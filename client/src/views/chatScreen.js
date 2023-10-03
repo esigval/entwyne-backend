@@ -1,26 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import logo from '../assets/images/logo.png'
 import backgroundImage from '../assets/images/drew-beamer-kUHfMW8awpE-unsplash.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const renderMessage = (message, handleLinkClick) => {
-    if (message.includes('[GetScannableCodeLink]')) {
-      const parts = message.split('[GetScannableCodeLink]');
-      return (
-        <>
-          {parts[0]}
-          <div style={styles.purpleBox}>
-            <Link to="/qrCode" style={styles.linkInsidePurpleBox} onClick={handleLinkClick}>
-              Get Scannable Code
-            </Link>
-          </div>
-          {parts[1]}
-        </>
-      );
-    }
-    return message;
-  };
+  if (message.includes('[GetScannableCodeLink]')) {
+    const parts = message.split('[GetScannableCodeLink]')
+    return (
+      <>
+        {parts[0]}
+        <div style={styles.purpleBox}>
+          <Link
+            to="/qrCode"
+            style={styles.linkInsidePurpleBox}
+            onClick={handleLinkClick}
+          >
+            Get Scannable Code
+          </Link>
+        </div>
+        {parts[1]}
+      </>
+    )
+  }
+  return message
+}
 
 const ChatScreen = () => {
   const [message, setMessage] = useState('')
@@ -30,11 +34,21 @@ const ChatScreen = () => {
   useEffect(() => {
     const lastMessage = chatHistory[chatHistory.length - 1]
 
-    if (lastMessage && lastMessage.sender === 'server' && lastMessage.message.includes('[GetScannableCodeLink]')) {
+    if (
+      lastMessage &&
+      lastMessage.sender === 'server' &&
+      lastMessage.message.includes('[GetScannableCodeLink]')
+    ) {
       // Simulate a "fake" server message
-      const simulatedServerMessage = { sender: 'server', message: 'Click the link above to get your scannable code!' }
+      const simulatedServerMessage = {
+        sender: 'server',
+        message: 'Click the link above to get your scannable code!'
+      }
 
-      setChatHistory((prevChatHistory) => [...prevChatHistory, simulatedServerMessage])
+      setChatHistory((prevChatHistory) => [
+        ...prevChatHistory,
+        simulatedServerMessage
+      ])
     }
   }, [chatHistory])
   const sendMessage = async () => {
@@ -196,11 +210,11 @@ const styles = {
     padding: '10px',
     borderRadius: '5px',
     display: 'inline-block',
-    margin: '5px',
+    margin: '5px'
   },
   linkInsidePurpleBox: {
     color: 'white',
-    textDecoration: 'none',
+    textDecoration: 'none'
   },
   userBubble: {
     display: 'flex',
