@@ -1,6 +1,4 @@
 import React from 'react'
-import logo from '../assets/images/logo.png'
-import backgroundImage from '../assets/images/brett-garwood-asZVvgMGshc-unsplash.jpg'
 import { useNavigate } from 'react-router-dom'
 
 const HomeScreen = () => {
@@ -9,64 +7,60 @@ const HomeScreen = () => {
   const handleBeginProject = () => {
     navigate('/chat')
   }
+
   return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <img
-          src={logo}
-          alt={'Logo'}
-          style={styles.logo}
-        />
-      </header>
-      <div style={styles.content}>
-      <button style={styles.beginButton} onClick={handleBeginProject}>
-          Begin Project
-        </button>
+    <div style={styles.outerContainer}>
+      <div style={styles.innerContainer}>
+        <h1 style={styles.headerText}>Start Your Next Project</h1>
+        <div style={styles.buttonContainer}>
+          <button style={styles.beginButton} onClick={handleBeginProject}>
+            +
+          </button>
+        </div>
       </div>
-      <footer style={styles.footer}>
-        {'Copyright All Rights Reserved 2023'}
-      </footer>
     </div>
   )
 }
 
 const styles = {
-  container: {
+  outerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    backgroundColor: '#f2f2f2',
+    backgroundSize: 'cover'
+  },
+  innerContainer: {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '100vh',
-    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url(${backgroundImage})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: '10px',
+    maxWidth: '500px',
+    height: '80vh',
+    padding: '20px'
   },
-  logo: {
-    width: '200px'
+  headerText: {
+    fontSize: '36px',
+    margin: '0',
+    marginBottom: '20px'
   },
-  content: {
-    flex: 2,
+  buttonContainer: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   beginButton: {
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer'
-  },
-  footer: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#333',
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    fontSize: '24px',
     color: '#fff',
-    textAlign: 'center'
+    backgroundColor: '#add8e6', // light blue
+    border: 'none',
+    cursor: 'pointer'
   }
 }
 
