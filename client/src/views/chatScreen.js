@@ -12,7 +12,7 @@ const renderMessage = (message, handleLinkClick) => {
         {parts[0]}
         <div style={styles.purpleBox}>
           <Link
-            to="/qrCode"
+            to='/qrCode'
             style={styles.linkInsidePurpleBox}
             onClick={handleLinkClick}
           >
@@ -109,7 +109,7 @@ const ChatScreen = () => {
   return (
     <div style={styles.container}>
       <header style={styles.header}>
-        <img src={logo} alt="Logo" style={styles.logo} />
+        <img src={logo} alt='Logo' style={styles.logo} />
       </header>
       <main style={styles.mainContainer}>
         <div style={styles.innerChatContainer}>
@@ -128,10 +128,10 @@ const ChatScreen = () => {
         </div>
       </main>
       <footer style={styles.footer}>
-        <div className="messageInputContainer">
+        <div className='messageInputContainer'>
           <input
-            type="text"
-            placeholder="Type your message here"
+            type='text'
+            placeholder='Type your message here'
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             style={styles.inputBox}

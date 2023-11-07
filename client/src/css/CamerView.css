@@ -1,0 +1,131 @@
+.camera-view {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #e5e5e500;
+    box-sizing: border-box;
+    /* This ensures the border does not affect the overall dimensions */
+}
+
+.camera-pre-record-container {
+    box-sizing: border-box;
+    /* This ensures padding and border are included in the element's total width and height */
+    border: 5px solid green;
+    padding: 20px;
+    /* Adjust as needed */
+    height: 100%;
+    /* Inherit the height of the parent container */
+    margin: 2%;
+}
+
+.timer {
+    font-size: 24px;
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+  }
+
+.camera-feed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: -1;
+  }
+
+.camera-header {
+    padding: 10px;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+.camera-footer {
+    position: absolute;
+    bottom: 100px;
+    /* Adjust this value to move the prompt closer/farther from the green line */
+    left: 0;
+    right: 0;
+    text-align: center;
+    /* Center the text horizontally */
+    font-size: larger;
+    color: white;
+}
+
+.camera-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* This will vertically center all items inside this container */
+    height: 100%;
+}
+
+.left-instructions {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    /* Center vertically */
+    justify-content: space-evenly;
+    /* Distribute items evenly horizontally */
+    flex-direction: row;
+    /* Align items horizontally */
+    gap: 10px;
+    align-self: flex-start;
+    /* Align to the top of the container */
+    margin-top: 5vh;
+    /* Add a margin of 10% of the viewport height */
+    color: antiquewhite;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    align-items: center;
+    /* Vertically centers the items */
+    height: 100%;
+    /* Takes full height of its parent container */
+}
+
+.checkmark {
+    color: green;
+    font-weight: bold;
+}
+
+.camera-placeholder {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    position: relative;
+}
+
+.circle-placeholder {
+    width: 60%;
+    height: 60%;
+    background-color: grey;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.right-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    /* This ensures it takes up equal space as other flex containers */
+    height: 100%;
+}
+
+.circle-outline {
+    width: 80px;
+    height: 80px;
+    border: 2px solid grey;
+    border-radius: 50%;
+}

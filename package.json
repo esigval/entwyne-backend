@@ -1,5 +1,5 @@
 {
-  "name": "spokenlist",
+  "name": "memoryapp",
   "version": "1.0.0",
   "description": "Test",
   "main": "index.js",
@@ -11,7 +11,8 @@
   "dependencies": {
     "cors": "2.8.5",
     "dotenv": "^16.3.1",
-    "https": "^1.0.0"
+    "https": "^1.0.0",
+    "multer": "1.4.5-lts.1"
   },
   "devDependencies": {
     "concurrently": "8.2.1"

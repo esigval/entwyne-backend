@@ -41,7 +41,7 @@ const QrCodeScreen = () => {
               to be directed to the items on your list.
             </p>
           </div>
-          <img src={qrCodeImage} alt="QR Code" style={styles.qrCodeImage} />
+          <img src={qrCodeImage} alt='QR Code' style={styles.qrCodeImage} />
         </div>
         <div style={styles.directionsButtonContainer}>
           <button

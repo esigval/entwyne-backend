@@ -1,0 +1,5 @@
+file 'F:\MemoryCollectionApp\server\assets\rawfootage\recorded-video-0.webm'
+file 'F:\MemoryCollectionApp\server\assets\rawfootage\recorded-video-1.webm'
+file 'F:\MemoryCollectionApp\server\assets\rawfootage\recorded-video-2.webm'
+file 'F:\MemoryCollectionApp\server\assets\rawfootage\recorded-video-3.webm'
+file 'F:\MemoryCollectionApp\server\assets\rawfootage\recorded-video.webm'
