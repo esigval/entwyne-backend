@@ -2,10 +2,11 @@ const express = require('express');
 const https = require('https');
 const dotenv = require('dotenv');
 const path = require('path');
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 const multer = require('multer');
+const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
-const db = require('../db/mySQL');
+const createConnection = require('../db/mySQL'); // Assuming this is the correct path to your database file
 
 // AWS configuration
 aws.config.update({
@@ -13,6 +14,8 @@ aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   region: process.env.AWS_REGION,
 });
+
+console.log(process.env.S3_BUCKET_NAME);
 
 // Create S3 service object
 const s3 = new aws.S3();
@@ -30,7 +33,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: process.env.S3_BUCKET_NAME,
-    acl: 'public-read',
+    // acl: 'public-read',
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
@@ -43,6 +46,7 @@ const upload = multer({
 
 
 router.post('/', upload.single('video'), async (req, res) => {
+  const connection = createConnection();
   // Get the file location from multer-s3's req.file.location
   const videoPath = req.file.location; // S3 file URL
   const videoFilename = req.file.key; // The name of the file in the S3 bucket
@@ -50,19 +54,19 @@ router.post('/', upload.single('video'), async (req, res) => {
   // Prepare SQL query to insert the file record
   const insertQuery = `INSERT INTO media (filename, filepath, transcription, sentiment, beattag) VALUES (?, ?, ?, ?, ?)`;
 
-  try {
-    // Insert file information into the database
-    db.query(insertQuery, [videoFilename, videoPath, null, null, null], function(err, results) {
-      if (err) throw err;
-      console.log(results);
-    });
+  connection.query(insertQuery, [videoFilename, videoPath, null, null, null], function(err, results) {
+    if (err) {
+      console.error('Error inserting video info into database:', err);
+      res.status(500).send('Error recording video information in database.');
+      connection.end(); // End the connection after handling the error
+      return;
+    }
+    console.log(results);
 
     // Send response back to the client
     res.json({ message: 'Video uploaded to S3 and recorded in database successfully!', filename: videoFilename, path: videoPath });
-  } catch (error) {
-    console.error('Error inserting video info into database:', error);
-    res.status(500).send('Error recording video information in database.');
-  }
+    connection.end(); // End the connection after sending the response
+  });
 });
 
 module.exports = router;
