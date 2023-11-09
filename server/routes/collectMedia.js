@@ -4,8 +4,8 @@ const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config({ path: path.join(__dirname, '../.env') });
 const multer = require('multer');
-const aws = reuiqre('aws-sdk');
-const db =
+const aws = require('aws-sdk');
+const db = require('../db/mySQL');
 
 // AWS configuration
 aws.config.update({
