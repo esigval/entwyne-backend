@@ -1,3 +1,10 @@
+// sends the media file to S3 bucket
+// saves location to the database
+// downloads the file from S3 bucket
+// extracts audio from the file using ffmpeg
+// saves the audio to the S3 bucket
+// saves audio file location to the database
+
 const express = require('express');
 const https = require('https');
 const dotenv = require('dotenv');
@@ -6,7 +13,9 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
-const createConnection = require('../db/mySQL'); // Assuming this is the correct path to your database file
+const fs = require('fs');
+const ffmpeg = require('fluent-ffmpeg');
+
 
 // AWS configuration
 aws.config.update({
@@ -19,54 +28,66 @@ console.log(process.env.S3_BUCKET_NAME);
 
 // Create S3 service object
 const s3 = new aws.S3();
-
+const pool = require('../db/mySQL');
 const router = express.Router();
 
-function getNextFileName() {
-  // S3 version of getNextFileName should handle file naming uniqueness
-  const date = new Date();
-  const timestamp = date.getTime();
-  return `recorded-video-${timestamp}.webm`;
-}
-
+// Upload configuration for multer
 const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: process.env.S3_BUCKET_NAME,
-    // acl: 'public-read',
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
-    key: (req, file, cb) => {
-      const newFileName = getNextFileName();
-      cb(null, newFileName);
+    key: function (req, file, cb) {
+      cb(null, `recorded-video-${Date.now()}.webm`);
     },
   }),
 });
 
-
 router.post('/', upload.single('video'), async (req, res) => {
-  const connection = createConnection();
-  // Get the file location from multer-s3's req.file.location
-  const videoPath = req.file.location; // S3 file URL
-  const videoFilename = req.file.key; // The name of the file in the S3 bucket
+  const videoFilename = req.file.key;
+  const videoPath = req.file.location;
 
-  // Prepare SQL query to insert the file record
-  const insertQuery = `INSERT INTO media (filename, filepath, transcription, sentiment, beattag) VALUES (?, ?, ?, ?, ?)`;
+  // Save video location to the database
+  const insertVideoQuery = 'INSERT INTO media (filename, webmfilepath) VALUES (?, ?)';
+  await pool.query(insertVideoQuery, [videoFilename, videoPath]);
 
-  connection.query(insertQuery, [videoFilename, videoPath, null, null, null], function(err, results) {
-    if (err) {
-      console.error('Error inserting video info into database:', err);
-      res.status(500).send('Error recording video information in database.');
-      connection.end(); // End the connection after handling the error
-      return;
-    }
-    console.log(results);
+  // Download the video file from S3
+  const downloadParams = { Bucket: process.env.S3_BUCKET_NAME, Key: videoFilename };
+  const videoData = await s3.getObject(downloadParams).promise();
 
-    // Send response back to the client
-    res.json({ message: 'Video uploaded to S3 and recorded in database successfully!', filename: videoFilename, path: videoPath });
-    connection.end(); // End the connection after sending the response
+  // Save video locally for processing
+  const localVideoPath = path.join(__dirname, 'uploads', videoFilename);
+  fs.writeFileSync(localVideoPath, videoData.Body);
+
+  // Extract audio using ffmpeg
+  const localAudioPath = localVideoPath.replace('.webm', '.mp3');
+  await new Promise((resolve, reject) => {
+    ffmpeg(localVideoPath)
+      .output(localAudioPath)
+      .noVideo()
+      .audioCodec('libmp3lame')
+      .on('end', resolve)
+      .on('error', reject)
+      .run();
   });
+
+  // Upload extracted audio to S3
+  const audioData = fs.readFileSync(localAudioPath);
+  const audioFilename = path.basename(localAudioPath);
+  const uploadParams = { Bucket: process.env.S3_BUCKET_NAME, Key: audioFilename, Body: audioData };
+  const audioUploadData = await s3.upload(uploadParams).promise();
+
+  // Save audio location to the database
+  const updateAudioQuery = 'UPDATE media SET audio = ? WHERE filename = ?';
+  await pool.query(updateAudioQuery, [audioUploadData.Location, videoFilename]);
+
+  // Clean up: delete local files
+  fs.unlinkSync(localVideoPath);
+  fs.unlinkSync(localAudioPath);
+
+  res.json({ message: 'Media processing complete' });
 });
 
 module.exports = router;

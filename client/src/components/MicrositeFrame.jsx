@@ -27,6 +27,54 @@ const MicrositeFrame = () => {
             });
     };
 
+    const transcribeAudio = () => {
+        fetch('http://localhost:3001/transcribeAudio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to transcribe audio');
+                }
+                return response.text();
+            })
+            .then((data) => {
+                console.log('Audio transcribed successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error transcribing audio:', error);
+            });
+    };
+
+    // Function to process storylines
+    const processStorylines = () => {
+        // Send a POST request to the recursive storyline generator
+        fetch('http://localhost:3001/recursiveStorylineGenerator', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => {
+                // If the response is not ok, throw an error
+                if (!response.ok) {
+                    throw new Error('Failed to generate storyline');
+                }
+                // Otherwise, return the response text
+                return response.text();
+            })
+            .then((data) => {
+                // Log the successfully generated storyline
+                console.log('Storyline generated successfully:', data);
+            })
+            .catch((error) => {
+                // Log any errors that occurred during the storyline generation
+                console.error('Error generating storyline:', error);
+            });
+    };
+
     const startCamera = () => {
         navigate('/camera')
     }
@@ -75,7 +123,12 @@ const MicrositeFrame = () => {
             <button style={buttonStyle} onClick={stitchVideos}>
                 Stitch Videos
             </button>
-
+            <button style={buttonStyle} onClick={transcribeAudio}>
+                Transcribe Audio
+            </button>
+            <button style={buttonStyle} onClick={processStorylines}>
+                ProcessStorylines
+            </button>
         </div>
     )
 }

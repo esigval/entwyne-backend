@@ -9,6 +9,7 @@
     "mongodb": "6.2.0",
     "multer-s3": "2.10.0",
     "mysql": "^2.18.1",
+    "mysql2": "3.6.3",
     "openai": "^4.0.0"
   },
   "name": "server",
