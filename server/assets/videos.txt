@@ -1,6 +1,3 @@
 file 'F:\MemoryCollectionApp\server\assets\rawfootage\video_0.webm'
 file 'F:\MemoryCollectionApp\server\assets\rawfootage\video_1.webm'
 file 'F:\MemoryCollectionApp\server\assets\rawfootage\video_2.webm'
-file 'F:\MemoryCollectionApp\server\assets\rawfootage\video_3.webm'
-file 'F:\MemoryCollectionApp\server\assets\rawfootage\video_4.webm'
-file 'F:\MemoryCollectionApp\server\assets\rawfootage\video_5.webm'

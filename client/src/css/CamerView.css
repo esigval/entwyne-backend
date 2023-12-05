@@ -35,6 +35,31 @@
     z-index: -1;
   }
 
+.record-button {
+    fill:red;
+    background-color: red;
+    width: 100px;
+    height: 100px;
+    background-color: grey;
+    border-radius: 50%;
+    position: fixed;
+    top: 50%;
+    bottom: 50%;
+    right: 5%;
+}
+
+.record-button-container {
+    width: 100px;
+    height: 100px;
+    background-color: grey;
+    border-radius: 50%;
+    position: fixed;
+    top: 50%;
+    bottom: 50%;
+    right: 5%; /* Adjust as needed */
+    /* Other styling for the container */
+  }
+
 .camera-header {
     padding: 10px;
     background-color: black;
@@ -77,6 +102,9 @@
     margin-top: 5vh;
     /* Add a margin of 10% of the viewport height */
     color: antiquewhite;
+    overflow: hidden;
+    height: 100px;
+
 }
 
 .check-item {
@@ -116,6 +144,7 @@
 
 .right-placeholder {
     display: flex;
+    flex-basis: 33%;
     justify-content: center;
     align-items: center;
     flex: 1;

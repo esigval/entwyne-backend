@@ -8,6 +8,8 @@ const fs = require('fs').promises;  // Use promises API for asynchronous operati
 const downloadVideo = require('../utils/downloadStoryFile');
 const getOrderedVideoPaths = require('../utils/getOrderedVideoPaths');
 const execAsync = promisify(exec); // Promisify exec for async/await use
+const uploadVideoFileToS3 = require('../utils/uploadStitchedFiletoS3');
+const pool = require('../db/mySQL');
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
@@ -31,6 +33,16 @@ router.post('/', async (req, res) => {
         // Concatenate and convert the videos using local file paths
         await concatenateVideos(localPaths);
         await convertToMP4();
+        // Upload the stitched video to S3
+        const s3BucketName = process.env.S3_BUCKET_NAME;
+        const s3Key = `stitchedVideos/stitchedVideo-${storylineId}.mp4`;
+        const videoUrl = await uploadVideoFileToS3(finalOutput, s3BucketName, s3Key);
+
+        // Update the database with the S3 URL
+        await updateDatabaseWithVideoUrl(storylineId, videoUrl);
+
+        await fs.unlink(finalOutput); // Delete the final output file
+
 
         res.status(200).json({ message: 'Videos processed successfully!' });
     } catch (error) {
@@ -58,6 +70,11 @@ async function concatenateVideos(localPaths) {
 async function convertToMP4() {
     await execAsync(`ffmpeg -i ${outputPath} -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest ${finalOutput}`);
     await fs.unlink(outputPath);
+}
+
+async function updateDatabaseWithVideoUrl(storylineId, videoUrl) {
+    const updateQuery = `UPDATE storylines SET stitchedVideo = ? WHERE id = ?`;
+    await pool.query(updateQuery, [videoUrl, storylineId]);
 }
 
 module.exports = router;

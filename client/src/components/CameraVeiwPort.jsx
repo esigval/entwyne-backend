@@ -145,19 +145,13 @@ const CameraView = () => {
               :{(timer % 60).toString().padStart(2, '0')}
             </div>
           )}
-
-          <div className='camera-placeholder'>
-            <div className='circle-placeholder' onClick={handleRecord}></div>
-          </div>
-
-          <div className='right-placeholder'>
-            <div className='circle-outline' onClick={handleRecord}></div>
-          </div>
         </div>
         <div className='camera-footer'>
-          Prompt: Can You Tell Me What Happened with Josh when he came to the
-          shop?
+          
         </div>
+        <div className='record-button-container' onClick={handleRecord}>
+        <div className='record-button'></div>
+      </div>
       </div>
     </div>
   )

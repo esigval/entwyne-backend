@@ -19,7 +19,7 @@ const prepareStorylineData = require('../models/prepareStorylinesData'); // Adju
 router.post('/', async (req, res) => {
   try {
     // User prompt
-    const userPrompt = "Anaylze the following transcripts. I want you to order them alphabetically by the fruit name, formatted as a json object, with id and transcription as properties."
+    const userPrompt = req.body.text + "To acheive this task, read the transcription field. Format the output as json with the properties as id, order(summarized from earlier), and transcription";
     console.log(userPrompt);
 
     // Query the database for transcripts

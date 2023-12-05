@@ -2,9 +2,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import TextAreaComponent from './TextAreaComponent';
 
 const MicrositeFrame = () => {
     const navigate = useNavigate()
+
+// Function to type in GPT Text
 
     const stitchVideos = () => {
         fetch('http://localhost:3001/stitchVideos', {
@@ -75,6 +78,8 @@ const MicrositeFrame = () => {
             });
     };
 
+    const endpointGPTVideo = 'http://localhost:3001/recursiveStorylineGenerator';
+
     const startCamera = () => {
         navigate('/camera')
     }
@@ -129,6 +134,7 @@ const MicrositeFrame = () => {
             <button style={buttonStyle} onClick={processStorylines}>
                 ProcessStorylines
             </button>
+            <TextAreaComponent endpoint={endpointGPTVideo} />
         </div>
     )
 }
