@@ -1,5 +1,5 @@
 const storylineTest = {
-    storyTemplate: [
+  storyTemplate: [
     {
       "prompt": "Your family's journey starts. Where does it begin?",
       "order": 0,
@@ -8,7 +8,8 @@ const storylineTest = {
       "contentType": "Establishing Shot",
       "storybeat": "Opening",
       "twyneId": null,
-      "shotDescription": "Family home or vehicle packed for the adventure."
+      "shotDescription": "Family home or vehicle packed for the adventure.",
+      "promptTitle": "Journey's Starting Point"
     },
     {
       "prompt": "Add a Title. What encapsulates your family's adventure?",
@@ -18,7 +19,8 @@ const storylineTest = {
       "contentType": "Title",
       "storybeat": "Opening",
       "twyneId": null,
-      "shotDescription": "Title screen with something like 'Sigvaldsens' Thanksgiving Expedition'."
+      "shotDescription": "Title screen with something like 'Sigvaldsens' Thanksgiving Expedition'.",
+      "promptTitle": "Family Adventure Title"
     },
     {
       "prompt": "Describe the feeling starting this family Thanksgiving trip?",
@@ -28,7 +30,8 @@ const storylineTest = {
       "contentType": "Interview Footage",
       "storybeat": "Middle",
       "twyneId": null,
-      "shotDescription": "Interview family members about their initial emotions and expectations."
+      "shotDescription": "Interview family members about their initial emotions and expectations.",
+      "promptTitle": "Emotional Expectations Interview"
     },
     {
       "prompt": "B-Roll family prep. What does anticipation look like?",
@@ -38,7 +41,8 @@ const storylineTest = {
       "contentType": "B-Roll Footage",
       "storybeat": "Middle",
       "twyneId": null,
-      "shotDescription": "Family members preparing, packing, and getting into the car."
+      "shotDescription": "Family members preparing, packing, and getting into the car.",
+      "promptTitle": "Family Preparation Scene"
     },
     {
       "prompt": "Interview about Hidden Forest Cave. First impressions?",
@@ -48,7 +52,8 @@ const storylineTest = {
       "contentType": "Interview Footage",
       "storybeat": "Middle",
       "twyneId": null,
-      "shotDescription": "Family's reactions upon encountering the entrance to the cave."
+      "shotDescription": "Family's reactions upon encountering the entrance to the cave.",
+      "promptTitle": "Cave Entrance Reactions"
     },
     {
       "prompt": "B-Roll Cave Entrance. How's everyone's mood?",
@@ -58,7 +63,8 @@ const storylineTest = {
       "contentType": "B-Roll Footage",
       "storybeat": "Middle",
       "twyneId": null,
-      "shotDescription": "Shots of the cave entrance, family members hesitating or exploring."
+      "shotDescription": "Shots of the cave entrance, family members hesitating or exploring.",
+      "promptTitle": "Cave Entrance Atmosphere"
     },
     {
       "prompt": "Interview about handling fear. How did Ana cope?",
@@ -68,7 +74,8 @@ const storylineTest = {
       "contentType": "Interview Footage",
       "storybeat": "Middle",
       "twyneId": null,
-      "shotDescription": "Discuss Ana's experience with the cave and holding Owen's hand."
+      "shotDescription": "Discuss Ana's experience with the cave and holding Owen's hand.",
+      "promptTitle": "Ana's Fear Management"
     },
     {
       "prompt": "B-Roll Cave Interior. What's the siblings' dynamic like?",
@@ -78,7 +85,8 @@ const storylineTest = {
       "contentType": "B-Roll Footage",
       "storybeat": "Middle",
       "twyneId": null,
-      "shotDescription": "Inside the cave: Ana nervous, Owen reassures, Rowan's curiosity."
+      "shotDescription": "Inside the cave: Ana nervous, Owen reassures, Rowan's curiosity.",
+      "promptTitle": "Siblings in the Cave"
     },
     {
       "prompt": "Montage Cave Triumph. What victory did the kids feel?",
@@ -88,7 +96,8 @@ const storylineTest = {
       "contentType": "Montage Footage",
       "storybeat": "Climax",
       "twyneId": null,
-      "shotDescription": "Ana smiling post-fear, Rowan exploring fearlessly."
+      "shotDescription": "Ana smiling post-fear, Rowan exploring fearlessly.",
+      "promptTitle": "Kids' Cave Victory"
     },
     {
       "prompt": "Montage Cowboy Dinner Tree Arrival. How did you feel?",
@@ -98,7 +107,8 @@ const storylineTest = {
       "contentType": "Montage Footage",
       "storybeat": "Climax",
       "twyneId": null,
-      "shotDescription": "Family's arrival at the restaurant, the darkness surrounding them."
+      "shotDescription": "Family's arrival at the restaurant, the darkness surrounding them.",
+      "promptTitle": "Dinner Tree Arrival"
     },
     {
       "prompt": "Montage Massive Steak. Who had eyes bigger than stomach?",
@@ -108,7 +118,8 @@ const storylineTest = {
       "contentType": "Montage Footage",
       "storybeat": "Climax",
       "twyneId": null,
-      "shotDescription": "The ridiculously large steak servings at the table."
+      "shotDescription": "The ridiculously large steak servings at the table.",
+      "promptTitle": "Giant Steak Challenge"
     },
     {
       "prompt": "Montage Dinner Enjoyment. What makes a perfect family meal?",
@@ -118,7 +129,8 @@ const storylineTest = {
       "contentType": "Montage Footage",
       "storybeat": "Climax",
       "twyneId": null,
-      "shotDescription": "Family eating, chatting, laughing around the dinner table."
+      "shotDescription": "Family eating, chatting, laughing around the dinner table.",
+      "promptTitle": "Joyful Family Dinner"
     },
     {
       "prompt": "Montage Evening End. How do you wrap up adventure?",
@@ -128,7 +140,8 @@ const storylineTest = {
       "contentType": "Montage Footage",
       "storybeat": "Climax",
       "twyneId": null,
-      "shotDescription": "Exhausted but satisfied family leaving the restaurant, driving home."
+      "shotDescription": "Exhausted but satisfied family leaving the restaurant, driving home.",
+      "promptTitle": "Adventure Conclusion"
     },
     {
       "prompt": "Add Credits. Who are your Thanksgiving adventure stars?",
@@ -138,8 +151,10 @@ const storylineTest = {
       "contentType": "Credits",
       "storybeat": "Closing",
       "twyneId": null,
-      "shotDescription": "Credits with family names and a thank you note."
+      "shotDescription": "Credits with family names and a thank you note.",
+      "promptTitle": "Thanksgiving Credits"
     }
-  ]};
+  ]
+};
 
-  export default storylineTest;
+export default storylineTest;

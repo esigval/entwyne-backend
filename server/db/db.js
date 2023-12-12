@@ -1,25 +1,24 @@
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
-import path from 'path';
-console.log(process.cwd())
 dotenv.config();
 
-// Connection URL and Database Name
-const dbUser = process.env.MONGODB_USER;
-const dbPassword = process.env.MONGODB_PASSWORD;
-const url = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.afrmpli.mongodb.net/`;
+const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}` +
+            `@cluster0.afrmpli.mongodb.net/`;
 const dbName = process.env.MONGODB_DB;
 
+console.log('Attempting to connect to the database...');
 console.log(url);
 
-// Create a new MongoClient
 const connect = async () => {
-  const client = new MongoClient(url);
-  await client.connect();
-  return client.db(dbName);
-}
-
-// Export the functions that can be used by other modules
-export {
-  connect,
+  try {
+    const client = new MongoClient(url);
+    await client.connect();
+    console.log('Connected successfully to the database');
+    return client.db(dbName);
+  } catch (err) {
+    console.error('Connection to the database failed:', err);
+    throw err;
+  }
 };
+
+export { connect };

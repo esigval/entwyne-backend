@@ -4,7 +4,8 @@ class Prompts {
         this.storyName = data.storyName;
         this.prompt = data.prompt;
         this.twyneId = data.DatetwyneId;
-        this.mediaType = data.mediaType;        
+        this.mediaType = data.mediaType;
+        this.promptTitle = data.promptTitle;        
     }
 };
 

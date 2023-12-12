@@ -7,13 +7,14 @@ const processStorylineAndCreatePrompts = async (storylineIdString) => {
         const database = await connect();
         const objectId = new ObjectId(storylineIdString);
         const storyDocument = await database.collection('storylines').findOne({ _id: objectId });
+        console.log('storyDocument:', storyDocument);
 
         if (!storyDocument) {
             throw new Error('Story not found');
         }
 
         const updatedStoryline = await Promise.all(storyDocument.storyline.map(async (item) => {
-            const promptData = new Prompts(item);
+            const promptData = new Prompts({ ...item, storyName: storyDocument.storyName });
             const result = await database.collection('prompts').insertOne(promptData);
             return { ...item, promptId: result.insertedId };
         }));

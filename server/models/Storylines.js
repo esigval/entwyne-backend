@@ -10,7 +10,8 @@ class Storyline {
             contentType: item.contentType,
             storybeat: item.storybeat,
             twyneId: item.twyneId,
-            shotDescription: item.shotDescription
+            shotDescription: item.shotDescription,
+            promptTitle: item.promptTitle
         }));
     }
 };
