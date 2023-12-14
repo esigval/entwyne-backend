@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const AppHeader = () => {
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Entwyne</Text>
+      <Text style={styles.headerText}></Text>
     </View>
   );
 };
@@ -14,7 +14,7 @@ const AppHeader = () => {
 const styles = StyleSheet.create({
   header: {
     width: '100%',
-    height: 70, // You can adjust the height as needed
+    height: 0, // You can adjust the height as needed
     backgroundColor: '#6A1B9A',
     alignItems: 'center',
     justifyContent: 'center',

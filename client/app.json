@@ -3,8 +3,18 @@
     "name": "client",
     "slug": "client",
     "version": "1.0.0",
+    "splash": {
+      "image": "./src/assets/entwyneLogoColor.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    }
   }
 }

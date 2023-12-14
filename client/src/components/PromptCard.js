@@ -4,6 +4,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
+
 const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) => {
 
     const { showActionSheetWithOptions } = useActionSheet();
@@ -21,7 +22,7 @@ const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) =>
             (buttonIndex) => {
                 switch (buttonIndex) {
                     case 0:
-                        navigation.navigate('CameraComponent');
+                        navigation.navigate('CameraCapture', {promptDetail: description});
                         break;
                     case 1:
                         onRequestTwyne('text');
