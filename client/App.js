@@ -4,9 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppHeader from './src/components/AppHeader';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { createStackNavigator } from '@react-navigation/stack';
-import CameraCapture from './src/components/CameraCapture.js';
+import CameraCapture from './src/screens/CameraCapture.js';
 import { DataProvider, DataContext } from './src/utils/dataContext.js';
 import TabNavigator from './src/navigation/TabNavigator';
+import ShareYourStoryScreen from './src/components/QRCode.js';
+import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,8 @@ const App = () => {
             <Stack.Navigator>
               <Stack.Screen name="Home" component={TabNavigator} />
               <Stack.Screen name="CameraCapture" component={CameraCapture} />
+              <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
+              <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>

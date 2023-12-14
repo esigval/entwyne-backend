@@ -3,8 +3,9 @@ import { Platform, ScrollView, View, Text, TouchableOpacity, StyleSheet, Animate
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import Icon from 'react-native-vector-icons/Ionicons';
-import SlideDownWidget from './SlideDownWidget';
-import PromptDrawer from './PromptDrawer';
+import SlideDownWidget from '../components/SlideDownWidget';
+import PromptDrawer from '../components/PromptDrawer';
+import { useNavigation } from '@react-navigation/native';
 
 const CameraCapture = ({ route }) => {
     const { promptDetail } = route.params;
@@ -12,6 +13,7 @@ const CameraCapture = ({ route }) => {
     const [type, setType] = useState(Camera.Constants.Type.back);
     const cameraRef = useRef(null);
     const [isRecording, setIsRecording] = useState(false);
+    const navigation = useNavigation();
 
 
     useEffect(() => {
@@ -20,11 +22,11 @@ const CameraCapture = ({ route }) => {
                 // Request camera permission
                 const cameraPermission = await Camera.requestCameraPermissionsAsync();
                 console.log('Camera permission status:', cameraPermission.status);
-    
+
                 // Request media library permission
                 const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
                 console.log('Media Library permission status:', mediaLibraryPermission.status);
-    
+
                 // Set permission state based on camera and media library permissions
                 setHasPermission(cameraPermission.status === 'granted' && mediaLibraryPermission.status === 'granted');
             } catch (error) {
@@ -47,6 +49,11 @@ const CameraCapture = ({ route }) => {
                 : Camera.Constants.Type.back
         );
     };
+    // Inside your CameraCapture component
+    const handleVideoSaved = (videoUri) => {
+        navigation.navigate('VideoConfirmation', { videoUri });
+    };
+
 
     const saveVideoToLibrary = async (videoUri) => {
         try {
@@ -56,16 +63,18 @@ const CameraCapture = ({ route }) => {
                 alert('Sorry, we need media library permissions to save the video!');
                 return;
             }
-    
+
             // Save the video to the media library
             const asset = await MediaLibrary.createAssetAsync(videoUri);
             console.log('Video saved to Photos', asset);
+            // Navigate to the VideoConfirmation screen after the video has been saved
+            handleVideoSaved(videoUri);
         } catch (error) {
             console.error('Error saving video to Photos:', error);
         }
     };
 
-    
+
 
     const toggleRecording = async () => {
         if (cameraRef.current) {
@@ -91,13 +100,15 @@ const CameraCapture = ({ route }) => {
     return (
         <View style={styles.container}>
             <Camera style={styles.camera} type={type} ref={cameraRef}>
-            <PromptDrawer promptDetail={promptDetail} />
+                <View style={styles.promptContainer}>
+                    <Text style={styles.promptText}>{promptDetail}</Text>
+                </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={toggleRecording} style={styles.recordButton}>
                         <Text style={styles.text}>{isRecording ? 'Stop' : 'Record'}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={flipCamera} style={styles.flipButton}>
-                    <Icon name="repeat-outline" size={30} color="#000" style={styles.flipIcon} />
+                        <Icon name="repeat-outline" size={30} color="#000" style={styles.flipIcon} />
                     </TouchableOpacity>
                 </View>
             </Camera>
@@ -149,10 +160,12 @@ const styles = StyleSheet.create({
     },
     promptContainer: {
         position: 'absolute',
-        top: 50, // Adjust top position as needed
+        top: 10, // Adjust top position as needed
         left: 0,
         right: 0,
         height: 100, // Set a fixed height for the slider
+        backgroundColor: '#00000080', // Semi-transparent black background
+        padding: 10,
     },
     slide: {
         width: '100%', // Each slide should be the width of the screen
@@ -164,7 +177,7 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
     },
-    
+
 });
 
 export default CameraCapture;

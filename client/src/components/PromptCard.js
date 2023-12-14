@@ -1,15 +1,33 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActionSheetIOS } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Platform, ActionSheetIOS } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import ShareYourStoryScreen from './QRCode';
 
 
 const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) => {
-
     const { showActionSheetWithOptions } = useActionSheet();
     const navigation = useNavigation();
+    const handleSendTextMessage = () => {
+        // You can customize this number and message
+        const phoneNumber = '1234567890';
+        const message = "Hey I just captured a video for ${title}! Check it out at https://twyne.io/1234567890;"
+        const smsLink = Platform.OS === 'android'
+            ? `sms:${phoneNumber}?body=${message}`
+            : `sms:${phoneNumber}&body=${message}`;
 
+        Linking.canOpenURL(smsLink)
+            .then((supported) => {
+                if (!supported) {
+                    console.log("Can't handle sms link");
+                } else {
+                    return Linking.openURL(smsLink);
+                }
+            })
+            .catch((err) => console.error('An error occurred', err));
+    };
+    
     const handleRequestTwynePress = () => {
         const options = ['Capture', 'Send Text Message', 'Create QR Code', 'Create Link', 'Cancel'];
         const cancelButtonIndex = 4;
@@ -25,10 +43,10 @@ const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) =>
                         navigation.navigate('CameraCapture', {promptDetail: description});
                         break;
                     case 1:
-                        onRequestTwyne('text');
+                        handleSendTextMessage();
                         break;
                     case 2:
-                        onRequestTwyne('qr');
+                        navigation.navigate('ShareYourStoryScreen', { data: 'Your data to encode in the QR code' });
                         break;
                     case 3:
                         onRequestTwyne('link');
