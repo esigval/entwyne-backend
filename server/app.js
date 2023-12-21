@@ -12,6 +12,9 @@ import cors from 'cors';
 // import recursiveStorylineGeneratorRouter from './routes/recursiveStorylineGenerator';
 import getStoriesRouter from './routes/getStories.js';
 import getPromptsRouter from './routes/getPrompts.js';
+import getTwynesRouter from './routes/getTwynes.js';
+import getS3PresignedUrlRouter from './routes/getS3PresignedUrl.js';
+import saveVideoUri from './routes/saveVideoUri.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
 const app = express();
@@ -26,6 +29,9 @@ app.use(cors());
 // app.use('/recursiveStorylineGenerator', recursiveStorylineGeneratorRouter);
 app.use('/v1/stories', getStoriesRouter);
 app.use('/v1/prompts', getPromptsRouter);
+app.use('/v1/twynes', getTwynesRouter);
+app.use('/v1/getS3PresignedUrl', getS3PresignedUrlRouter);
+app.use('/v1/saveVideoUri', saveVideoUri);
 // app.use('/collectCharacters', collectCharactersRouter);
 
 app.listen(port, () => {

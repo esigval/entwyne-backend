@@ -9,6 +9,7 @@ import { DataProvider, DataContext } from './src/utils/dataContext.js';
 import TabNavigator from './src/navigation/TabNavigator';
 import ShareYourStoryScreen from './src/components/QRCode.js';
 import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
+import FullScreenMediaScreen from './src/screens/FullScreenMediaPlayer.js';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ const App = () => {
               <Stack.Screen name="CameraCapture" component={CameraCapture} />
               <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
               <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} />
+              <Stack.Screen name="FullScreenMediaScreen" component={FullScreenMediaScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>

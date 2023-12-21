@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Platform, ScrollView, View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder, PermissionsAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import Icon from 'react-native-vector-icons/Ionicons';
-import SlideDownWidget from '../components/SlideDownWidget';
-import PromptDrawer from '../components/PromptDrawer';
 import { useNavigation } from '@react-navigation/native';
 
 const CameraCapture = ({ route }) => {
     const { promptDetail } = route.params;
+    const { promptId } = route.params;
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const cameraRef = useRef(null);
@@ -51,7 +50,7 @@ const CameraCapture = ({ route }) => {
     };
     // Inside your CameraCapture component
     const handleVideoSaved = (videoUri) => {
-        navigation.navigate('VideoConfirmation', { videoUri });
+        navigation.navigate('VideoConfirmation', { videoUri, promptId});
     };
 
 

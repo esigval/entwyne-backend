@@ -1,14 +1,16 @@
 import React, { useRef } from 'react'; // Make sure to import useRef here
 import { View, Button, StyleSheet } from 'react-native';
 import { Video } from 'expo-av'; // Ensure Video is imported correctly
+import uploadVideoToS3 from '../functions/uploadVideoToS3';
 
 const VideoConfirmationScreen = ({ route }) => {
   // Retrieve the video URI from route.params
   const { videoUri } = route.params;
+  const { promptId } = route.params;
   const videoRef = useRef(null); // Reference to the video player
 
-  const handleSend = () => {
-    // Implement your sending logic here
+  const handleSend = async () => {
+    await uploadVideoToS3(videoUri, promptId);
   };
 
   return (

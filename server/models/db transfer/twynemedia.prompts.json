@@ -1,0 +1,182 @@
+[{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b41"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.227Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Your family's journey starts. Where does it begin?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Journey's Starting Point"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b44"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.228Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "B-Roll family prep. What does anticipation look like?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Family Preparation Scene"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b45"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.228Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Interview about Hidden Forest Cave. First impressions?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Cave Entrance Reactions"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b46"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.228Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "B-Roll Cave Entrance. How's everyone's mood?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Cave Entrance Atmosphere"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b47"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.228Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Interview about handling fear. How did Ana cope?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Ana's Fear Management"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b48"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.228Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "B-Roll Cave Interior. What's the siblings' dynamic like?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Siblings in the Cave"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b43"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.227Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Describe the feeling starting this family Thanksgiving trip?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Emotional Expectations Interview"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b42"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.227Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Add a Title. What encapsulates your family's adventure?",
+  "twyneId": null,
+  "mediaType": "text/still",
+  "promptTitle": "Family Adventure Title"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b4b"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.229Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Montage Massive Steak. Who had eyes bigger than stomach?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Giant Steak Challenge"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b4c"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.229Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Montage Dinner Enjoyment. What makes a perfect family meal?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Joyful Family Dinner"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b4d"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.229Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Montage Evening End. How do you wrap up adventure?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Adventure Conclusion"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b4e"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.229Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Add Credits. Who are your Thanksgiving adventure stars?",
+  "twyneId": null,
+  "mediaType": "text",
+  "promptTitle": "Thanksgiving Credits"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b49"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.228Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Montage Cave Triumph. What victory did the kids feel?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Kids' Cave Victory"
+},
+{
+  "_id": {
+    "$oid": "6573d2e66378fe2269485b4a"
+  },
+  "created": {
+    "$date": "2023-12-09T02:37:26.229Z"
+  },
+  "storyName": "Test Story",
+  "prompt": "Montage Cowboy Dinner Tree Arrival. How did you feel?",
+  "twyneId": null,
+  "mediaType": "video",
+  "promptTitle": "Dinner Tree Arrival"
+}]

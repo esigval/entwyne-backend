@@ -64,6 +64,7 @@ const Tab2Screen = () => {
         keyExtractor={(item) => item._id} // Assuming each prompt has a unique _id
         renderItem={({ item }) => (
           <PromptCard
+            promptId={item._id}
             title={item.promptTitle} // Use the 'promptTitle' field as the title
             description={item.prompt} // Use the 'prompt' field as the description
             onRequestTwyne={onRequestTwyne}
@@ -78,21 +79,21 @@ const Tab2Screen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-    },
-    headerText: {
-      fontWeight: 'bold',
-      textAlign: 'center',
-      padding: 10,
-    },
-    contentContainerStyle: {
-      paddingBottom: 20,
-    },
-  });
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  headerText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+  },
+  contentContainerStyle: {
+    paddingBottom: 20,
+  },
+});
 
 export default Tab2Screen;
 

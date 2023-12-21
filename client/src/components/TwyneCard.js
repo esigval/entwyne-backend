@@ -1,27 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, Image, Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
 const cardWidth = (width / 2) - 16; // Subtract some margin
 
-const MediaCard = ({ prompt, characters, capturedBy, description }) => {
+const TwyneCard = ({ imageUrl }) => {
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
-        {/* Replace with an actual <Image> tag or media component */}
-        <Text style={styles.imagePlaceholderText}>Picture Media Here</Text>
-      </View>
-      <View style={styles.contentContainer}>
-        <Text style={styles.promptText}>Prompt(s): {prompt}</Text>
-        <Text style={styles.charactersText}>Characters: {characters.join(', ')}</Text>
-        <Text style={styles.capturedByText}>Captured By: {capturedBy}</Text>
-        <Text style={styles.descriptionText}>{description}</Text>
+        <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} onError={(error) => console.log(error)} />
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   card: {
     width: cardWidth,
     backgroundColor: '#fff',
@@ -41,24 +34,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imagePlaceholderText: {
-    color: '#333',
-  },
-  contentContainer: {
-    padding: 8,
-  },
-  promptText: {
-    fontWeight: 'bold',
-  },
-  charactersText: {
-    color: '#333',
-  },
-  capturedByText: {
-    color: '#333',
-  },
-  descriptionText: {
-    color: '#666',
-  },
-});
+};
 
-export default MediaCard;
+export default TwyneCard;

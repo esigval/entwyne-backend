@@ -2,8 +2,7 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}` +
-            `@cluster0.afrmpli.mongodb.net/`;
+const url = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB;
 
 console.log('Attempting to connect to the database...');

@@ -1,16 +1,18 @@
-import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
 
-const uploadVideoToS3 = async (videoUri) => {
+const uploadVideoToS3 = async (videoUri, promptId) => {
   try {
+    console.log('promptId:', promptId); // Make sure promptId is correct
     // Get the pre-signed URL from your backend
-    const { data: { presignedUrl } } = await axios.get('YOUR_BACKEND_ENDPOINT');
+    const { data: { presignedUrl } } = await axios.get(`http://192.168.0.137:3001/v1/getS3PresignedUrl?promptId=${promptId}&videoUri=${encodeURIComponent(videoUri)}`);
+    console.log('presignedUrl:', presignedUrl); // Make sure presignedUrl is correct
 
-    // Read the file into a blob
-    const videoBlob = await FileSystem.readAsStringAsync(videoUri, { encoding: FileSystem.EncodingType.Base64 });
+    // Fetch the video file as a blob directly from the file URI
+    const response = await fetch(videoUri);
+    const videoBlob = await response.blob();
 
     // Upload the file to S3
-    const response = await fetch(presignedUrl, {
+    const uploadResponse = await fetch(presignedUrl, {
       method: 'PUT',
       body: videoBlob,
       headers: {
@@ -18,7 +20,9 @@ const uploadVideoToS3 = async (videoUri) => {
       },
     });
 
-    if (!response.ok) {
+    if (!uploadResponse.ok) {
+      const errorResponseText = await uploadResponse.text();
+      console.error('S3 upload error response:', errorResponseText);
       throw new Error('Failed to upload video to S3');
     }
 
@@ -27,3 +31,5 @@ const uploadVideoToS3 = async (videoUri) => {
     console.error('Error uploading video:', error);
   }
 };
+
+export default uploadVideoToS3;

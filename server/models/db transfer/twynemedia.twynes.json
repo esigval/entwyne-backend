@@ -1,0 +1,134 @@
+[{
+  "_id": {
+    "$oid": "65820083cdd2109b3377144c"
+  },
+  "filename": "video/6573d2e66378fe2269485b44_20231219124346.mp4",
+  "s3Uri": "s3://twynes/video/6573d2e66378fe2269485b44_20231219124346.mp4",
+  "s3FilePath": "https://twynes.s3.amazonaws.com/video/6573d2e66378fe2269485b44_20231219124346.mp4",
+  "thumbnail": "https://twynes-post.s3.amazonaws.com/thumbnails/video/6573d2e66378fe2269485b44_20231219124346.mp4",
+  "webmFilePath": null,
+  "transcription": null,
+  "sentiment": null,
+  "beatTag": null,
+  "audio": null,
+  "transcriptionUrl": null,
+  "associatedPromptId": {
+    "$oid": "6573d2e66378fe2269485b44"
+  },
+  "createAt": {
+    "$date": "2023-12-19T20:43:47.826Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65820b17d16de9554097306c"
+  },
+  "filename": "video/6573d2e66378fe2269485b41_20231219132854.mp4",
+  "s3Uri": "s3://twynes/video/6573d2e66378fe2269485b41_20231219132854.mp4",
+  "s3FilePath": "https://twynes.s3.amazonaws.com/video/6573d2e66378fe2269485b41_20231219132854.mp4",
+  "thumbnail": null,
+  "webmFilePath": null,
+  "transcription": null,
+  "sentiment": null,
+  "beatTag": null,
+  "audio": null,
+  "transcriptionUrl": null,
+  "associatedPromptId": {
+    "$oid": "6573d2e66378fe2269485b41"
+  },
+  "createAt": {
+    "$date": "2023-12-19T21:28:55.575Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65820bd30ff6d72dbef5bc68"
+  },
+  "associatedPromptId": {
+    "$oid": "6573d2e66378fe2269485b41"
+  },
+  "audio": null,
+  "beatTag": null,
+  "createdAt": {
+    "$date": "2023-12-19T21:32:03.805Z"
+  },
+  "filename": "video/6573d2e66378fe2269485b41_20231219133202.mp4",
+  "s3FilePath": "https://twynes.s3.amazonaws.com/video/6573d2e66378fe2269485b41_20231219133202.mp4",
+  "s3Uri": "s3://twynes/video/6573d2e66378fe2269485b41_20231219133202.mp4",
+  "s3UriThumbnail": "s3://twynes-post/thumbnails/video/6573d2e66378fe2269485b41_20231219133202.mp4",
+  "sentiment": null,
+  "thumbnail": null,
+  "thumbnailUrl": "https://twynes-post.s3.amazonaws.com/thumbnails//6573d2e66378fe2269485b41_20231219133202.jpg",
+  "transcription": null,
+  "transcriptionUrl": null,
+  "webmFilePath": null
+},
+{
+  "_id": {
+    "$oid": "65820bf44aa3b0791591398a"
+  },
+  "associatedPromptId": {
+    "$oid": "6573d2e66378fe2269485b41"
+  },
+  "audio": null,
+  "beatTag": null,
+  "createdAt": {
+    "$date": "2023-12-19T21:32:36.688Z"
+  },
+  "filename": "video/6573d2e66378fe2269485b41_20231219133235.mp4",
+  "s3FilePath": "https://twynes.s3.amazonaws.com/video/6573d2e66378fe2269485b41_20231219133235.mp4",
+  "s3Uri": "s3://twynes/video/6573d2e66378fe2269485b41_20231219133235.mp4",
+  "s3UriThumbnail": "s3://twynes-post/thumbnails/video/6573d2e66378fe2269485b41_20231219133235.mp4",
+  "sentiment": null,
+  "thumbnail": null,
+  "thumbnailUrl": "https://twynes-post.s3.amazonaws.com/thumbnails/6573d2e66378fe2269485b41_20231219133235.jpg",
+  "transcription": null,
+  "transcriptionUrl": null,
+  "webmFilePath": null
+},
+{
+  "_id": {
+    "$oid": "65820de84aa3b0791591398b"
+  },
+  "associatedPromptId": {
+    "$oid": "6573d2e66378fe2269485b45"
+  },
+  "audio": null,
+  "beatTag": null,
+  "createdAt": {
+    "$date": "2023-12-19T21:40:56.423Z"
+  },
+  "filename": "video/6573d2e66378fe2269485b45_20231219134055.mp4",
+  "s3FilePath": "https://twynes.s3.amazonaws.com/video/6573d2e66378fe2269485b45_20231219134055.mp4",
+  "s3Uri": "s3://twynes/video/6573d2e66378fe2269485b45_20231219134055.mp4",
+  "s3UriThumbnail": "s3://twynes-post/thumbnails/video/6573d2e66378fe2269485b45_20231219134055.mp4",
+  "sentiment": null,
+  "thumbnail": null,
+  "thumbnailUrl": "https://twynes-post.s3.amazonaws.com/thumbnails/6573d2e66378fe2269485b45_20231219134055.jpg",
+  "transcription": null,
+  "transcriptionUrl": null,
+  "webmFilePath": null
+},
+{
+  "_id": {
+    "$oid": "6582266c4aa3b0791591398c"
+  },
+  "associatedPromptId": {
+    "$oid": "6573d2e66378fe2269485b46"
+  },
+  "audio": null,
+  "beatTag": null,
+  "createdAt": {
+    "$date": "2023-12-19T23:25:32.752Z"
+  },
+  "filename": "video/6573d2e66378fe2269485b46_20231219152531.mp4",
+  "s3FilePath": "https://twynes.s3.amazonaws.com/video/6573d2e66378fe2269485b46_20231219152531.mp4",
+  "s3Uri": "s3://twynes/video/6573d2e66378fe2269485b46_20231219152531.mp4",
+  "s3UriThumbnail": "s3://twynes-post/thumbnails/video/6573d2e66378fe2269485b46_20231219152531.mp4",
+  "sentiment": null,
+  "thumbnail": null,
+  "thumbnailUrl": "https://twynes-post.s3.amazonaws.com/thumbnails/6573d2e66378fe2269485b46_20231219152531.jpg",
+  "transcription": null,
+  "transcriptionUrl": null,
+  "webmFilePath": null
+}]

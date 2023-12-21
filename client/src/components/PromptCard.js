@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import ShareYourStoryScreen from './QRCode';
 
 
-const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) => {
+const PromptCard = ({ promptId, title, description, onRequestTwyne, onUpload, onEdit }) => {
     const { showActionSheetWithOptions } = useActionSheet();
     const navigation = useNavigation();
     const handleSendTextMessage = () => {
@@ -40,7 +40,7 @@ const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) =>
             (buttonIndex) => {
                 switch (buttonIndex) {
                     case 0:
-                        navigation.navigate('CameraCapture', {promptDetail: description});
+                        navigation.navigate('CameraCapture', {promptDetail: description, promptId: promptId});
                         break;
                     case 1:
                         handleSendTextMessage();
@@ -61,7 +61,7 @@ const PromptCard = ({ title, description, onRequestTwyne, onUpload, onEdit }) =>
             <Text style={styles.headerText}>{title}</Text>
             <Text style={styles.descriptionText}>{description}</Text>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={handleRequestTwynePress} style={styles.buttonStyle}>
+                <TouchableOpacity onPress={() => handleRequestTwynePress(promptId)} style={styles.buttonStyle}>
                     <Icon name="camera" size={20} color="#FFFFFF" style={styles.iconStyle} />
                     <Text style={styles.buttonText}>Capture</Text>
                 </TouchableOpacity>

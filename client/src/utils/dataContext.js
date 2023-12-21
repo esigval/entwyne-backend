@@ -1,6 +1,5 @@
-// DataContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import { fetchStories, fetchPrompts } from './dataFetch';
+import { fetchStories, fetchPrompts, fetchTwynes } from './dataFetch';
 import * as SplashScreen from 'expo-splash-screen';
 
 export const DataContext = createContext();
@@ -8,25 +7,29 @@ export const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [stories, setStories] = useState([]);
   const [prompts, setPrompts] = useState([]);
+  const [twynes, setTwynes] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const [storiesData, promptsData, twynesData] = await Promise.all([
+        fetchStories(),
+        fetchPrompts(),
+        fetchTwynes()
+      ]);
+      setStories(storiesData);
+      setPrompts(promptsData);
+      setTwynes(twynesData);
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setIsDataLoaded(true);
+    }
+  };
+  
 
   useEffect(() => {
-    async function prepare() {
-      try {
-        const storiesData = await fetchStories();
-        const promptsData = await fetchPrompts();
-
-        setStories(storiesData);
-        setPrompts(promptsData);
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setIsDataLoaded(true);
-      }
-    }
-
-    prepare();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -35,8 +38,13 @@ export const DataProvider = ({ children }) => {
     }
   }, [isDataLoaded]);
 
+  const refreshData = async () => {
+    setIsDataLoaded(false);
+    await fetchData();
+  };
+
   return (
-    <DataContext.Provider value={{ stories, setStories, prompts, setPrompts }}>
+    <DataContext.Provider value={{ stories, setStories, prompts, setPrompts, twynes, setTwynes, refreshData }}>
       {children}
     </DataContext.Provider>
   );
