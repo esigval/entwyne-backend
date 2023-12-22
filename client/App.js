@@ -11,6 +11,7 @@ import ShareYourStoryScreen from './src/components/QRCode.js';
 import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
 import FullScreenMediaScreen from './src/screens/FullScreenMediaPlayer.js';
 import WebMarketingHome from './src/components/webMarketing.js';
+import DirectorChat from './src/components/DirectorChat.js';
 
 
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ const App = () => {
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }}/>
+              <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }}/>
               <Stack.Screen name="Home" component={TabNavigator} />
               <Stack.Screen name="CameraCapture" component={CameraCapture} />
               <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />

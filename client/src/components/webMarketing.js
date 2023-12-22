@@ -4,11 +4,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import Svg, { Path } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
+import { useNavigation } from '@react-navigation/native';
 
 const WebMarketingHome = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      
+
       {/* Rest of your components */}
       <View style={styles.header}>
         <Text style={styles.headerText}>entwyne</Text>
@@ -26,7 +28,10 @@ const WebMarketingHome = () => {
         </Text>
       </View>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('DirectorChat')}
+        >
           <Text style={styles.buttonText}>Try it Now</Text>
         </TouchableOpacity>
         <Text style={styles.footerText}>Opens a Demo Experience.</Text>
@@ -73,11 +78,10 @@ const styles = StyleSheet.create({
     paddingBottom: '20%',
 
   },
-  
+
   callout: {
     fontSize: 48,
     fontWeight: 'bold',
-    fontFamily: 'Oxygen',
     color: '#F55353', // Set the text color
   },
   button: {
