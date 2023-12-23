@@ -12,6 +12,9 @@ import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
 import FullScreenMediaScreen from './src/screens/FullScreenMediaPlayer.js';
 import WebMarketingHome from './src/components/webMarketing.js';
 import DirectorChat from './src/components/DirectorChat.js';
+import TwyneLoadingScreen from './src/components/TwyneLoadingScreen.js';
+import ErrorBoundary from './src/utils/ErrorBoundary.js';
+import DeliverTwyne from './src/components/DeliverTwyne.js';
 
 
 const Stack = createStackNavigator();
@@ -19,24 +22,28 @@ const Stack = createStackNavigator();
 const App = () => {
 
   return (
-    <DataProvider>
-      <ActionSheetProvider>
-        <View style={{ flex: 1 }}>
-          <AppHeader />
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }}/>
-              <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }}/>
-              <Stack.Screen name="Home" component={TabNavigator} />
-              <Stack.Screen name="CameraCapture" component={CameraCapture} />
-              <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
-              <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} />
-              <Stack.Screen name="FullScreenMediaScreen" component={FullScreenMediaScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </View>
-      </ActionSheetProvider>
-    </DataProvider>
+    <ErrorBoundary>
+      <DataProvider>
+        <ActionSheetProvider>
+          <View style={{ flex: 1 }}>
+            <AppHeader />
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen name="TwyneLoadingScreen" component={TwyneLoadingScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
+                <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
+                <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }} />
+                <Stack.Screen name="Home" component={TabNavigator} />
+                <Stack.Screen name="CameraCapture" component={CameraCapture} />
+                <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
+                <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} />
+                <Stack.Screen name="FullScreenMediaScreen" component={FullScreenMediaScreen} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </View>
+        </ActionSheetProvider>
+      </DataProvider>
+    </ErrorBoundary>
   );
 };
 
