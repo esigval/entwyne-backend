@@ -29,9 +29,9 @@ const App = () => {
             <AppHeader />
             <NavigationContainer>
               <Stack.Navigator>
+              <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
                 <Stack.Screen name="TwyneLoadingScreen" component={TwyneLoadingScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
-                <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
                 <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }} />
                 <Stack.Screen name="Home" component={TabNavigator} />
                 <Stack.Screen name="CameraCapture" component={CameraCapture} />
