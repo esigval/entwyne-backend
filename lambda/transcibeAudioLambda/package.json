@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "transcribeAudio",
   "version": "1.0.0",
   "description": "",
@@ -8,5 +9,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-transcribe": "3.481.0",
+    "mongodb": "6.3.0"
+  }
 }

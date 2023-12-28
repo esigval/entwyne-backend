@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/lambdas/node_modules
 
 # testing
 /coverage
@@ -24,3 +25,5 @@ yarn-error.log*
 .env
 global-bundle.pem
 NEastSSH.ppk
+dev-server.ppk
+nessh.pem

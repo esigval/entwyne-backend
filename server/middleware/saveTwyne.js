@@ -32,6 +32,7 @@ const saveTwyne = async (req, res, next) => {
             s3UriThumbnail: `s3://${process.env.S3_POST_BUCKET_NAME}/thumbnails/${key}`,
             thumbnailUrl: `https://${process.env.S3_POST_BUCKET_NAME}.s3.amazonaws.com/thumbnails${jpgKey}`,
             videoUri: videoUri,
+            audioUri: `s3://${process.env.S3_POST_BUCKET_NAME}/audio/${key}.mp3`,
 
         });
 

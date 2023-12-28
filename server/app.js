@@ -3,7 +3,18 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import { connect } from './db/db.js';
 
+async function testDbConnection() {
+  try {
+    const db = await connect();
+    console.log('Database connection test succeeded');
+  } catch (err) {
+    console.error('Database connection test failed:', err);
+  }
+}
+
+testDbConnection();
 
 // import stitchVideosRouter from './routes/stitchVideos';
 // import gptRequestRouter from './routes/gptRequest';

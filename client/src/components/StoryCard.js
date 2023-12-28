@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import image from '../assets/leonardo-miranda-dvF6s1H1x68-unsplash.jpg';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const NewStoryCard = ({ title, description }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.mediaContainer}>
@@ -14,7 +18,10 @@ const NewStoryCard = ({ title, description }) => {
         <TouchableOpacity style={[styles.button, styles.buttonRender]}>
           <Text style={styles.buttonText}>Render</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('DirectorChat')}
+        >
           <Text style={styles.buttonText}>AI Director</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>

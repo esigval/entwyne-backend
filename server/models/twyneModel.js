@@ -2,7 +2,7 @@ class Twyne {
     constructor({
         _id,
         associatedPromptId,
-        audio,
+        audioUri,
         beatTag,
         createdAt,
         filename,
@@ -19,7 +19,7 @@ class Twyne {
     } = {}) {
         this._id = _id;
         this.associatedPromptId = associatedPromptId;
-        this.audio = audio;
+        this.audioUri = audioUri;
         this.beatTag = beatTag;
         this.createdAt = createdAt;
         this.filename = filename;

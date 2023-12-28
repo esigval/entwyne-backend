@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AppHeader from './src/components/AppHeader';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
@@ -12,7 +12,7 @@ import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
 import FullScreenMediaScreen from './src/screens/FullScreenMediaPlayer.js';
 import WebMarketingHome from './src/components/webMarketing.js';
 import DirectorChat from './src/components/DirectorChat.js';
-import TwyneLoadingScreen from './src/components/TwyneLoadingScreen.js';
+import TwyneLoadingScreen from './src/components/TwyneLoadingScreen';
 import ErrorBoundary from './src/utils/ErrorBoundary.js';
 import DeliverTwyne from './src/components/DeliverTwyne.js';
 
@@ -29,11 +29,11 @@ const App = () => {
             <AppHeader />
             <NavigationContainer>
               <Stack.Navigator>
-              <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
-                <Stack.Screen name="TwyneLoadingScreen" component={TwyneLoadingScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
-                <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }} />
                 <Stack.Screen name="Home" component={TabNavigator} />
+                <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
+                <Stack.Screen name="TwyneLoadingScreen" component={TwyneLoadingScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }} />
+                <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
                 <Stack.Screen name="CameraCapture" component={CameraCapture} />
                 <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
                 <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} />
