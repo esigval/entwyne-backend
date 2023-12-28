@@ -5,16 +5,17 @@ import express from 'express';
 import cors from 'cors';
 import { connect } from './db/db.js';
 
-async function testDbConnection() {
-  try {
-    const db = await connect();
-    console.log('Database connection test succeeded');
-  } catch (err) {
-    console.error('Database connection test failed:', err);
-  }
+let db;
+
+async function startDatabase() {
+    try {
+        db = await connect();
+    } catch (err) {
+        console.error('Failed to connect to the database:', err);
+    }
 }
 
-testDbConnection();
+startDatabase();
 
 // import stitchVideosRouter from './routes/stitchVideos';
 // import gptRequestRouter from './routes/gptRequest';
@@ -26,6 +27,7 @@ import getPromptsRouter from './routes/getPrompts.js';
 import getTwynesRouter from './routes/getTwynes.js';
 import getS3PresignedUrlRouter from './routes/getS3PresignedUrl.js';
 import saveVideoUri from './routes/saveVideoUri.js';
+import createThread from './routes/assistants/createThread.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
 const app = express();
@@ -38,11 +40,16 @@ app.use(cors());
 // app.use('/collectMedia', collectMediaRouter);
 // app.use('/transcribeAudio', transcribeAudioRouter);
 // app.use('/recursiveStorylineGenerator', recursiveStorylineGeneratorRouter);
+app.use((req, res, next) => {
+  req.db = db;
+  next();
+});
 app.use('/v1/stories', getStoriesRouter);
 app.use('/v1/prompts', getPromptsRouter);
 app.use('/v1/twynes', getTwynesRouter);
 app.use('/v1/getS3PresignedUrl', getS3PresignedUrlRouter);
 app.use('/v1/saveVideoUri', saveVideoUri);
+app.use('/v1/assistants/createThread', createThread);
 // app.use('/collectCharacters', collectCharactersRouter);
 
 app.listen(port, () => {

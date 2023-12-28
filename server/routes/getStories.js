@@ -1,11 +1,9 @@
-import { connect } from '../db/db.js';
 import express from 'express';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const db = await connect();
-        const collection = db.collection('storylines');
+        const collection = req.db.collection('storylines');
         const docs = await collection.find({}).toArray();
         console.log(docs);
         res.json(docs);
