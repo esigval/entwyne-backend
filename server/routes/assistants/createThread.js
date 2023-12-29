@@ -1,5 +1,5 @@
 import express from 'express';
-import { openai } from '../../services/openAiAssistant'; // Import the OpenAI instance
+import { openai } from '../../services/openAiAssistant.js'; // Import the OpenAI instance
 
 const router = express.Router();
 
