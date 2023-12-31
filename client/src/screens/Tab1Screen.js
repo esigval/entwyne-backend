@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, FlatList, Button } from 'react-native';
 import { DataContext } from '../utils/dataContext';
 import StoryCard from '../components/StoryCard';
-import LoadingComponent from '../components/LoadingComponent';
+import PlaceholderStoryCard from '../components/PlaceholderStoryCard'; // Import your PlaceholderStoryCard
 
 const Tab1Screen = () => {
-  const { stories } = useContext(DataContext);
+  const { stories, setStories } = useContext(DataContext);
+  const [isCreating, setCreating] = useState(false);
 
-  // Function to handle 'Create Story' button press
   const handleCreateStoryPress = () => {
-    console.log('Create Story button pressed');
-    fetch('http://192.168.0.137:3001/v1/createStory', {
+    setCreating(true); // Start creating a new story
+    fetch(`${process.env.LOCAL_NODE_SERVER}/v1/createStory`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -18,29 +18,48 @@ const Tab1Screen = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('Success:', data);
+        setCreating(false); // Stop creating
+        setStories([...stories, data.savedStory]); // Update the stories list with the new story
       })
       .catch((error) => {
         console.error('Error:', error);
+        setCreating(false); // Stop creating in case of error
       });
   };
 
-  if (stories.length === 0) {
-    return <LoadingComponent loadingText="Loading stories..." />;
-  }
+  const handleDeleteStory = (id) => {
+    fetch(`${process.env.LOCAL_NODE_SERVER}/v1/gtstories/${id}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (response.ok) {
+        setStories(stories.filter(story => story._id !== id)); // Update state to reflect deletion
+      } else {
+        // Handle error response
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  };
+
+  const renderStory = ({ item }) => {
+    if (item.loading) {
+      return <PlaceholderStoryCard />;
+    }
+    return <StoryCard title={item.storyName} description={item.description || 'No description available'} onDeletePress={handleDeleteStory}
+    id={item._id}/>;
+  };
+
+  const dataWithPlaceholder = isCreating ? [...stories, { loading: true }] : stories;
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Your Stories</Text>
       <FlatList
-        data={stories}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <StoryCard
-            title={item.storyName}
-            description={item.description || 'No description available'}
-          />
-        )}
+        data={dataWithPlaceholder}
+        keyExtractor={(item) => item._id || 'placeholder'}
+        renderItem={renderStory}
         ListFooterComponent={() => (
           <Button
             title="Create Story"

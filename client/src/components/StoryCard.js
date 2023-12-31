@@ -9,11 +9,15 @@ const NewStoryCard = ({ title, description }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      
       <View style={styles.mediaContainer}>
-        <Image source={require('../assets/leonardo-miranda-dvF6s1H1x68-unsplash.jpg')} style={styles.imageStyle} />
+        <Image source={image} style={styles.imageStyle} />
       </View>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => onDeletePress(id)}>
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text style={styles.description}>{description || 'No description available'}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.button, styles.buttonRender]}>
           <Text style={styles.buttonText}>Render</Text>
@@ -43,6 +47,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     marginBottom: 16,
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 185, // Adjust the value to match your design
+    right: 20, // Adjust the value to match your design
+    backgroundColor: 'red', // Use your desired background color
+    padding: 8,
+    borderRadius: 4,
+    zIndex: 1, // Ensure the button is above other elements
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   mediaContainer: {
     height: 150, // Adjust the height as needed

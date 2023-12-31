@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const fetchStories = async () => {
   try {
-    const response = await axios.get('http://192.168.0.137:3001/v1/stories');
+    const response = await axios.get(`${process.env.LOCAL_NODE_SERVER}/v1/stories`);
     return response.data;
   } catch (error) {
     console.error('Error fetching stories:', error);
@@ -13,7 +13,7 @@ export const fetchStories = async () => {
 
 export const fetchPrompts = async () => {
   try {
-    const response = await axios.get('http://192.168.0.137:3001/v1/prompts');
+    const response = await axios.get(`${process.env.LOCAL_NODE_SERVER}/v1/prompts`);
     return response.data;
   } catch (error) {
     console.error('Error fetching prompts:', error);
@@ -23,7 +23,7 @@ export const fetchPrompts = async () => {
 
 export const fetchTwynes = async () => {
   try {
-    const response = await axios.get('http://192.168.0.137:3001/v1/twynes');
+    const response = await axios.get(`${process.env.LOCAL_NODE_SERVER}/v1/twynes`);
     return response.data;
   } catch (error) {
     console.error('Error fetching twynes:', error);

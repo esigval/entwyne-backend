@@ -29,6 +29,7 @@ import getS3PresignedUrlRouter from './routes/getS3PresignedUrl.js';
 import saveVideoUri from './routes/saveVideoUri.js';
 import createThread from './routes/assistants/createThread.js';
 import createStory from './routes/createStory.js';
+import deleteStory from '/routes/deleteStory.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
 const app = express();
@@ -52,6 +53,7 @@ app.use('/v1/getS3PresignedUrl', getS3PresignedUrlRouter);
 app.use('/v1/saveVideoUri', saveVideoUri);
 app.use('/v1/assistants/createThread', createThread);
 app.use('/v1/createStory', createStory);
+app.use('/v1/deleteStory/:id', deleteStory);
 // app.use('/collectCharacters', collectCharactersRouter);
 
 app.listen(port, () => {
