@@ -1,0 +1,62 @@
+import { openai } from '../services/openAiAssistant.js';
+
+export const createRun = async (threadId, Assistant) => {
+  const run = await openai.beta.threads.runs.create(
+    threadId,
+    { assistant_id: Assistant }
+  );
+
+  return run;
+};
+
+export const addMessageToThread = async (message, threadId) => {
+  const response = await openai.beta.threads.messages.create(
+    threadId,
+    {
+      role: "user",
+      content: message
+    }
+  );
+
+  return response;
+};
+
+const getLastMessageId = async (threadId) => {
+  try {
+    const newMessages = await openai.beta.threads.messages.list(
+      threadId, {
+        limit: 10,
+        order: 'desc'
+      }
+    );
+
+    return newMessages.body.first_id;
+  } catch (error) {
+    throw new Error('Error fetching recent message ID:', error);
+  }
+};
+
+export const retrieveNewMessagesFromThread = async (threadId) => {
+  let lastMessageId = await getLastMessageId(threadId);
+  let message;
+
+  while (true) {
+    message = await openai.beta.threads.messages.retrieve(
+      threadId,
+      lastMessageId
+    );
+
+    if (message.role === 'assistant') {
+      // Check if the message content is empty
+      if (message.content && message.content.length > 0 && message.content[0].text && message.content[0].text.value) {
+        return message.content[0].text.value;
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+        lastMessageId = await getLastMessageId(threadId); // Refresh the last message ID
+      }
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+      lastMessageId = await getLastMessageId(threadId); // Refresh the last message ID
+    }
+  }
+};

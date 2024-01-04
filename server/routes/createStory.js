@@ -1,5 +1,5 @@
 import express from 'express';
-import Storyline from '../models/storylineModel.js'; // Make sure this points to your new class file
+import Story from '../models/storyModel.js'; // Make sure this points to your new class file
 import { openai } from '../services/openAiAssistant.js';
 import generateStoryName from '../utils/generateStoryName.js';
 
@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
         console.log(openAiThread);
 
         // Create a new story in the database using the static create method
-        const savedStory = await Storyline.create({
+        const savedStory = await Story.create({
             storyName,
             threadId,
             // Include other fields as necessary

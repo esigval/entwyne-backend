@@ -4,7 +4,7 @@ const uploadVideoToS3 = async (videoUri, promptId) => {
   try {
     console.log('promptId:', promptId); // Make sure promptId is correct
     // Get the pre-signed URL from your backend
-    const { data: { presignedUrl } } = await axios.get(`${process.env.LOCAL_NODE_SERVER}/v1/getS3PresignedUrl?promptId=${promptId}&videoUri=${encodeURIComponent(videoUri)}`);
+    const { data: { presignedUrl } } = await axios.get(`${API_BASE_URL}/v1/getS3PresignedUrl?promptId=${promptId}&videoUri=${encodeURIComponent(videoUri)}`);
     console.log('presignedUrl:', presignedUrl); // Make sure presignedUrl is correct
 
     // Fetch the video file as a blob directly from the file URI

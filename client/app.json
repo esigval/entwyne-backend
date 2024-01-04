@@ -11,10 +11,13 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "extra": {
+      "localNodeServer": "http://192.168.0.137:3001"
+    },
     "android": {
       "permissions": [
         "WRITE_EXTERNAL_STORAGE"
       ]
     }
-  }
+    }
 }

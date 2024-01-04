@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const collection = req.db.collection('storylines');
+        const collection = req.db.collection('stories');
         const docs = await collection.find({}).toArray();
         console.log(docs);
         res.json(docs);

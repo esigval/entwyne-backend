@@ -5,11 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const NewStoryCard = ({ title, description }) => {
+const NewStoryCard = ({ title, description, onDeletePress, id }) => {
   const navigation = useNavigation();
+  const navigateToDirectorChat = () => {
+    navigation.navigate('DirectorChat', { storyId: id });
+  };
   return (
     <View style={styles.container}>
-      
+
       <View style={styles.mediaContainer}>
         <Image source={image} style={styles.imageStyle} />
       </View>
@@ -24,7 +27,7 @@ const NewStoryCard = ({ title, description }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('DirectorChat')}
+          onPress={navigateToDirectorChat} // Use the new function here
         >
           <Text style={styles.buttonText}>AI Director</Text>
         </TouchableOpacity>

@@ -1,21 +1,38 @@
 import express from 'express';
-import openai from '../../services/openAiAssistant.js';
+import { openai } from '../../services/openAiAssistant.js';
+import findThreadByStoryId from '../../utils/userInputUtils.js';
+import { addMessageToThread, createRun, retrieveNewMessagesFromThread } from '../../utils/assistantFunctions.js';
+import { StorylineDirectorAssistantv1 } from './assistants.js';
 
 const router = express.Router();
 
 // Route to handle user input
-router.post('/user-input', async (req, res) => {
-    const { input: userInput, threadId } = req.body;
+router.post('/', async (req, res) => {
+    const { message, storyId } = req.body;
+
+    console.log(`POST request received. User input: ${message}, storyId: ${storyId}`);
 
     try {
+        // Find the thread ID for the story
+        const threadId = await findThreadByStoryId(storyId);
+        
         // Create or access the thread (logic to be implemented)
-        const thread = await manageThread(threadId, userInput);
+        await addMessageToThread(message, threadId);
 
-        // Send input to OpenAI Assistant and get response (implementation needed)
-        const assistantResponse = await openai.sendInput(userInput, thread.context);
+        // Run the Thread on the Assistant
+        await createRun (threadId, StorylineDirectorAssistantv1);
 
+        // Is there a delay here? If so, how long?
+        const startTime = Date.now();
+        const lastResponse = await retrieveNewMessagesFromThread(threadId);
+        const endTime = Date.now();
+       
+
+        const responseTime = endTime - startTime;
+        console.log(lastResponse);
+        console.log(`Response time: ${responseTime} ms`);
         // Forward the assistant's immediate response to keep the interaction responsive
-        res.json({ assistantResponse });
+        res.json({ lastResponse });
     } catch (error) {
         res.status(500).send('Error processing user input');
     }

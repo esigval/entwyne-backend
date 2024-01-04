@@ -1,5 +1,7 @@
 import OpenAI from 'openai';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const openai = new OpenAI(); // You might need to pass API key or other config here
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 export { openai };

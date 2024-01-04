@@ -3,6 +3,8 @@ import { View, Text, FlatList, Button } from 'react-native';
 import { DataContext } from '../utils/dataContext';
 import StoryCard from '../components/StoryCard';
 import PlaceholderStoryCard from '../components/PlaceholderStoryCard'; // Import your PlaceholderStoryCard
+import { API_BASE_URL } from '../../config.js';
+
 
 const Tab1Screen = () => {
   const { stories, setStories } = useContext(DataContext);
@@ -10,7 +12,7 @@ const Tab1Screen = () => {
 
   const handleCreateStoryPress = () => {
     setCreating(true); // Start creating a new story
-    fetch(`${process.env.LOCAL_NODE_SERVER}/v1/createStory`, {
+    fetch(`${API_BASE_URL}/v1/createStory`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +30,7 @@ const Tab1Screen = () => {
   };
 
   const handleDeleteStory = (id) => {
-    fetch(`${process.env.LOCAL_NODE_SERVER}/v1/gtstories/${id}`, {
+    fetch(`${API_BASE_URL}/v1/deleteStory/${id}`, {
       method: 'DELETE',
     })
     .then(response => {

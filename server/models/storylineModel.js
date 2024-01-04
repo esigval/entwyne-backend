@@ -1,45 +1,73 @@
-// storyline.js
 import { connect } from '../db/db.js'; // Adjust with your actual connection file path
+import { ObjectId } from 'mongodb';
 
-let db;
-
-class Storyline {
-    constructor({ threadId, created, storyName, storyline }) {
-        this.threadId = threadId;
-        this.created = created || new Date(); // Default to current date if not provided
-        this.storyName = storyName;
-        this.storyline = storyline || []; // Default to empty array if not provided
+class StorylineModel {
+    constructor({
+        _id = new ObjectId(),
+        StoryId,
+        StorylineTemplateParts = []
+    }) {
+        this._id = _id;
+        this.StoryId = StoryId;
+        this.StorylineParts = StorylineTemplateParts;
     }
+
 
     static get collectionName() {
         return 'storylines'; // Name of the collection in the database
     }
 
-    static async create(data) {
+    getStorylineParts() {
+        return this.StorylineParts;
+    }
+
+    static async findById(id) {
         try {
             const db = await connect();
-            const collection = db.collection(Storyline.collectionName);
-            const result = await collection.insertOne(data);
-            // Construct the new object with the insertedId
-            return new Storyline({ ...data, _id: result.insertedId });
+            const collection = db.collection(StorylineModel.collectionName);
+            const document = await collection.findOne({ _id: new ObjectId(id) });
+            return document ? new StorylineModel(document) : null;
         } catch (error) {
-            console.error("Error in Storyline.create:", error);
+            console.error("Error in StorylineModel.findById:", error);
             throw error;
         }
     }
-    
 
-    // Example update method (you can expand it based on your requirements)
-    static async update(id, updateData) {
-        if (!db) {
-            db = await connect();
-        }
-        const collection = db.collection(Storyline.collectionName);
-        const result = await collection.updateOne({ _id: id }, { $set: updateData });
-        return result;
+    static async create(data) {
+    try {
+        const db = await connect();
+        const collection = db.collection(StorylineModel.collectionName);
+        const result = await collection.insertOne(data);
+        // Use the insertedId to construct the new object
+        return new StorylineModel({ ...data, _id: result.insertedId });
+    } catch (error) {
+        console.error("Error in StorylineModel.create:", error);
+        throw error;
     }
-
-    // Additional methods for delete, find, etc., can be added here
 }
 
-export default Storyline;
+
+    static async updateStorylinePartWithPromptId(storylineId, order, promptId) {
+    try {
+        const db = await connect();
+        const collection = db.collection(StorylineModel.collectionName);
+
+        // Update the specific storyline part with the promptId
+        const updateResult = await collection.updateOne(
+            { _id: storylineId, "StorylineParts.order": order },
+            { $set: { "StorylineParts.$.promptId": promptId } }
+        );
+
+        return updateResult;
+    } catch (error) {
+        console.error("Error in StorylineModel.updateStorylinePartWithPromptId:", error);
+        throw error;
+    }
+}
+
+}
+
+export default StorylineModel;
+
+
+

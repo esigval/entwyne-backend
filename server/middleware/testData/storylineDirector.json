@@ -1,0 +1,95 @@
+[
+    {
+      "order": 1,
+      "prompt": "Select an image that captures the essence of your love story's beginning or a defining theme of your relationship.",
+      "promptTitle": "Define Beginning"
+    },
+    {
+      "order": 2,
+      "prompt": "Film your reflection on significant experiences that reveal the depth and uniqueness of your relationship with Katie.",
+      "promptTitle": "Share Experiences"
+    },
+    {
+      "order": 3,
+      "prompt": "Choose an image that represents a pivotal moment of change or illustrates how you support each other through life's transitions.",
+      "promptTitle": "Pivotal Moment"
+    },
+    {
+      "order": 4,
+      "prompt": "Record an anecdote where effective communication and idea clarification from Katie profoundly impacted your partnership.",
+      "promptTitle": "Impactful Communication"
+    },
+    {
+      "order": 5,
+      "prompt": "Pick an image that symbolizes the continuity of your love story, bridging the gap between shared past experiences and future aspirations.",
+      "promptTitle": "Story Continuity"
+    },
+    {
+      "order": 6,
+      "prompt": "Conclude with an image that captures the current joy and contentment in your relationship, or symbolizes your shared dreams.",
+      "promptTitle": "Joyful Conclusion"
+    }
+  ]
+
+
+// New Data Feed Object comes in from the server
+
+  {
+    "order": 1,
+    "prompt": "Select an image that captures the essence of your love story's beginning or a defining theme of your relationship.",
+    "promptTitle": "Define Beginning"
+  },
+
+// From that data we're going to create new Prompt Data
+  {
+    "order": 1,
+    "prompt": "Select an image that captures the essence of your love story's beginning or a defining theme of your relationship.",
+    "promptTitle": "Define Beginning"
+    "storylineId": {corresponds to storylineId of recently made storyline data object}
+    "storyId": {corresponds to storyId of recently made story data object}
+  },
+
+// Create and also create storyline data objects
+  {
+    "Order": 2,
+    "SuggestedLength": 20,
+    "MediaType": "video",
+    "Storypart": "First Interview"
+    "promptId": {corresponds to promptId of recently made prompt data object}
+  },
+
+
+
+  "StorylineParts": [
+
+    {
+      "Order": 2,
+      "SuggestedLength": 20,
+      "MediaType": "video",
+      "Storypart": "First Interview"
+    },
+    {
+      "Order": 3,
+      "SuggestedLength": 4,
+      "MediaType": "picture",
+      "Storypart": "Transition Frame"
+    },
+    {
+      "Order": 4,
+      "SuggestedLength": 20,
+      "MediaType": "video",
+      "Storypart": "Second Interview"
+    },
+    {
+      "Order": 5,
+      "SuggestedLength": 4,
+      "MediaType": "picture",
+      "Storypart": "Transition Frame"
+    },
+    {
+      "Order": 6,
+      "SuggestedLength": 4,
+      "MediaType": "picture",
+      "Storypart": "Outro Frame"
+    }
+  ]
