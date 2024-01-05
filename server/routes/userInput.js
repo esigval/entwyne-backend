@@ -1,8 +1,8 @@
 import express from 'express';
-import { openai } from '../../services/openAiAssistant.js';
-import findThreadByStoryId from '../../utils/userInputUtils.js';
-import { addMessageToThread, createRun, retrieveNewMessagesFromThread } from '../../utils/assistantFunctions.js';
-import { StorylineDirectorAssistantv1 } from './assistants.js';
+import { openai } from '../services/openAiAssistant.js';
+import findThreadByStoryId from '../utils/userInputUtils.js';
+import { addMessageToThread, createRun, retrieveNewMessagesFromThread } from '../utils/assistantFunctions.js';
+import { StorylineDirectorAssistantv1 } from '../services/assistants.js';
 
 const router = express.Router();
 

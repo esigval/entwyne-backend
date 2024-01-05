@@ -27,6 +27,7 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
+            data.created = new Date();
             const result = await collection.insertOne(data);
             // Construct the new object with the insertedId
             return new Prompts({ ...data, _id: result.insertedId });
