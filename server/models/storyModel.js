@@ -70,6 +70,18 @@ class Story {
         }
     }
 
+    static async findByThreadId(threadId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            const result = await collection.findOne({ threadId });
+            return result;  // return the raw document
+        } catch (error) {
+            console.error("Error in Storyline.findByThreadId:", error);
+            throw error;
+        }
+    }
+
     
 
     // Additional methods for delete, find, etc., can be added here

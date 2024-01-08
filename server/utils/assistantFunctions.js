@@ -1,13 +1,47 @@
 import { openai } from '../services/openAiAssistant.js';
 
 export const createRun = async (threadId, Assistant) => {
-  const run = await openai.beta.threads.runs.create(
-    threadId,
-    { assistant_id: Assistant }
-  );
+  try {
+    const run = await openai.beta.threads.runs.create(
+      threadId,
+      { assistant_id: Assistant }
+    );
+    return run;
+  } catch (error) {
+    console.error("Error in createRun:", error);
+  }
+};
 
+export const checkRun = async (threadId, runId) => {
+  try {
+    const runStatus = await openai.beta.threads.runs.retrieve(
+      threadId,
+      runId
+    );
+    return runStatus;
+  } catch (error) {
+    console.error("Error in checkRun:", error);
+    // Handle error appropriately
+  }
+};
+
+export const submitToolOutputs = async (threadId, runId, callIds) => {
+  const run = await openai.beta.threads.runs.submitToolOutputs(
+      threadId,
+      runId,
+      {
+          tool_outputs: [
+              {
+                  tool_call_id: callIds[0], // Assuming callIds is an array
+                  output: "true",
+              },
+          ],
+      }
+  )
   return run;
 };
+
+
 
 export const addMessageToThread = async (message, threadId) => {
   const response = await openai.beta.threads.messages.create(
@@ -25,9 +59,9 @@ const getLastMessageId = async (threadId) => {
   try {
     const newMessages = await openai.beta.threads.messages.list(
       threadId, {
-        limit: 10,
-        order: 'desc'
-      }
+      limit: 10,
+      order: 'desc'
+    }
     );
 
     return newMessages.body.first_id;

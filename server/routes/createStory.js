@@ -13,13 +13,17 @@ router.post('/', async (req, res) => {
         console.log(openAiThread);
 
         // Create a new story in the database using the static create method
-        const savedStory = await Story.create({
+        const createStory = await Story.create({
             storyName,
             threadId,
             // Include other fields as necessary
         });
+        console.log('createStory:', createStory);
 
-        res.status(201).json({ message: 'Story created successfully', savedStory });
+        const updatedStory = await Story.findByThreadId(createStory.threadId);
+        console.log('updatedStory:', updatedStory);
+
+        res.status(201).json({ message: 'Story created successfully', updatedStory });
     } catch (error) {
         console.error('Error creating a new story:', error);
         res.status(500).send('Error creating a new story');

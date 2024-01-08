@@ -9,6 +9,7 @@ async function transformStoryToPrompts(instructions, threadHistory, templatePart
     });
 
     let content = completion.choices[0].message.content;
+    console.log('content:', completion.choices[0].message.content)
 
     // Find the index where the JSON array starts
     const jsonStartIndex = content.indexOf('[');

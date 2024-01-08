@@ -1,0 +1,18 @@
+{
+    "name": "trigger storyEngine",
+    "description": "This function triggers the storyEngine to start a story, once the user is ready to move onto filming",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "createPrompt": {
+                "type": "boolean",
+                "description": "A flag to create a prompt",
+                "default": true
+            }
+
+        },
+        "required": [
+            "createPrompt"
+        ]
+    }
+}

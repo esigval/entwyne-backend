@@ -5,10 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const NewStoryCard = ({ title, description, onDeletePress, id }) => {
+const NewStoryCard = ({ title, description, onDeletePress, id, threadId }) => {
   const navigation = useNavigation();
   const navigateToDirectorChat = () => {
-    navigation.navigate('DirectorChat', { storyId: id });
+    navigation.navigate('DirectorChat', { storyId: id, threadId: threadId});
   };
   return (
     <View style={styles.container}>

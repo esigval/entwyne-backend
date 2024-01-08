@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../../config.js';
 
 
 const Tab1Screen = () => {
-  const { stories, setStories } = useContext(DataContext);
+  const { stories, setStories, refreshData } = useContext(DataContext);
   const [isCreating, setCreating] = useState(false);
 
   const handleCreateStoryPress = () => {
@@ -18,16 +18,26 @@ const Tab1Screen = () => {
         'Content-Type': 'application/json',
       },
     })
-      .then(response => response.json())
-      .then(data => {
-        setCreating(false); // Stop creating
-        setStories([...stories, data.savedStory]); // Update the stories list with the new story
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        setCreating(false); // Stop creating in case of error
-      });
+    .then(response => response.json())
+    .then(data => {
+      setCreating(false); // Stop creating
+      if (data && data.updatedStory) {
+        // Assuming updatedStory is the correct property based on your screenshot
+        setStories(prevStories => [...prevStories, data.updatedStory]);
+        // If refreshData() is used to refresh the list from the server, it might not be needed here.
+        // Only use it if you want to re-fetch all stories.
+        // refreshData(); 
+      } else {
+        // Handle any case where the response may not be what you expect
+        console.error('New story was not returned correctly from the server', data);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      setCreating(false); // Stop creating in case of error
+    });
   };
+  
 
   const handleDeleteStory = (id) => {
     fetch(`${API_BASE_URL}/v1/deleteStory/${id}`, {
@@ -50,10 +60,11 @@ const Tab1Screen = () => {
       return <PlaceholderStoryCard />;
     }
     return <StoryCard title={item.storyName} description={item.description || 'No description available'} onDeletePress={handleDeleteStory}
-    id={item._id}/>;
+    id={item._id} threadId={item.threadId}/>;
   };
 
   const dataWithPlaceholder = isCreating ? [...stories, { loading: true }] : stories;
+  console.log("Stories:", stories);
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

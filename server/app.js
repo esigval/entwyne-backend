@@ -27,11 +27,12 @@ import getPromptsRouter from './routes/getPrompts.js';
 import getTwynesRouter from './routes/getTwynes.js';
 import getS3PresignedUrlRouter from './routes/getS3PresignedUrl.js';
 import saveVideoUri from './routes/saveVideoUri.js';
-import createThread from './routes/assistants/createThread.js';
+import createThread from './routes/createThread.js';
 import createStory from './routes/createStory.js';
 import deleteStory from './routes/deleteStory.js';
-import userInput from './routes/assistants/userInput.js';
+import userInput from './routes/userInput.js';
 import getTemplateName from './routes/getTemplateName.js'
+import buildStoryline from './routes/buildStoryline.js'
 // import modelResponse from './routes/assistants/modelResponse.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
@@ -59,6 +60,7 @@ app.use('/v1/createStory', createStory);
 app.use('/v1', deleteStory);
 app.use('/v1/assistants/userInput', userInput);
 app.use('/v1/getTemplate', getTemplateName);
+app.use('/v1/buildStoryline', buildStoryline);
 // app.use('/v1/assistants/modelResponse', modelResponse);
 // app.use('/collectCharacters', collectCharactersRouter);
 

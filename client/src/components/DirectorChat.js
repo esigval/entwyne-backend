@@ -34,8 +34,9 @@ const DirectorChat = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const storyId = route.params?.storyId;
+  const threadId = route.params?.threadId;
 
-  
+
   const onSend = async () => {
     if (inputText.trim()) {
       const newMessage = {
@@ -51,7 +52,7 @@ const DirectorChat = () => {
 
       try {
         // Send the message to the server and wait for the response
-        const responseData = await sendMessageToServer(newMessage.text, storyId);
+        const responseData = await sendMessageToServer(newMessage.text, storyId, data[0].value);
         console.log(responseData);
 
         // Assume responseData contains the assistant's message
@@ -74,21 +75,25 @@ const DirectorChat = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const result = await axios.get(`${API_BASE_URL}/v1/getTemplate`);
-            const transformedData = result.data.map(item => ({
-                label: item,
-                value: item
-            }));
-            setData(transformedData);
-        } catch (err) {
-            console.error('Failed to fetch templates:', err);
-            // Handle error appropriately
+      try {
+        const result = await axios.get(`${API_BASE_URL}/v1/getTemplate`);
+        const transformedData = result.data.map(item => ({
+          label: item,
+          value: item
+        }));
+        setData(transformedData);
+
+        // Optionally set the selectedValue to the first item if it exists
+        if (transformedData.length > 0) {
+          setSelectedValue(transformedData[0]);
         }
+      } catch (err) {
+        console.error('Failed to fetch templates:', err);
+      }
     };
 
     fetchData();
-}, []);
+  }, []);
 
   const handleInputChange = (text) => {
     setInputText(text);
@@ -99,6 +104,23 @@ const DirectorChat = () => {
     navigation.navigate('TwyneLoadingScreen');
   };
 
+  const renderStory = async () => {
+    try {
+      console.log('templateName:', data);
+      const response = await axios.post(`${API_BASE_URL}/v1/buildStoryline`, {
+        templateName: data[0].value,
+        storyId: storyId,
+        threadId: threadId,
+      });
+
+      // handle the response here
+      console.log(response.data[0].value);
+    } catch (error) {
+      console.error('Failed to render story:', error.response ? error.response.data : error);
+      // Handle error appropriately
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.messagesContainer}>
@@ -106,18 +128,25 @@ const DirectorChat = () => {
           <MessageBubble key={message.id} message={message} />
         ))}
       </ScrollView>
+      <TouchableOpacity style={styles.goOnButton} onPress={renderStory}>
+        <Text style={styles.goOnButtonText}>Render Story</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.goOnButton} onPress={devGoOnPress}>
         <Text style={styles.goOnButtonText}>Go On</Text>
       </TouchableOpacity>
-      <Picker
-        selectedValue={selectedValue}
-        style={styles.picker}
-        onValueChange={(itemValue) => setSelectedValue(itemValue)}
-      >
-        {data.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-      </Picker>
+      {data.length > 0 ? (
+        <Picker
+          selectedValue={selectedValue}
+          style={styles.picker}
+          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+        >
+          {data.map((item, index) => (
+            <Picker.Item key={index} label={item.label} value={item.value} />
+          ))}
+        </Picker>
+      ) : (
+        <Text>Loading templates...</Text> // Or any other placeholder
+      )}
       <MessageInput
         inputText={inputText}
         handleInputChange={handleInputChange} // Corrected from onInputChange to handleInputChange
