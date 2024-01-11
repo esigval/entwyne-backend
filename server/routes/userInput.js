@@ -30,13 +30,14 @@ router.post('/', async (req, res) => {
         console.log('Final run status:', finalRunStatus.status)
 
         // Check the final status of the run
-        if (finalRunStatus.status === 'requires_action') {
+        if (finalRunStatus.status === 'requires_action' || finalRunStatus.status === 'queued') {
             const toolCallId = finalRunStatus.required_action.submit_tool_outputs.tool_calls[0].id;
             console.log('tool_call_id:', toolCallId);
             const results = await storyEngine(instructions, storyId, threadId, templateName);
             console.log('storyEngine Successful.', results);
             const toolOutputs = submitToolOutputs(threadId, run.id, [toolCallId]);
             console.log('Tool outputs submitted', toolOutputs);
+            return res.status(200).json({ message: 'NavigatetoCapture' });
 
             // ... (handle action required)
         } else if (finalRunStatus.status === 'cancelled' || finalRunStatus.status === 'failed') {
@@ -44,7 +45,6 @@ router.post('/', async (req, res) => {
             console.error('Run cancelled or failed');
             // ... (handle error)
         } else if (finalRunStatus.status === 'completed') {
-            // Proceed as normal, run completed successfully
             // ... (handle completion)
         }
 

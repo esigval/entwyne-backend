@@ -1,6 +1,7 @@
 import express from 'express';
 import createPresignedUrl from '../middleware/createPresignedUrl.js';
 import saveTwyne from '../middleware/saveTwyne.js';
+import Twyne from '../models/twyneModel.js';
 const router = express.Router();
 
 router.get('/',
@@ -25,13 +26,14 @@ router.get('/',
     }
   },
   saveTwyne, // saveTwyne middleware runs next
-  
+
   async (req, res) => { // Make this function async
     const presignedUrl = await req.presignedUrl;
     console.log('req.presignedUrl:', presignedUrl); // Make sure presignedUrl is correct
+    console.log('newTwyneId:', res.locals.newTwyneId); // Access the new ObjectId from the res.locals object
     // Send response after saveTwyne middleware has run
-    res.json({ presignedUrl: presignedUrl });
-  }
+    res.json({ presignedUrl: presignedUrl, newTwyneId: res.locals.newTwyneId });
+}
 );
 
 export default router;

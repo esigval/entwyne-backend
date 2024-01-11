@@ -39,9 +39,16 @@ const Tab1Screen = () => {
   };
   
 
-  const handleDeleteStory = (id) => {
+  const handleDeleteStory = (id, threadId) => {
     fetch(`${API_BASE_URL}/v1/deleteStory/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        threadId: threadId,
+
+      }),
     })
     .then(response => {
       if (response.ok) {

@@ -8,7 +8,7 @@ const TwyneCard = ({ imageUrl }) => {
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} onError={(error) => console.log(error)} />
+        <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }}/>
       </View>
     </View>
   );

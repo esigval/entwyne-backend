@@ -4,17 +4,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppHeader from './src/components/AppHeader';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { createStackNavigator } from '@react-navigation/stack';
-import CameraCapture from './src/screens/CameraCapture.js';
+import CameraCapture from './src/screens/CameraCapture';
 import { DataProvider, DataContext } from './src/utils/dataContext.js';
 import TabNavigator from './src/navigation/TabNavigator';
 import ShareYourStoryScreen from './src/components/QRCode.js';
 import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
 import FullScreenMediaScreen from './src/screens/FullScreenMediaPlayer.js';
 import WebMarketingHome from './src/components/webMarketing.js';
-import DirectorChat from './src/components/DirectorChat.js';
+import DirectorChat from './src/screens/DirectorChat.js';
 import TwyneLoadingScreen from './src/components/TwyneLoadingScreen';
 import ErrorBoundary from './src/utils/ErrorBoundary.js';
 import DeliverTwyne from './src/components/DeliverTwyne.js';
+import PromptCollectionScreen from './src/screens/PromptCollection.js';
+import ProcessingMomentComponent from './src/screens/ProcessingMomentScreen';
+import DirectorReview from './src/screens/DirectorMomentReviewScreen.js';
+
 
 
 const Stack = createStackNavigator();
@@ -29,15 +33,18 @@ const App = () => {
             <AppHeader />
             <NavigationContainer>
               <Stack.Navigator>
-                <Stack.Screen name="Home" component={TabNavigator} />
+                <Stack.Screen name="Home" component={TabNavigator}/>
+                <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
+                <Stack.Screen name="ProcessingMoment" component={ProcessingMomentComponent} options={{ headerShown: false }} />
+                <Stack.Screen name="CameraCapture" component={CameraCapture} />
                 <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
                 <Stack.Screen name="TwyneLoadingScreen" component={TwyneLoadingScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }} />
                 <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
-                <Stack.Screen name="CameraCapture" component={CameraCapture} />
                 <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
                 <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} />
                 <Stack.Screen name="FullScreenMediaScreen" component={FullScreenMediaScreen} />
+                <Stack.Screen name="PromptCollection" component={PromptCollectionScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </View>

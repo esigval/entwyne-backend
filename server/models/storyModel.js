@@ -82,6 +82,16 @@ class Story {
         }
     }
 
+    static async findThreadByStoryId(storyId) { // This is a custom method
+        try {
+            const story = await Story.findById(storyId); // Pass the storyId directly
+            return story.threadId; // Assuming the story model has a 'threadId' field
+        } catch (error) {
+            console.error('Error finding story:', error);
+            throw error;
+        }
+    }   
+
     
 
     // Additional methods for delete, find, etc., can be added here

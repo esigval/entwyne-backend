@@ -4,12 +4,12 @@ import { ObjectId } from 'mongodb';
 class StorylineModel {
     constructor({
         _id = new ObjectId(),
-        StoryId,
-        StorylineTemplateParts = []
+        storyId,
+        storylineParts = []
     }) {
         this._id = _id;
-        this.StoryId = StoryId;
-        this.StorylineParts = StorylineTemplateParts;
+        this.storyId = storyId;
+        this.storylineParts = storylineParts;
     }
 
 
@@ -18,7 +18,7 @@ class StorylineModel {
     }
 
     getStorylineParts() {
-        return this.StorylineParts;
+        return this.storylineParts;
     }
 
     static async findById(id) {
@@ -34,36 +34,37 @@ class StorylineModel {
     }
 
     static async create(data) {
-    try {
-        const db = await connect();
-        const collection = db.collection(StorylineModel.collectionName);
-        const result = await collection.insertOne(data);
-        // Use the insertedId to construct the new object
-        return new StorylineModel({ ...data, _id: result.insertedId });
-    } catch (error) {
-        console.error("Error in StorylineModel.create:", error);
-        throw error;
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+            const result = await collection.insertOne(data);
+            // Use the insertedId to construct the new object
+            return new StorylineModel({ ...data, _id: result.insertedId });
+        } catch (error) {
+            console.error("Error in StorylineModel.create:", error);
+            throw error;
+        }
     }
-}
 
 
     static async updateStorylinePartWithPromptId(storylineId, order, promptId) {
-    try {
-        const db = await connect();
-        const collection = db.collection(StorylineModel.collectionName);
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
 
-        // Update the specific storyline part with the promptId
-        const updateResult = await collection.updateOne(
-            { _id: storylineId, "StorylineParts.order": order },
-            { $set: { "StorylineParts.$.promptId": promptId } }
-        );
+            // Update the specific storyline part with the promptId
+            const updateResult = await collection.updateOne(
+                { _id: storylineId, "storylineParts.order": order }, // Ensure field names are consistent
+                { $set: { "storylineParts.$.promptId": promptId } }  // Correct use of the $ operator
+            );
 
-        return updateResult;
-    } catch (error) {
-        console.error("Error in StorylineModel.updateStorylinePartWithPromptId:", error);
-        throw error;
+            return updateResult;
+        } catch (error) {
+            console.error("Error in StorylineModel.updateStorylinePartWithPromptId:", error);
+            throw error;
+        }
     }
-}
+
 
 }
 

@@ -16,13 +16,13 @@ const s3 = new AWS.S3();
 const createPresignedUrl = (bucketName, promptId, expires = 60) => {
   // Generate a unique key using the video name and a timestamp
   const timestamp = moment().format('YYYYMMDDHHmmss');
-  const key = `video/${promptId}_${timestamp}.mp4`;
+  const key = `video/${promptId}_${timestamp}.webm`;
 
   const params = {
     Bucket: bucketName,
     Key: key,
     Expires: expires, // Expiration time in seconds
-    ContentType: 'video/mp4', // Specify the content type
+    ContentType: 'video/webm', // Specify the content type
   };
 
   return { presignedUrl: s3.getSignedUrlPromise('putObject', params), key };

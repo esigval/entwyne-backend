@@ -48,6 +48,45 @@ class Prompts {
             throw error;
         }
     }
+
+    static async findByStorylineIdAndMediaType(storylineId, mediaType) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({ storylineId, mediaType }).toArray();
+            return prompts;
+        } catch (error) {
+            console.error("Error in Prompts.findByStorylineIdAndMediaType:", error);
+            throw error;
+        }
+    }
+
+    static async findByStorylineIdWithTranscription(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({ storylineId, transcription: { $ne: null } }).toArray();
+            return prompts;
+        } catch (error) {
+            console.error("Error in Prompts.findByStorylineIdWithTranscription:", error);
+            throw error;
+        }
+    }
+
+    static async findByStorylineIdWithThumbnail(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({ storylineId, thumbnailUrl: { $ne: null } }).toArray();
+            return prompts;
+        } catch (error) {
+            console.error("Error in Prompts.findByStorylineIdWithThumbnail:", error);
+            throw error;
+        }
+    }
+
+
+
 }
 
 export default Prompts;

@@ -33,21 +33,20 @@ const saveTwyne = async (req, res, next) => {
             thumbnailUrl: `https://${process.env.S3_POST_BUCKET_NAME}.s3.amazonaws.com/thumbnails${jpgKey}`,
             videoUri: videoUri,
             audioUri: `s3://${process.env.S3_POST_BUCKET_NAME}/audio/${key}.mp3`,
+            transcription: "We had a wonderful time on the clouds. It was awesome"
 
         });
 
         const result = await collection.insertOne(twyne);
+        // Extract the ObjectId of the newly inserted document
+        const newTwyneId = result.insertedId;
         req.presignedUrl = presignedUrl; // If needed elsewhere in the middleware chain
-        console.log(`Successfully inserted item with _id: ${result.insertedId}`);
-
+        console.log(`Successfully inserted item with _id: ${newTwyneId}`);
+        res.locals.newTwyneId = newTwyneId;
         next(); // Pass control to the next middleware
     } catch (error) {
         console.error('Error saving Twyne:', error);
         res.status(500).send('Internal Server Error');
-    } finally {
-        if (database && database.close) {
-            await database.close();
-        }
     }
 };
 

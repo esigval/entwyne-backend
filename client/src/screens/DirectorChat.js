@@ -1,8 +1,8 @@
 // DirectorChat.js
 import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { MessageBubble } from './MessageBubble';
-import { MessageInput } from './MessageInput';
+import { MessageBubble } from '../components/MessageBubble';
+import { MessageInput } from '../components/MessageInput';
 import { useNavigation } from '@react-navigation/native'
 import { useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
@@ -101,7 +101,7 @@ const DirectorChat = () => {
   };
 
   const devGoOnPress = () => {
-    navigation.navigate('TwyneLoadingScreen');
+    navigation.navigate('PromptCollection', { storyId: storyId, mediaType: 'video', threadId: threadId });
   };
 
   const renderStory = async () => {
@@ -111,6 +111,7 @@ const DirectorChat = () => {
         templateName: data[0].value,
         storyId: storyId,
         threadId: threadId,
+        mediaType: 'video'
       });
 
       // handle the response here

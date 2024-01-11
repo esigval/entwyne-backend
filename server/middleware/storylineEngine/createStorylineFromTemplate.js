@@ -8,12 +8,12 @@ async function createStorylineFromTemplate(templateName, storyId) {
         if (!storylineTemplateParts) {
             throw new Error("No storyline parts found for the given template name.");
         }
-        console.log("storylineTemplateParts:", storylineTemplateParts);
+        // console.log("storylineTemplateParts:", storylineTemplateParts);
 
         // Prepare the data for the new storyline
         const storylineData = {
-            StoryId: storyId,
-            StorylineTemplateParts: storylineTemplateParts,
+            storyId: storyId,
+            storylineParts: storylineTemplateParts,
         };
 
         // Create the new storyline
