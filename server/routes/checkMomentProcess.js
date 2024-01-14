@@ -1,8 +1,10 @@
 import express from 'express';
 import Twyne from '../models/twyneModel.js'; // Adjust the path to your Twyne model file
 import Story from '../models/storyModel.js'; // Adjust the path to your Story model file
-import directorReviewAssistant from '../middleware/assistants/directorReviewAssistant';
-import { directorReviewInstructions } from '../prompts/assistantInstructions.js';
+import directorReviewAssistant from '../middleware/assistants/directorReviewAssistant.js';
+import sentimentAnalysisAssistant from '../middleware/assistants/sentimentAnalysisAssistant.js';
+import directorReviewScoreAssistant from '../middleware/assistants/directorReviewScoreAssistant.js';
+import { directorReviewInstructions, sentimentAnalysisAssistantInstructions,directorReviewScoreAssistantInstructions } from '../prompts/assistantInstructions.js';
 
 const router = express.Router();
 
@@ -13,7 +15,8 @@ router.get('/', async (req, res) => {
 
     const twyneId = req.query.newTwyneId;
     const storyId = req.query.storyId;
-    const threadId = await Story.findThreadIdByStoryId(storyId);
+    console.log('storyId:', storyId)
+    const threadId = await Story.findThreadByStoryId(storyId);
     const prompts = req.query.prompts;
     console.log('twyneId:', twyneId);
 
@@ -21,12 +24,24 @@ router.get('/', async (req, res) => {
         const twyne = await Twyne.findByTwyneIdWithDetails(twyneId);
 
         if (twyne) {
-            const result = await directorReviewAssistant(directorReviewInstructions, threadId, prompts);
+            console.log('sending to director review assistant');
+            const [directorReview, sentimentAnalysis, directorReviewScore] = await Promise.all([
+                directorReviewAssistant(directorReviewInstructions, threadId, prompts, twyne.transcription),
+                sentimentAnalysisAssistant(sentimentAnalysisAssistantInstructions, twyne.transcription),
+                directorReviewScoreAssistant(directorReviewScoreAssistantInstructions, threadId, prompts, twyne.transcription),
+            ]);
+            console.log('directorReview:', directorReview);
+            console.log('sentimentAnalysis:', sentimentAnalysis);
+            console.log('directorReviewScore:', directorReviewScore);
             // Return the associatedPromptId if the twyne has both transcription and thumbnailUrl
             res.json({
                 promptId: twyne.associatedPromptId,
                 thumbnailUrl: twyne.thumbnailUrl,
-                transcription: twyne.transcription
+                transcription: twyne.transcription,
+                directorReview: directorReview,
+                sentimentAnalysis: sentimentAnalysis,
+                directorReviewScore: directorReviewScore,
+                promptDetail: prompts,
             });
         } else {
             // If twyne does not have both transcription and thumbnailUrl

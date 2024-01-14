@@ -30,10 +30,16 @@ import saveVideoUri from './routes/saveVideoUri.js';
 import createThread from './routes/createThread.js';
 import createStory from './routes/createStory.js';
 import deleteStory from './routes/deleteStory.js';
+import deleteTwyne from './routes/deleteTwyne.js';
 import userInput from './routes/userInput.js';
 import getTemplateName from './routes/getTemplateName.js'
 import buildStoryline from './routes/buildStoryline.js'
 import checkMomentProcess from './routes/checkMomentProcess.js';
+import confirmTwyne from './routes/confirmTwyne.js';
+import collectPictures from './routes/collectPictures.js';
+import getThumbnails from './routes/getThumbnails.js'; 
+import checkPromptLoading from './routes/checkPromptLoading.js';  
+import getStoryPrompts from './routes/getStoryPrompts.js';
 // import modelResponse from './routes/assistants/modelResponse.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
@@ -59,10 +65,16 @@ app.use('/v1/saveVideoUri', saveVideoUri);
 app.use('/v1/assistants/createThread', createThread);
 app.use('/v1/createStory', createStory);
 app.use('/v1', deleteStory);
+app.use('/v1', deleteTwyne);
 app.use('/v1/assistants/userInput', userInput);
 app.use('/v1/getTemplate', getTemplateName);
 app.use('/v1/buildStoryline', buildStoryline);
 app.use('/v1/checkMomentProcess', checkMomentProcess);
+app.use('/v1/confirmTwyne', confirmTwyne); 
+app.use(`/v1/collectPictures`, collectPictures);
+app.use(`/v1/getThumbnails`, getThumbnails);
+app.use(`/v1/checkPromptLoading`, checkPromptLoading);
+app.use(`/v1/getStoryPrompts`, getStoryPrompts);
 // app.use('/v1/assistants/modelResponse', modelResponse);
 // app.use('/collectCharacters', collectCharactersRouter);
 

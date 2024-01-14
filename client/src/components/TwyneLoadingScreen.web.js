@@ -8,17 +8,54 @@ if (Platform.OS === 'web') {
 import TwynesMobile from '../assets/vectors/twynes.svg'; // Rename for clarity
 import couple from '../assets/images/Couple.png';
 import gsap from 'gsap';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config.js';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 
-const TwyneLoadingScreen = () => {
+const TwyneLoadingScreen = ({route}) => {
     gsap.registerPlugin(MotionPathPlugin);
     // const navigation = useNavigation(); // if using react-navigation
     const [progress, setProgress] = useState(0);
     const [text, setText] = useState('Entwining');
+    const [thumbnails, setThumbnails] = useState([]);
     const navigation = useNavigation();
+    const { storylineId } = route.params;
+    
 
     // Thumbnail animation values
     const thumbnailAnim = new Animated.Value(0);
+    
+
+    const getThumbnails = async (storylineId) => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/v1/getThumbnails`, {
+                params: {
+                    storylineId: storylineId,
+                }
+            });
+    
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.error('Failed to get thumbnails:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error during get thumbnails:', error);
+        }
+    
+        return [];
+    };
+
+    useEffect(() => {
+        const fetchThumbnails = async (storylineId) => {
+            const thumbData = await getThumbnails(storylineId);
+            console.log('thumbData', thumbData)
+            setThumbnails(thumbData);
+        };
+
+        fetchThumbnails(storylineId);
+    }, []);
+
 
     function animateAlongPath(rectangleId, pathId, animationDelay) {
         const tl = gsap.timeline({ delay: animationDelay });

@@ -53,8 +53,15 @@ export const DataProvider = ({ children }) => {
   // Refresh the data when needed
   const refreshData = async () => {
     setIsDataLoaded(false); // Set data as not loaded
-    await fetchData(); // Fetch data again
-  };
+    try {
+        const promptsData = await fetchPrompts();
+        setPrompts(promptsData);
+    } catch (e) {
+        console.warn(e);
+    } finally {
+        setIsDataLoaded(true);
+    }
+};
 
   // Define the context provider value
   const contextValue = {

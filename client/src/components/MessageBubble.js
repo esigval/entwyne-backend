@@ -1,15 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ChatTail } from "./ChatTail";
+import EllipsisLoading from "./EllipsisisLoading";
 
 export const MessageBubble = ({ message }) => {
-    return (
-      <View style={[styles.bubble, message.isDirector ? styles.directorBubble : styles.userBubble]}>
-        <Text style={styles.text}>{message.text}</Text>
-        {message.isDirector && <ChatTail />}
-      </View>
-    );
-  };
+  return (
+    <View style={[styles.bubble, message.isDirector ? styles.directorBubble : styles.userBubble]}>
+      {message.isLoading 
+        ? <EllipsisLoading />
+        : <Text style={styles.text}>{message.text}</Text>
+      }
+      {message.isDirector && !message.isLoading}
+    </View>
+  );
+};
+
 
   const styles = StyleSheet.create({
     bubble: {
@@ -32,3 +37,4 @@ export const MessageBubble = ({ message }) => {
       fontSize: 16,
     },
   });
+

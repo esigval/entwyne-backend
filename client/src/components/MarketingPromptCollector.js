@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const MarketingPromptCollectorCard = ({ promptId, title, prompt }) => {
+const MarketingPromptCollectorCard = ({ promptId, title, prompt, storyId }) => {
     const navigation = useNavigation();
 
     const handleRequestTwynePress = () => {
-        navigation.navigate('CameraCapture', {promptDetail: prompt, promptId: promptId, });
+        navigation.navigate('CameraCapture', {promptDetail: prompt, promptId: promptId, storyId: storyId });
     };
 
     return (

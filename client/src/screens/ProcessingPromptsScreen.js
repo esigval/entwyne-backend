@@ -7,27 +7,25 @@ import FadeInView from '../components/FadeInView.js';
 
 
 // Usage in your app
-const ProcessingMomentComponent = ({route}) => {
+const creatingStoryLoadingComponent = ({route}) => {
 
-  const [currentCheck, setCurrentCheck] = useState('Checking Video');
+  const [currentCheck, setCurrentCheck] = useState('Finding Themes');
   const [loadingAnim] = useState(new Animated.Value(0));  // Initial value f7or width: 0
   const [data, setData] = useState(null);  // State variable to store the data from the endpoint
 
   const navigation = useNavigation();
-  const { storyId, newTwyneId, promptDetail, promptId } = route.params;
+  const { storyId, threadId, mediaType } = route.params;
+
 
   const hasNavigated = useRef(false);
-  
-  
-  console.log('newTwyneId:', newTwyneId);
 
   useEffect(() => {
     // Change the checking text every second
     const interval = setInterval(() => {
       setCurrentCheck((prevCheck) => {
-        if (prevCheck === 'Checking Video') return 'Checking Audio';
-        if (prevCheck === 'Checking Audio') return 'Checking Message';
-        return 'Checking Video';
+        if (prevCheck === 'Creating Prompts') return 'Reviewing Story';
+        if (prevCheck === 'Reviewing Story') return 'Building Storyline';
+        return 'Creating Prompts';
       });
     }, 2000); // Interval set to 2 second
 
@@ -47,34 +45,32 @@ const ProcessingMomentComponent = ({route}) => {
   }, [loadingAnim]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const fetchData = async () => {
-        console.log('newTwyneId Right before Call:', newTwyneId); // Log newTwyneId
-        try {
-          const result = await axios.get(`${API_BASE_URL}/v1/checkMomentProcess?newTwyneId=${newTwyneId}&storyId=${storyId}&prompts=${promptDetail}`);
-          setData(result.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+    const fetchData = async () => {
+      try {
+        const result = await axios.get(`${API_BASE_URL}/v1/checkPromptLoading?storyId=${storyId}&mediaType=${mediaType}`);
+        setData(result.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
   
-      if (hasNavigated.current) {
-        clearInterval(interval);
-      } else {
+    const interval = setInterval(() => {
+      if (!hasNavigated.current) {
         fetchData();
       }
-    }, 4000);  // Interval set to 5 seconds
+    }, 4000);  // Interval set to 4 seconds
   
     // Clear interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [storyId, mediaType, hasNavigated]); // Include all dependencies here
+  
   
 
   useEffect(() => {
     if (data) {
       // Navigate to the new screen when data is set
       // Replace 'NewScreenName' with the actual name of the screen you want to navigate to
-      navigation.navigate('DirectorReview', { data, storyId, newTwyneId, promptDetail, promptId });
+      navigation.navigate('PromptCollection', { storyId: storyId, mediaType: 'video', threadId: threadId});
       hasNavigated.current = true;
     }
   }, [data, navigation]);
@@ -84,12 +80,12 @@ const ProcessingMomentComponent = ({route}) => {
       <View style={styles.headerContainer}>
         <Animated.View style={[styles.loadingBar, { width: loadingAnim }]} />
         <FadeInView style={styles.fadeView}>
-          <Text style={styles.header}>Processing Moment</Text>
+          <Text style={styles.header}>Creating Interview Questions</Text>
         </FadeInView>
       </View>
       <View style={styles.contentContainer}>
         <FadeInView style={styles.fadeView}>
-          <Text style={styles.standardText}>Let’s Review Your Moment to Make Sure It Looks and Sounds Great</Text>
+          <Text style={styles.standardText}>Awesome! We're Going to Set-up Your Interview Questions. In the Meantime, Find a Comfortable Place to Film</Text>
         </FadeInView>
         <Text style={styles.checkingText}>{currentCheck}</Text>
       </View>
@@ -125,7 +121,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   checkingText: {
-    marginTop: 100,
+    marginTop: 80,
     textAlign: 'center',
     fontSize: 24,
   },
@@ -145,4 +141,4 @@ const styles = StyleSheet.create({
 
 
 
-export default ProcessingMomentComponent;
+export default creatingStoryLoadingComponent;

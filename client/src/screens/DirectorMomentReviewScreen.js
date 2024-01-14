@@ -1,53 +1,101 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, Animated, StyleSheet, Dimensions, Pressable, Image } from 'react-native';
+import { View, Text, Animated, StyleSheet, Dimensions, Pressable, Image, ScrollView } from 'react-native';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native'
 import FadeInView from '../components/FadeInView.js';
 import { DataContext } from '../utils/dataContext.js';
-import coupleImage from '../assets/images/CoupleFinished.png';
 
 
 const DirectorReview = ({ route }) => {
     const { twynes, prompts } = useContext(DataContext);
-    const { data, storyId, newTwyneId } = route.params;
-    const { promptId } = data.promptId;
-    const promptRecord = prompts.find(prompt => prompt.id === promptId);
+    const { data, storyId, newTwyneId, promptDetail, promptId } = route.params;
+    console.log('promptId', promptId)
     const transcription = data.transcription;
-    const directorNotes = 'filler content';
-    const prompt = promptRecord ? promptRecord.prompt : 'Here is Your Video';
+    const directorNotes = data.directorReview;
+    const sentiment = data.sentimentAnalysis;
+    const score = data.directorReviewScore;
+    const prompt = promptDetail;
     const navigation = useNavigation();
+    const momentVideo = data.thumbnailUrl;
+    const mediaType = 'video';
 
+    const handleDeleteTwyne = () => {
+        axios.delete(`${API_BASE_URL}/v1/deleteTwyne/${newTwyneId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    navigation.goBack(); // Go back to the previous screen
+                } else {
+                    // Handle error response
+                    console.error('Error:', response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
 
-
+    const handleConfirmTwyne = () => {
+        axios.get(`${API_BASE_URL}/v1/confirmTwyne?promptId=${promptId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    if (response.data === true) {
+                        navigation.navigate('PhotoUpload', { data, newTwyneId, storyId, promptDetail, promptId });
+                    } else {
+                        navigation.navigate('PromptCollection', { newTwyneId, storyId, promptDetail, promptId, mediaType });
+                    }
+                } else {
+                    // Handle error response
+                    console.error('Error:', response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.headerText}>Director Review</Text>
-            <View style={styles.transcriptionContainer}>
-                <Text style={styles.textContent}>{prompt}</Text>
-            </View>
-            <Image
-                style={styles.image}
-                source={coupleImage} // Replace with your image uri
-            />
-            <View style={styles.transcriptionContainer}>
-                <Text style={styles.subHeaderText}>Transcription</Text>
-                <Text style={styles.textContent}>{transcription}</Text>
-            </View>
-            <View style={styles.notesContainer}>
-                <Text style={styles.subHeaderText}>Director Notes</Text>
-                <Text style={styles.textContent}>{directorNotes}</Text>
-            </View>
+            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+                <Text style={styles.headerText}>Director Review</Text>
+                <View style={styles.transcriptionContainer}>
+                    <Text style={styles.textContent}>{prompt}</Text>
+                </View>
+                <Image
+                    style={styles.image}
+                    source={{ uri: momentVideo }}
+                />
+                <View style={styles.transcriptionContainer}>
+                    <Text style={styles.subHeaderText}>Transcription</Text>
+                    <Text style={styles.textContent}>{transcription}</Text>
+                </View>
+                <View style={styles.notesContainer}>
+                    <Text style={styles.subHeaderText}>Director Feedback</Text>
+                    <Text style={styles.textContent}>{directorNotes}</Text>
+                </View>
+                <View style={styles.splitContainer}>
+                    <View style={styles.column}>
+                        <Text style={styles.subHeaderText}>Sentiment</Text>
+                        <Text style={styles.textContent}>{sentiment}</Text>
+                    </View>
+                    <View style={styles.column}>
+                        <Text style={styles.subHeaderText}>Score</Text>
+                        <Text style={styles.textContent}>{score}</Text>
+                    </View>
+                </View>
+            </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
                     style={styles.button}
-                    onPress={() => navigation.push('CameraCapture', { prompt, promptId, storyId })}
+                    onPress={() => {
+                        navigation.navigate('CameraCapture', { promptDetail, promptId, storyId, fromScreen: 'DirectorReview' });
+
+                    }}
                 >
-                    <Text style={styles.buttonText}>Redo</Text>
+                    <Text style={styles.buttonText}>Film Again</Text>
                 </Pressable>
                 <Pressable style={styles.buttonNext}>
-                    <Text style={styles.buttonNextText}>Next</Text>
+                    <Text style={styles.buttonNextText} onPress={handleConfirmTwyne}>Submit</Text>
                 </Pressable>
             </View>
         </View>
@@ -63,8 +111,17 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         paddingTop: 50,
         backgroundColor: '#fff',
-        position: 'relative',
+        position: 'absolute',
     },
+    scrollView: {
+        width: '100%',
+        flex: 1, // Makes sure the ScrollView takes up the remaining space
+    },
+    scrollViewContent: {
+        alignItems: 'center',
+        paddingBottom: 100, // This should be the height of your buttonContainer
+    },
+    
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -102,8 +159,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '90%',
-        position: 'absolute', // Add this
-        bottom: 50, // Add this
+        position: 'absolute',
+        bottom: 10, // Position at the bottom of the container
+        // Height, backgroundColor, padding, etc. for your button container
     },
     button: {
         backgroundColor: '#eee',
@@ -115,7 +173,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     buttonNext: {
-        backgroundColor: 'blue',
+        backgroundColor: '#143F6B',
         padding: 15,
         borderRadius: 20,
         flexGrow: 1,
@@ -124,14 +182,26 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: 'bold',
-        color: '#000',
+        color: '#143F6B',
     },
     buttonNextText: {
         fontSize: 18,
         fontWeight: 'bold',
         color: 'white',
+    },
+    splitContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%', // Set the width similar to other containers
+        marginBottom: 20,
+    },
+    column: {
+        flex: 1, // This ensures that each column takes up equal space
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 15, // Optional, for internal spacing
     },
 });
 

@@ -18,6 +18,8 @@ import DeliverTwyne from './src/components/DeliverTwyne.js';
 import PromptCollectionScreen from './src/screens/PromptCollection.js';
 import ProcessingMomentComponent from './src/screens/ProcessingMomentScreen';
 import DirectorReview from './src/screens/DirectorMomentReviewScreen.js';
+import PhotoUpload from './src/screens/PhotoUpload.js';
+import ProcessingPromptsScreen from './src/screens/ProcessingPromptsScreen';
 
 
 
@@ -33,7 +35,9 @@ const App = () => {
             <AppHeader />
             <NavigationContainer>
               <Stack.Navigator>
-                <Stack.Screen name="Home" component={TabNavigator}/>
+              <Stack.Screen name="Home" component={TabNavigator} />
+              <Stack.Screen name="ProcessingPrompts" component={ProcessingPromptsScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={{ headerShown: false }} />
                 <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
                 <Stack.Screen name="ProcessingMoment" component={ProcessingMomentComponent} options={{ headerShown: false }} />
                 <Stack.Screen name="CameraCapture" component={CameraCapture} />

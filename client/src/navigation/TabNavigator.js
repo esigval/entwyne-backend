@@ -12,7 +12,7 @@ const TabNavigator = () => {
     <Tab.Navigator>
       <Tab.Screen name="Stories" component={Tab1Screen} />
       <Tab.Screen name="Prompts" component={Tab2Screen} />
-      <Tab.Screen name="Twynes" component={Tab3Screen} />
+      <Tab.Screen name="Moments" component={Tab3Screen} />
     </Tab.Navigator>
   );
 };

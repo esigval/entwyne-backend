@@ -22,30 +22,23 @@ const WebCamera = ({ route }) => {
     const timerRef = useRef(null);
 
 
-    useEffect(() => {
 
-        async function enableStream() {
-            if (typeof navigator.mediaDevices.getUserMedia === 'function') {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                    setStream(stream);
-                    if (videoRef.current) {
-                        videoRef.current.srcObject = stream;
-                    }
-                } catch (err) {
-                    console.error(err);
+
+
+    const enableStream = async () => {
+        if (typeof navigator.mediaDevices.getUserMedia === 'function') {
+            try {
+                const newStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                setStream(newStream);
+                if (videoRef.current) {
+                    videoRef.current.srcObject = newStream;
                 }
+            } catch (err) {
+                console.error(err);
             }
         }
+    };
 
-        if (!stream) {
-            enableStream();
-        } else {
-            return function cleanup() {
-                stream.getTracks().forEach(track => track.stop());
-            };
-        }
-    }, [stream]);
 
     const handleStartRecording = () => {
         if (!isRecording) {
@@ -130,12 +123,29 @@ const WebCamera = ({ route }) => {
                 console.log('Video uploaded successfully');
 
                 // Navigate to the 'PromptCollection' screen with parameters
-                navigation.navigate('ProcessingMoment', { storyId: storyId, newTwyneId: newTwyneId, promptDetail: promptDetail });
+                navigation.navigate('ProcessingMoment', { storyId: storyId, newTwyneId: newTwyneId, promptDetail: promptDetail, promptId: promptId });
             } catch (error) {
                 console.error('Error in uploading video:', error);
             }
         }
     };
+
+    useEffect(() => {
+        if (!stream) {
+            enableStream();
+        } else {
+            // Cleanup function
+            return () => {
+                stream.getTracks().forEach(track => track.stop());
+            };
+        }
+    }, [stream]);
+
+    useEffect(() => {
+        if (route.params?.fromScreen === 'DirectorReview') {
+            handleRerecord();
+        }
+    }, [route.params]);
 
     useEffect(() => {
 
@@ -150,24 +160,27 @@ const WebCamera = ({ route }) => {
     }, [isRecording, recordedChunks, playbackMode]);
 
     const handleRerecord = () => {
+        // Stop any active tracks in the stream
         if (stream) {
-            // Stop any active tracks in the stream
             stream.getTracks().forEach(track => track.stop());
         }
         setStream(null);
         setRecordedVideoURL(null);
         setPlaybackMode(false);
         setRecordedChunks([]);
-        // Re-initialize the stream
-        enableStream();
+
+        enableStream(); // Re-initialize the stream
+
         // Reset the timer
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
-        setTimer(timerDuration);
+        setTimerValue(timerDuration); // Reset the timer display value
+        setTimer(timerDuration * 10); // Reset the timer to the initial duration
+
     };
 
-    
+
 
     return (
         <View style={styles.container}>

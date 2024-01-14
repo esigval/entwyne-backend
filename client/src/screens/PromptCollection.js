@@ -1,41 +1,68 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { DataContext } from '../utils/dataContext';
-import MarketingPromptCollectorCardromptCard from '../components/MarketingPromptCollector';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+
+import MarketingPromptCollectorCard from '../components/MarketingPromptCollector';
+
+const fetchPromptsByStoryIdAndMediaType = async (storyId, mediaType) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/v1/getStoryPrompts`, {
+            params: { storyId, mediaType }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    }
+};
 
 const PromptCollectionScreen = ({ route }) => {
-    const { prompts } = useContext(DataContext);
-    const [filteredPrompts, setFilteredPrompts] = useState([]);
-
-    // Extract storylineId and mediaType from route parameters
+    const [prompts, setPrompts] = useState([]);
     const { storyId, mediaType } = route.params;
-    console.log('PromptCollectionScreen params:', storyId, mediaType);
 
     useEffect(() => {
-        // Log the entire DataContext to see its structure
-        console.log('DataContext prompts:', prompts);
-        // Filter the prompts based on storylineId and mediaType
-        const filtered = prompts.filter(prompt => 
-            prompt.storyId === storyId && prompt.mediaType === mediaType
-        );
-         // Log the filtered prompts
-         console.log('Filtered prompts:', filtered);
-        setFilteredPrompts(filtered);
-    }, [storyId, mediaType, prompts]);
+        const fetchData = async () => {
+            try {
+                const data = await fetchPromptsByStoryIdAndMediaType(storyId, mediaType);
+                setPrompts(data);
+            } catch (error) {
+                console.error('Error fetching prompts:', error);
+            }
+        };
+    
+        if (route.params?.fromScreen === 'DirectorReview') {
+            fetchData();
+        }
+    }, [route.params, storyId, mediaType]);
+
+    
 
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>Prompts</Text>
             <FlatList
-                data={filteredPrompts}
-                keyExtractor={(item) => item._id}
+                data={prompts}
+                keyExtractor={(item) => item._id.toString()}
                 renderItem={({ item }) => (
-                    <MarketingPromptCollectorCardromptCard
+                    <MarketingPromptCollectorCard
                         promptId={item._id}
                         title={item.promptTitle}
                         prompt={item.prompt}
+                        storyId={item.storyId}
                     />
                 )}
+                ListEmptyComponent={<Text>No prompts available</Text>}
+                // Optional: Add these for performance optimization and pull-to-refresh functionality
+                // initialNumToRender={10}
+                // maxToRenderPerBatch={5}
+                // windowSize={5}
+                // refreshControl={
+                //   <RefreshControl
+                //     refreshing={refreshing}
+                //     onRefresh={yourRefreshFunction}
+                //   />
+                // }
             />
         </View>
     );

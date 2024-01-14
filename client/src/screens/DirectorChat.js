@@ -50,25 +50,40 @@ const DirectorChat = () => {
       setInputText('');
       setIsTyping(false);
 
+      // Add a loading placeholder message
+      const loadingMessageId = messages.length + 2;
+      const loadingMessage = {
+        id: loadingMessageId,
+        text: '...',
+        isDirector: true,
+        isLoading: true, // Special property to indicate loading
+      };
+      setMessages(prevMessages => [...prevMessages, loadingMessage]);
+
       try {
         // Send the message to the server and wait for the response
         const responseData = await sendMessageToServer(newMessage.text, storyId, data[0].value);
         console.log(responseData);
 
-        // Assume responseData contains the assistant's message
         if (responseData) {
           const assistantMessage = {
-            id: messages.length + 2, // New ID for the assistant's message
+            id: messages.length + 3,
             text: responseData.lastResponse,
             isDirector: true,
           };
 
-          // Update local state with the assistant's response
-          setMessages(prevMessages => [...prevMessages, assistantMessage]);
+          // Replace the loading message with the actual response
+          setMessages(prevMessages => prevMessages.map(m => m.id === loadingMessageId ? assistantMessage : m));
+        }
+
+        if (responseData.message === 'NavigatetoCapture') {
+          navigation.navigate('ProcessingPrompts', { storyId: storyId, mediaType: 'video', threadId: threadId });
         }
       } catch (error) {
         console.error('Error sending message:', error);
-        // Handle the error (e.g., display a notification)
+        // Remove the loading message or replace it with an error message
+        setMessages(prevMessages => prevMessages.filter(m => m.id !== loadingMessageId));
+        // Optionally, add an error message to the chat
       }
     }
   };
