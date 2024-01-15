@@ -157,7 +157,24 @@ class Prompts {
         }
     }
 
-    static async
+    static async saveTwyneToPrompt(promptId, twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+    
+            // Update the twyneId in the document with the given promptId
+            const updateResult = await collection.updateOne(
+                { _id: new ObjectId(promptId) },
+                { $set: { twyneId: twyneId } }
+            );
+    
+            return updateResult;
+        } catch (error) {
+            console.error('Error in saveTwyneToPrompt:', error);
+            throw error;
+        }
+    }
+
 
     // I want to find prompts that match the storyId exist 
 

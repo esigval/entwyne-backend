@@ -36,7 +36,7 @@ const DirectorReview = ({ route }) => {
     };
 
     const handleConfirmTwyne = () => {
-        axios.get(`${API_BASE_URL}/v1/confirmTwyne?promptId=${promptId}`)
+        axios.get(`${API_BASE_URL}/v1/confirmTwyne?promptId=${promptId}&newTwyneId=${newTwyneId}`)
             .then(response => {
                 if (response.status === 200) {
                     if (response.data === true) {

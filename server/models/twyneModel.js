@@ -124,30 +124,44 @@ class Twyne {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
     
+            // Check if the S3 bucket name is set
+            if (!process.env.S3_POST_BUCKET_NAME) {
+                throw new Error('S3_POST_BUCKET_NAME environment variable is not set');
+            }
+    
             // Create a new instance of Twyne
-            const newTwyne = new Twyne({
+            const newTwyne = {
                 _id: new ObjectId(),
                 associatedPromptId: new ObjectId(associatedPromptId),
                 filename: key,
-                mediaType: `picture`,
+                mediaType: 'picture',
                 createdAt: new Date(),
                 s3FilePath: `https://${process.env.S3_POST_BUCKET_NAME}.s3.amazonaws.com/${key}`,
                 s3Uri: `s3://${process.env.S3_POST_BUCKET_NAME}/${key}`,
                 storylineId: storylineId,
-                beatType: `b-roll`,
-
-            });
+                beatType: 'b-roll'
+            };
     
             // Insert the new instance into the database
-            const result = await collection.insertOne(newTwyne);
+            await collection.insertOne(newTwyne);
     
-            // Return the result
-            return result;
+            // Return the newTwyne object
+            return newTwyne;
         } catch (error) {
-            console.error("Error in Twyne.createNewRecord:", error);
+            console.error("Error in Twyne.createPictureTwynes:", error);
+            throw error; // Rethrow the error for the caller to handle
         }
     }
+    
 
+    static async getTwyneUrls(twyneId) {
+        const db = await connect();
+        const collection = db.collection(Twyne.collectionName);
+        const twyne = await collection.findOne({ _id: new ObjectId(twyneId) });
+    
+        // Return the s3FilePath and s3Uri properties
+        return { s3FilePath: twyne.s3FilePath, s3Uri: twyne.s3Uri };
+    }
 
 }
 

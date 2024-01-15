@@ -5,11 +5,13 @@ class StorylineModel {
     constructor({
         _id = new ObjectId(),
         storyId,
-        storylineParts = []
+        storylineParts = [],
+        bRoll = []
     }) {
         this._id = _id;
         this.storyId = storyId;
         this.storylineParts = storylineParts;
+        this.bRoll = bRoll;
     }
 
 
@@ -61,6 +63,87 @@ class StorylineModel {
             return updateResult;
         } catch (error) {
             console.error("Error in StorylineModel.updateStorylinePartWithPromptId:", error);
+            throw error;
+        }
+    }
+
+    static async updateBrollWithTwyneId(storylineId, fileType, bRollShotLength, twyneId, s3FilePath, s3Uri) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+
+            // Convert storylineId and twyneId from string to ObjectId
+            const objectId = new ObjectId(storylineId);
+            const objectTwyneId = new ObjectId(twyneId);
+
+            // Get the storyline document
+            const storyline = await collection.findOne({ _id: objectId });
+
+            // Initialize bRoll array if it doesn't exist
+            if (!storyline.bRoll) {
+                storyline.bRoll = [];
+            }
+            const currentLength = storyline.bRoll.length;
+
+            // The next order number is currentLength + 1
+            const order = currentLength + 1;
+
+            // Update the specific bRoll part with the new entry
+            const updateResult = await collection.updateOne(
+                { _id: objectId },
+                {
+                    $push: {
+                        "bRoll": {
+                            order: order,
+                            twyneId: objectTwyneId,
+                            shotLength: bRollShotLength,
+                            fileType: fileType,
+                            s3FilePath: s3FilePath,
+                            s3Uri: s3Uri
+                        }
+                    }
+                },
+                { upsert: true } // This will create a new document if it doesn't exist, which may or may not be desired
+            );
+            // Check if the update was successful
+            if (updateResult.modifiedCount === 0 && updateResult.upsertedCount === 0) {
+                throw new Error('Update failed or no document was upserted.');
+            }
+
+            // Construct the bRoll object to return
+            const bRollData = {
+                order: order,
+                twyneId: objectTwyneId,
+                shotLength: bRollShotLength,
+                fileType: fileType,
+                s3FilePath: s3FilePath,
+                s3Uri: s3Uri
+            };
+
+            return {
+                updateResult: updateResult,
+                bRollData: bRollData
+            };
+        } catch (error) {
+            // Handle error
+            console.error("Error updating bRoll: ", error);
+        }
+    }
+
+    static async updateStorylinePartWithS3Url(storylineId, promptId, s3FilePath, s3UriPath, twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+
+            // Update the specific storyline part with the s3FilePath and s3UriPath
+            const updateResult = await collection.updateOne(
+                { _id: new ObjectId(storylineId), "storylineParts.promptId": new ObjectId(promptId) },
+                { $set: { "storylineParts.$.s3FilePath": s3FilePath, "storylineParts.$.s3UriPath": s3UriPath, "storylineParts.$.twyneId": new ObjectId(twyneId) } }
+            );
+
+            return updateResult;
+        } catch (error) {
+            console.error("Error in StorylineModel.updateStorylinePartWithS3Url:", error);
             throw error;
         }
     }
