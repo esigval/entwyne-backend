@@ -1,0 +1,27 @@
+{
+    "templateName": "{Name of Template}",
+    "templateGoal": "{A natural language query that describes the goal of the template e.g. `I want to create a template that tells the story of how two people met and fell in love`}",
+    "templateSturcture": "{3 Act Structure, 5 Act Structure, Heroes Journey, etc, or a custom structure, use preceding question to infer and clarify from the user a good suggestion based on what they want.}",
+    "leadingQuestion": {"This is the conversational question that will initially open the conversation e.g.` How did you both first meet?"},
+    "templateLengthInTotal": "{time variable}", // (integer in seconds)
+    "averageCutLength": "{Use this variable}", // (integer in seconds)
+    "maxInterviews": "{User Variable}", // (Integer)
+    "fillerFramesPerInterview": "{This would be a number}",
+    "rulesHeader": "Sample Rules",
+    "storylineParts": [ // `Example array as follows, it should expand per the number of interviews or narrative points above`
+    {
+      "Order": "{x}",
+      "SuggestedLength": "{length of time}",
+      "MediaType": "{video, picture, audio, graphic}",
+      "Storypart": "{of Template Story Structure}"
+    }
+  ],
+    "bRoll": [ // // `Example array as follows, it should expand per the number of interviews or narrative points above`
+        {
+            "clipName": "Clip 1",
+            "clipLength": 10,
+            "clipType": "video",
+
+        }
+    ]
+}

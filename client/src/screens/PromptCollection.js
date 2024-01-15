@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 
@@ -21,20 +22,22 @@ const PromptCollectionScreen = ({ route }) => {
     const [prompts, setPrompts] = useState([]);
     const { storyId, mediaType } = route.params;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchPromptsByStoryIdAndMediaType(storyId, mediaType);
-                setPrompts(data);
-            } catch (error) {
-                console.error('Error fetching prompts:', error);
-            }
-        };
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchData = async () => {
+                try {
+                    const data = await fetchPromptsByStoryIdAndMediaType(storyId, mediaType);
+                    setPrompts(data);
+                } catch (error) {
+                    console.error('Error fetching prompts:', error);
+                }
+            };
     
-        if (route.params?.fromScreen === 'DirectorReview') {
             fetchData();
-        }
-    }, [route.params, storyId, mediaType]);
+    
+            return () => {}; // optional cleanup function
+        }, [storyId, mediaType])
+    );
 
     
 

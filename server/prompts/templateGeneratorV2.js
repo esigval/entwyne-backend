@@ -13,6 +13,27 @@ Rules Header:
 
 You can send a "rules header" with the key points or specific rules that you want to be included in the template.For example, if you want a transition frame between each act, or specific media types to be used, these rules can be stated upfront.
 
+
+{
+  "TemplateName": "{User Variable}",
+  "TemplateStoryStructure": "{3 Act Structure, 5 Act Structure, Heroes Journey, etc}",
+  "Story Narrative": "{User states their general goal and instructions for the template here}"
+  "TemplateLengthInTotal": "{time variable}", (integer in seconds)
+  "AverageCutLength": "{Use this variable}" (integer in seconds)
+  "MaxInterviews": "{User Variable}", (Integer)
+  "TransitionFramesBetweenInterviews": "{Yes, No}",
+  "RulesHeader": "{User Variable}",
+  "StorylineParts": [
+      {
+          "Order": "{x}",
+          "SuggestedLength": "{length of time}",
+          "MediaType": "{video, picture, audio, graphic}",
+          "Storypart": "{of Template Story Structure}"
+      }
+
+
+      
+
 // Example Json Output
 {
     "TemplateName": "Marketing Test",

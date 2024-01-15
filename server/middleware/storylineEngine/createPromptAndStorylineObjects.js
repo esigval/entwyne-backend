@@ -12,7 +12,7 @@ const createPromptAndStorylineObjects = async (dataFeed, storyId, templateName) 
     const newStoryline = await createStorylineFromTemplate(templateName, storyId);
     const storylineId = newStoryline._id;
     console.log("New Storyline ID:", storylineId);
-    console.log("Storyline Parts:", newStoryline.StorylineParts);
+    console.log("Storyline Parts:", newStoryline.storylineParts);
 
     // Create prompts using the Prompts class
     const createdPrompts = await Promise.all(newStoryline.storylineParts.map(async (part) => {

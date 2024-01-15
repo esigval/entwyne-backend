@@ -5,6 +5,7 @@ import { addMessageToThread, createRun, checkRun, retrieveNewMessagesFromThread,
 import { StorylineDirectorAssistantv1 } from '../services/assistants.js';
 import { instructions } from '../prompts/assistantInstructions.js';
 import storyEngine from '../middleware/storylineEngine/storyEngine.js';
+import StorylineTemplate from '../models/storylineTemplateModel.js';
 
 const router = express.Router();
 
@@ -21,8 +22,12 @@ router.post('/', async (req, res) => {
         // Create or access the thread (logic to be implemented)
         await addMessageToThread(message, threadId);
 
+        // Get the template details
+        const template = await StorylineTemplate.getTemplateDetails(templateName);
+        console.log('template:', template);
+
         // Run the Thread on the Assistant and capture the run object
-        const run = await createRun(threadId, StorylineDirectorAssistantv1);
+        const run = await createRun(threadId, StorylineDirectorAssistantv1, template);
         console.log('Run created:', run);
 
         // Poll the run status

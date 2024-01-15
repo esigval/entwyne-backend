@@ -1,0 +1,26 @@
+{
+    "templateName": "What I Love About You",
+    "templateGoal": "To create a template that tells the story of what a person loves about their partner and how that has changed over their relationship",
+    "templateStructure": "Two-Part Reflective Structure",
+    "leadingQuestion": "Can you share one thing that instantly attracted you to your partner?",
+    "templateLengthInTotal": 60, 
+    "averageCutLength": 30, 
+    "maxInterviews": 2, 
+    "fillerFramesPerInterview": 2,
+    "rulesHeader": "Sample Rules",
+    "storylineParts": [
+        {
+            "Order": 1,
+            "SuggestedLength": 30,
+            "MediaType": "video",
+            "Storypart": "Current Feelings"
+        },
+        {
+            "Order": 2,
+            "SuggestedLength": 30,
+            "MediaType": "video",
+            "Storypart": "Evolution of Feelings"
+        }
+    ],
+    "bRoll": []
+}

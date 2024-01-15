@@ -3,23 +3,31 @@ import { ObjectId } from 'mongodb';
 
 class StorylineTemplate {
     constructor({
+        _id,
         templateName,
-        templateStoryStructure,
+        templateGoal,
+        templateStructure,
+        leadingQuestion,
         templateLengthInTotal,
         averageCutLength,
         maxInterviews,
-        transitionFramesBetweenInterviews,
+        fillerFramesPerInterview,
         rulesHeader,
-        storylineParts
+        storylineParts,
+        bRoll,
     }) {
+        this._id = _id;
         this.templateName = templateName;
-        this.templateStoryStructure = templateStoryStructure;
+        this.templateGoal = templateGoal;
+        this.templateStructure = templateStructure;
+        this.leadingQuestion = leadingQuestion;
         this.templateLengthInTotal = templateLengthInTotal;
         this.averageCutLength = averageCutLength;
         this.maxInterviews = maxInterviews;
-        this.transitionFramesBetweenInterviews = transitionFramesBetweenInterviews;
+        this.fillerFramesPerInterview = fillerFramesPerInterview;
         this.rulesHeader = rulesHeader;
         this.storylineParts = storylineParts || []; // Default to empty array if not provided
+        this.bRoll = bRoll || []; // Default to empty array if not provided
     }
 
     static get collectionName() {
@@ -47,6 +55,22 @@ class StorylineTemplate {
             return template ? template.storylineParts : null;
         } catch (error) {
             console.error("Error in StorylineTemplate.getStorylineParts:", error);
+            throw error;
+        }
+    }
+
+    static async getTemplateDetails(data) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineTemplate.collectionName);
+            const template = await collection.findOne({ templateName: data });
+            return template ? {
+                templateGoal: template.templateGoal,
+                templateStructure: template.templateStructure,
+                leadingQuestion: template.leadingQuestion
+            } : null;
+        } catch (error) {
+            console.error("Error in StorylineTemplate.getTemplateDetails:", error);
             throw error;
         }
     }

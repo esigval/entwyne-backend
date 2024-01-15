@@ -1,10 +1,11 @@
 import { openai } from '../../services/openAiAssistant.js';
 import { modelVersion } from '../../config.js';
 
-async function transformStoryToPrompts(instructions, threadHistory, templateParts) {
+async function transformStoryToPrompts(instructions, threadHistory, templateParts, template) {
   try {
+    console.log('storyline Template Parts', templateParts);
     const completion = await openai.chat.completions.create({
-      messages: [{ role: "system", content: instructions + threadHistory + templateParts }],
+      messages: [{ role: "system", content: instructions + '// storyGoal // ' + template.templateGoal + `// storyParts //` + templateParts + '//threadHistory//' + threadHistory}],
       model: modelVersion,
     });
 
