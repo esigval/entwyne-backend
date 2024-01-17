@@ -2,7 +2,8 @@ import { connect } from '../db/db.js'; // Adjust with your actual connection fil
 import { ObjectId } from 'mongodb';
 
 class Edit {
-    constructor(sourceMediaID, storylineId, filePath, mediaType, startTime, duration, resolution, frameRate, format, audioSettings, filters, overlayData, transitionType, outputPath, userComments, order, metadata, accessPermissions, beatType) {
+    constructor(_id, sourceMediaID, storylineId, filePath, mediaType, startTime, duration, resolution, frameRate, format, audioSettings, filters, overlayData, transitionType, outputPath, userComments, order, metadata, accessPermissions, beatType) {
+        this._id = _id;                     // Unique ID for the edit
         this.sourceMediaID = sourceMediaID; // Reference to the original media
         this.storylineId = storylineId;     // Reference to the storyline
         this.filePath = filePath;           // File path or URL of the source media
@@ -48,8 +49,53 @@ class Edit {
 
         }
     }
+
+
+
+    static async getEditsByStorylineId(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Edit.collectionName);
+    
+            if (ObjectId.isValid(storylineId)) {
+                storylineId = new ObjectId(storylineId);
+            }
+    
+            const documents = await collection.find({ storylineId }).toArray();
+            return documents.map(document => {
+                return new Edit(
+                    document._id,
+                    document.sourceMediaID,
+                    document.storylineId,
+                    document.filePath,
+                    document.mediaType,
+                    document.startTime,
+                    document.duration,
+                    document.resolution,
+                    document.frameRate,
+                    document.format,
+                    document.audioSettings,
+                    document.filters,
+                    document.overlayData,
+                    document.transitionType,
+                    document.outputPath,
+                    document.userComments,
+                    document.order,
+                    document.metadata,
+                    document.accessPermissions,
+                    document.beatType
+                );
+            });
+    
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    
+    
 }
 
 
 
 export default Edit;
+
