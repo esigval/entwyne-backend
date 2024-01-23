@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#6A1B9A', // This should be the purple color from your design
+        color: '#143F6B', // This should be the purple color from your design
     },
     descriptionText: {
         fontSize: 14,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     buttonStyle: {
         flexDirection: 'row', // Align icon and text horizontally
         alignItems: 'center', // Center icon and text vertically in the button
-        backgroundColor: '#8E24AA', // This should be the purple color of the button
+        backgroundColor: '#143F6B', // This should be the purple color of the button
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 20,
@@ -123,10 +123,10 @@ const styles = StyleSheet.create({
     buttonOutline: {
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: '#8E24AA' // Border color should match the filled button color
+        borderColor: '#143F6B' // Border color should match the filled button color
     },
     buttonOutlineText: {
-        color: '#8E24AA' // Text color should match the filled button color
+        color: '#143F6B' // Text color should match the filled button color
     }
 });
 

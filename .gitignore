@@ -6,6 +6,7 @@
 .pnp.js
 /lambdas/node_modules
 lambda/transcribeAudioLambda/node_modules
+lambda/renderVideoLambda/node_modules
 
 # testing
 /coverage

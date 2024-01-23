@@ -30,7 +30,8 @@ const createPromptAndStorylineObjects = async (dataFeed, storyId, templateName) 
                 prompt: feedItem.prompt,
                 twyneId: null, // or any specific value
                 mediaType: part.mediaType, // Using mediaType from the storyline part
-                promptTitle: feedItem.promptTitle
+                promptTitle: feedItem.promptTitle,
+                primers: feedItem.primers
             };
             console.log("Prompt Data:", promptData);
             return await promptModel.create(promptData);

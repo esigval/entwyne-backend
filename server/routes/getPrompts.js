@@ -5,7 +5,6 @@ router.get('/', async (req, res) => {
     try {
         const collection = req.db.collection('prompts');
         const docs = await collection.find({}).toArray();
-        console.log(docs);
         res.json(docs);
     } catch (err) {
         console.error('Failed to get stories:', err);

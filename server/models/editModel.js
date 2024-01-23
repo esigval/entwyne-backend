@@ -53,12 +53,17 @@ class Edit {
 
 
     static async getEditsByStorylineId(storylineId) {
+
         try {
             const db = await connect();
             const collection = db.collection(Edit.collectionName);
     
             if (ObjectId.isValid(storylineId)) {
                 storylineId = new ObjectId(storylineId);
+            } else if (!isNaN(storylineId)) {
+                storylineId = storylineId;
+            } else {
+                throw new Error('Invalid storylineId');
             }
     
             const documents = await collection.find({ storylineId }).toArray();

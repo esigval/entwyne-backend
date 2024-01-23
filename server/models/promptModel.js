@@ -10,6 +10,7 @@ class Prompts {
         mediaType,
         promptTitle,
         collected,
+        primers,
     }) {
         this.created = new Date();
         this.order = order;
@@ -19,6 +20,7 @@ class Prompts {
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
         this.collected = collected ?? false;
+        this.primers = primers ?? [];
     }
 
     static get collectionName() {

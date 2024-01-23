@@ -53,6 +53,7 @@ const PromptCollectionScreen = ({ route }) => {
                         title={item.promptTitle}
                         prompt={item.prompt}
                         storyId={item.storyId}
+                        primers={item.primers}
                     />
                 )}
                 ListEmptyComponent={<Text>No prompts available</Text>}

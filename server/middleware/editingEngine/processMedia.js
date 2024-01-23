@@ -7,8 +7,8 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const processMedia = async (storylineId) => {
-    const mediaFiles = await downloadAndSaveFiles(storylineId);
+const processMedia = async (storylineId, order) => {
+    const mediaFiles = await downloadAndSaveFiles(storylineId, order);
     const images = mediaFiles.imageFiles;
     const videos = mediaFiles.videoFiles;
 
@@ -24,8 +24,8 @@ const processMedia = async (storylineId) => {
  [0:v]scale=-2:1080:flags=lanczos[fg]; \
  [blurred]pad=1920:1080:(ow-iw)/2:(oh-ih)/2[bg]; \
  [bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1" \
--t 5 -c:v libx264 -pix_fmt yuv420p "${output}"`;
-        execSync(command);
+-t 5 -c:v libx264 -r 30 -pix_fmt yuv420p "${output}"`;
+        execSync(command); 
     });
 
 
@@ -35,7 +35,7 @@ const processMedia = async (storylineId) => {
         const command = `ffmpeg -i "${video}" \
 -c:v libx264 -crf 23 -preset fast -c:a aac -b:a 192k \
 -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" \
--pix_fmt yuv420p -ar 44100 -ac 2 "${output}"`;
+-r 30 -pix_fmt yuv420p -ar 44100 -ac 2 "${output}"`;
         execSync(command);
     });
 };

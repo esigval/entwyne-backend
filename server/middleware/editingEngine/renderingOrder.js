@@ -2,13 +2,10 @@ import Edit from "../../models/editModel.js";
 
 const renderingOrder = async (storylineId) => {
     const edits = await Edit.getEditsByStorylineId(storylineId);
-    console.log(`edits`, edits);
 
     // Find all narrative clips and sort by order
     let narrativeClips = edits.filter(edit => edit.beatType === 'narrative').sort((a, b) => a.order - b.order);
-    console.log(`narrativeClips`, narrativeClips);
     let bRollClips = edits.filter(edit => edit.beatType === 'b-roll').sort((a, b) => a.order - b.order);
-    console.log(`bRollClips`, bRollClips);
 
     let renderingOrder = [];
     let bRollIndex = 0;
@@ -48,7 +45,6 @@ const renderingOrder = async (storylineId) => {
         });  // Include beatType and mediaType
         bRollIndex++;
     }
-console.log(`renderingOrder`, renderingOrder);
     return renderingOrder;  // This now contains the ordered list of edit _ids
 };
 

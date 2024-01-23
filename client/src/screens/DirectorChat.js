@@ -1,5 +1,5 @@
 // DirectorChat.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { MessageBubble } from '../components/MessageBubble';
 import { MessageInput } from '../components/MessageInput';
@@ -14,7 +14,7 @@ import { sendMessageToServer } from '../services/chatService.js';
 const mockMessages = [
   {
     id: 1,
-    text: "To understand your story, I will need to ask a few questions, and you can either take a video, record audio, or text in chat.",
+    text: "To understand your story, I will need to ask a few questions, and at the end we'll move on to the next step to make interviews!",
     isDirector: true,
   },
   {
@@ -137,32 +137,34 @@ const DirectorChat = () => {
     }
   };
 
+  const scrollViewRef = useRef();
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.messagesContainer}>
+      <ScrollView
+        style={styles.messagesContainer}
+        ref={scrollViewRef}
+        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+      >
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}
       </ScrollView>
-      <TouchableOpacity style={styles.goOnButton} onPress={renderStory}>
-        <Text style={styles.goOnButtonText}>Render Story</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.goOnButton} onPress={devGoOnPress}>
-        <Text style={styles.goOnButtonText}>Go On</Text>
-      </TouchableOpacity>
-      {data.length > 0 ? (
-        <Picker
-          selectedValue={selectedValue}
-          style={styles.picker}
-          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-        >
-          {data.map((item, index) => (
-            <Picker.Item key={index} label={item.label} value={item.value} />
-          ))}
-        </Picker>
-      ) : (
-        <Text>Loading templates...</Text> // Or any other placeholder
-      )}
+      {/*
+  data.length > 0 ? (
+    <Picker
+      selectedValue={selectedValue}
+      style={styles.picker}
+      onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+    >
+      {data.map((item, index) => (
+        <Picker.Item key={index} label={item.label} value={item.value} />
+      ))}
+    </Picker>
+  ) : (
+    <Text>Loading templates...</Text> // Or any other placeholder
+  )
+*/}
       <MessageInput
         inputText={inputText}
         handleInputChange={handleInputChange} // Corrected from onInputChange to handleInputChange

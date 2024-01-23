@@ -84,7 +84,7 @@ const Tab1Screen = () => {
           <Button
             title="Create Story"
             onPress={handleCreateStoryPress}
-            style={{ marginVertical: 20 }}
+            style={{ marginVertical: 20, color: '#FF0000' }}
           />
         )}
       />

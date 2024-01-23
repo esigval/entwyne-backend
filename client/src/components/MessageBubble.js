@@ -8,7 +8,7 @@ export const MessageBubble = ({ message }) => {
     <View style={[styles.bubble, message.isDirector ? styles.directorBubble : styles.userBubble]}>
       {message.isLoading 
         ? <EllipsisLoading />
-        : <Text style={styles.text}>{message.text}</Text>
+        : <Text style={message.isDirector ? styles.directorText : styles.userText}>{message.text}</Text>
       }
       {message.isDirector && !message.isLoading}
     </View>
@@ -24,17 +24,25 @@ export const MessageBubble = ({ message }) => {
       maxWidth: '80%',
     },
     directorBubble: {
-      backgroundColor: '#E1E3E5',
+      backgroundColor: '#FFD696',
       alignSelf: 'flex-start',
       marginLeft: 15,
     },
     userBubble: {
-      backgroundColor: '#0078FF',
+      backgroundColor: '#143F6B',
       alignSelf: 'flex-end',
       marginRight: 15,
     },
     text: {
       fontSize: 16,
+    },
+    directorText: {
+      fontSize: 16,
+      color: 'black', // Or any color you want for director messages
+    },
+    userText: {
+      fontSize: 16,
+      color: 'white', // White color for user messages
     },
   });
 

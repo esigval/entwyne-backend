@@ -3,12 +3,10 @@ import { videoConfig } from './videoConfig.js'; // Importing the video config
 import Edit from '../../models/editModel.js'; // Assuming Edit class is in Edit.js
 import StorylineModel from '../../models/storylineModel.js'; // Assuming StorylineModel class is in StorylineModel.js
 
-
-
-// Example usage
-async function main() {
+async function editsFromStoryline(storylineId) {
     try {
-        const storylineId = new ObjectId('65a59778e91d4c46ebf40ed5'); // Ensure this is ObjectId
+        // const storylineObjectId = new ObjectId(storylineId);
+        // console.log(`storylineObjectId`, storylineObjectId)
         const storylineDocument = await StorylineModel.findById(storylineId);
 
         if (!storylineDocument) {
@@ -23,7 +21,7 @@ async function main() {
     }
 }
 
-main();
+export default editsFromStoryline;
 
 const transformStorylineToEdits = (storyline) => {
     const edits = [];
@@ -88,6 +86,7 @@ const transformStorylineToEdits = (storyline) => {
 
     return edits;
 }
+
 
 // Compare to this object and make sure we're aligning properly: 
 

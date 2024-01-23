@@ -1,0 +1,27 @@
+@keyframes countdown {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: calc(2 * 3.14 * 190); /* Assuming the radius is 190 */
+    }
+}
+
+.circular-timer {
+    position: 'absolute';
+    z-index: 1;
+    /* Adjust the size of the SVG to fit your needs */
+    width: 400px; 
+    height: 400px;
+}
+
+.circular-timer circle {
+    fill: none;
+    stroke: #00e0ff; /* Color of the progress line */
+    stroke-width: 3; /* Width of the progress line */
+    stroke-dasharray: calc(2 * 3.14 * 190); /* Circumference of the circle */
+    stroke-dashoffset: calc(2 * 3.14 * 190); /* Initially set to full circumference */
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+    animation: countdown 30s linear forwards; /* Run the animation over 30 seconds */
+}

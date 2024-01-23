@@ -6,12 +6,14 @@ class StorylineModel {
         _id = new ObjectId(),
         storyId,
         storylineParts = [],
-        bRoll = []
+        bRoll = [],
+        finalRender,
     }) {
         this._id = _id;
         this.storyId = storyId;
         this.storylineParts = storylineParts;
         this.bRoll = bRoll;
+        this.finalRender = finalRender;
     }
 
 
@@ -147,6 +149,52 @@ class StorylineModel {
             throw error;
         }
     }
+
+    static async updateStorylineWithFinalRender(storylineId, finalRenderUrl) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+    
+            // Update the specific storyline with the finalRenderUrl
+            const updateResult = await collection.updateOne(
+                { _id: new ObjectId(storylineId) },
+                { $set: { finalRender: finalRenderUrl } }
+            );
+    
+            return updateResult;
+        } catch (error) {
+            console.error("Error in StorylineModel.updateStorylineWithFinalRender:", error);
+            throw error;
+        }
+    }
+
+    static async findFinalRender(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+            const document = await collection.findOne({ _id: new ObjectId(storylineId) });
+            return document ? new StorylineModel(document) : null;
+        } catch (error) {
+            console.error("Error in StorylineModel.findFinalRender:", error);
+            throw error;
+        }
+    }
+
+    static async findStorylineByStoryId(storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+            const document = await collection.findOne({ storyId: storyId }); // Remove new ObjectId()
+            return document ? new StorylineModel(document) : null;
+        } catch (error) {
+            console.error("Error in StorylineModel.findStorylineByStoryId:", error);
+            throw error;
+        }
+    }
+
+    
+
+
 
 
 }

@@ -1,0 +1,50 @@
+'[
+    {
+        "_id": "65a5afe8ef83ddab15aafdaf",
+        "newOrder": 0,
+        "filePath": "https://twynes.s3.amazonaws.com/video/65a59778e91d4c46ebf40ed6_20240115123724.webm",
+        "beatType": "narrative",
+        "mediaType": "video",
+        "duration": 30
+    },
+    {
+        "_id": "65a5afe8ef83ddab15aafdb1",
+        "newOrder": 1,
+        "filePath": "https://twynes-post.s3.amazonaws.com/pictures/20240115123802_f0be1f67-19e4-4d4c-aeae-6e5a5d6a2139 - Copy.jpg",
+        "beatType": "b-roll",
+        "mediaType": "image/jpeg",
+        "duration": 5
+    },
+    {
+        "_id": "65a5afe9ef83ddab15aafdb2",
+        "newOrder": 2,
+        "filePath": "https://twynes-post.s3.amazonaws.com/pictures/20240115123803_316226862_10229536440213731_6391272906758594362_n.jpg",
+        "beatType": "b-roll",
+        "mediaType": "image/jpeg",
+        "duration": 5
+    },
+    {
+        "_id": "65a5afe8ef83ddab15aafdb0",
+        "newOrder": 3,
+        "filePath": "https://twynes.s3.amazonaws.com/video/65a59778e91d4c46ebf40ed7_20240115123745.webm",
+        "beatType": "narrative",
+        "mediaType": "video",
+        "duration": 30
+    },
+    {
+        "_id": "65a5afe9ef83ddab15aafdb3",
+        "newOrder": 4,
+        "filePath": "https://twynes-post.s3.amazonaws.com/pictures/20240115123804_0347ee32f084592189558df342e53e81.jpg",
+        "beatType": "b-roll",
+        "mediaType": "image/jpeg",
+        "duration": 5
+    },
+    {
+        "_id": "65a5afe9ef83ddab15aafdb4",
+        "newOrder": 5,
+        "filePath": "https://twynes-post.s3.amazonaws.com/pictures/20240115123805_CoupleFinished.png",
+        "beatType": "b-roll",
+        "mediaType": "image/png",
+        "duration": 5
+    }
+]'

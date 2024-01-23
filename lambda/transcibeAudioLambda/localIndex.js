@@ -1,7 +1,7 @@
 import { TranscribeClient, StartTranscriptionJobCommand } from "@aws-sdk/client-transcribe";
 import dotenv from 'dotenv';
 dotenv.config();
-// const { connect } from './db.js'; // Uncomment if you need MongoDB connection
+import { connect } from './db.js'; // Uncomment if you need MongoDB connection
 
 // Initialize AWS Transcribe client
 const transcribeClient = new TranscribeClient({ region: "us-east-1" });
@@ -30,11 +30,11 @@ const startTranscription = async () => {
         console.log("Transcription job started successfully, response:", JSON.stringify(response));
 
         // Uncomment and modify if MongoDB update is required
-        // const db = await connect(); // Connect to MongoDB
-        // const collection = db.collection('twynes'); // Replace with your collection name
-        // const update = { $set: { transcriptionFileUri: transcriptionOutputUri } };
-        // await collection.updateOne({ audioFileUri: audioFileUri }, update);
-        // console.log("MongoDB record updated successfully");
+        const db = await connect(); // Connect to MongoDB
+        const collection = db.collection('twynes'); // Replace with your collection name
+        const update = { $set: { transcriptionFileUri: transcriptionOutputUri } };
+        await collection.updateOne({ audioFileUri: audioFileUri }, update);
+        console.log("MongoDB record updated successfully");
 
     } catch (error) {
         console.error("Error starting transcription job:", error);

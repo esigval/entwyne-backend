@@ -16,6 +16,11 @@ const ProcessingMomentComponent = ({route}) => {
   const navigation = useNavigation();
   const { storyId, newTwyneId, promptDetail, promptId } = route.params;
 
+  /* test block const newTwyneId = '65a59784e91d4c46ebf40ed8';
+  const promptId = '65a59778e91d4c46ebf40ed6';
+  const promptDetail = 'Reflect on the first thing that attracted you to your partner. Share that initial spark with us!';
+  const storyId = '65a596f6e91d4c46ebf40ed4';*/
+
   const hasNavigated = useRef(false);
   
   

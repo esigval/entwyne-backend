@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const MarketingPromptCollectorCard = ({ promptId, title, prompt, storyId }) => {
+const MarketingPromptCollectorCard = ({ promptId, title, prompt, storyId, primers }) => {
     const navigation = useNavigation();
 
     const handleRequestTwynePress = () => {
-        navigation.navigate('CameraCapture', {promptDetail: prompt, promptId: promptId, storyId: storyId });
+        navigation.navigate('CameraCapture', {promptDetail: prompt, promptId: promptId, storyId: storyId, primers });
     };
 
     return (
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#6A1B9A',
+        color: '#143F6B',
     },
     descriptionText: {
         fontSize: 14,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     buttonStyle: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#8E24AA',
+        backgroundColor: '#143F6B',
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 20,

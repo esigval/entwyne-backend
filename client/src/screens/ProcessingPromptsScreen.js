@@ -47,7 +47,12 @@ const creatingStoryLoadingComponent = ({route}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get(`${API_BASE_URL}/v1/checkPromptLoading?storyId=${storyId}&mediaType=${mediaType}`);
+        const result = await axios.get(`${API_BASE_URL}/v1/checkPromptLoading`, {
+          params: {
+            storyId: storyId,
+            mediaType: mediaType,
+          }
+        });
         setData(result.data);
       } catch (error) {
         console.error(error);

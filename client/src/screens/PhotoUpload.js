@@ -3,6 +3,7 @@ import { View, Text, Pressable, Image, StyleSheet, ScrollView } from 'react-nati
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { fadeIn, fadeOut, fadeTransition } from '../functions/fadeAnimations.js';
 import couplePhoto from '../assets/images/CoupleFinished.png';
 import { WebFileUpload } from '../components/WebFileUpload.js/WebFileUpload.js'; // Import your WebFileUpload component
 
@@ -10,12 +11,19 @@ const PhotoUpload = ({ route }) => {
     const navigation = useNavigation();
     const [imageThumbnails, setImageThumbnails] = useState([]);
     const [files, setFiles] = useState([]); // Add this line
+    const [isLoading, setIsLoading] = useState(false);
+    const [isUploaded, setIsUploaded] = useState(false);
+
     const directorNotes = 'Now We’re Going to Fill in Some Moments Between the Film...';
     const isUploadable = imageThumbnails.length > 0;
 
-    const { data, newTwyneId, storyId, promptDetail, promptId } = route.params;
-    const momentVideo = data.thumbnailUrl;
-    
+
+    // const { data, newTwyneId, storyId, promptDetail, promptId } = route.params;
+    //const momentVideo = data.thumbnailUrl;
+    const momentVideo = couplePhoto;
+    const promptId = '65a59778e91d4c46ebf40ed6';
+
+
 
     const handleRemoveThumbnail = (name) => {
         // Filter out the thumbnail and file with the matching name
@@ -36,7 +44,9 @@ const PhotoUpload = ({ route }) => {
     };
 
     const handleSubmit = async () => {
-        if (!isUploadable) return; // Check if there are files to upload
+        if (!isUploadable || isLoading) return;
+
+        setIsLoading(true);
 
         let storylineId;
 
@@ -55,6 +65,7 @@ const PhotoUpload = ({ route }) => {
 
                     // Assign storylineId here
                     storylineId = response.data.storylineId;
+                    console.log(`storylineid`, storylineId)
 
                     // Set the headers for the PUT request
                     const options = {
@@ -80,8 +91,13 @@ const PhotoUpload = ({ route }) => {
                 console.error('Error during file upload:', error);
             }
         }
-
-        navigation.navigate('TwyneLoadingScreen', { storylineId: storylineId });
+        console.log('storylineId:', storylineId)
+        setIsLoading(false);
+        setIsUploaded(true);
+        setTimeout(() => {
+            fadeOut();
+            navigation.navigate('TitleDetails', { storylineId });
+        }, 1000);
     };
 
 
@@ -126,11 +142,13 @@ const PhotoUpload = ({ route }) => {
                 {/* Submit Button */}
 
                 <Pressable
-                    style={isUploadable ? styles.buttonActive : styles.buttonInactive}
-                    onPress={isUploadable ? handleSubmit : null} // Replace `handleSubmit` with your actual submit function
-                    disabled={!isUploadable}
+                    style={isUploadable ? (isUploaded ? styles.buttonUploaded : styles.buttonActive) : styles.buttonInactive}
+                    onPress={handleSubmit}
+                    disabled={!isUploadable || isLoading}
                 >
-                    <Text style={styles.buttonText}>Submit</Text>
+                    <Text style={styles.buttonText}>
+                        {isLoading ? 'Uploading...' : isUploaded ? 'Uploaded!' : 'Submit'}
+                    </Text>
                 </Pressable>
             </View>
         </View>
@@ -145,6 +163,10 @@ const styles = StyleSheet.create({
         fontSize: 16, // Set the font size
         textAlign: 'center', // Center the text horizontally
         // Other styles as needed...
+    },
+    buttonUploaded: {
+        backgroundColor: '#4CAF50', // Green or any other color indicating success
+        // ... other styles similar to buttonActive
     },
     buttonActive: {
         backgroundColor: '#143F6B', // Active color (blue)

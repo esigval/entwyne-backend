@@ -40,6 +40,10 @@ import collectPictures from './routes/collectPictures.js';
 import getThumbnails from './routes/getThumbnails.js'; 
 import checkPromptLoading from './routes/checkPromptLoading.js';  
 import getStoryPrompts from './routes/getStoryPrompts.js';
+import getTitleDetails from './routes/sendTitleDetails.js';
+import finalRender from './routes/getFinalRender.js';
+import confirmVideoRender from './routes/confirmVideoRender.js';
+import getStorylines from './routes/getStorylines.js';
 // import modelResponse from './routes/assistants/modelResponse.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
@@ -75,6 +79,10 @@ app.use(`/v1/collectPictures`, collectPictures);
 app.use(`/v1/getThumbnails`, getThumbnails);
 app.use(`/v1/checkPromptLoading`, checkPromptLoading);
 app.use(`/v1/getStoryPrompts`, getStoryPrompts);
+app.use(`/v1/getTitleDetails`, getTitleDetails);
+app.use(`/v1/finalRender`, finalRender);
+app.use(`/v1/confirmVideoRender`, confirmVideoRender);
+app.use(`/v1/getStorylines`, getStorylines);
 // app.use('/v1/assistants/modelResponse', modelResponse);
 // app.use('/collectCharacters', collectCharactersRouter);
 

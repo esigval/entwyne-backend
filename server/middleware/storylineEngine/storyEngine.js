@@ -21,6 +21,8 @@ const storyEngine = async (instructions, storyId, threadId, templateName) => {
         // Give threadHistory to chat completions to create output
         const promptJson = await transformStoryToPrompts(instructions, threadHistory, templateParts, template); // Implement this function
 
+        // const primers = await transformPromptsToPrimers(threadHistory, promptJson, template); // Implement this function
+
         // Convert promptJson to database entries and storyline objects
         const dataFeed = await createPromptAndStorylineObjects(promptJson, storyId, templateName); // Implement this function
         return dataFeed;

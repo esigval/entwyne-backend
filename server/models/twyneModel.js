@@ -58,12 +58,12 @@ class Twyne {
             // Get all Twynes that match the storylineId
             const matchingTwynes = await collection.find({ storylineId: new ObjectId(storylineId) }).toArray();
     
-            // Get the pictureUri of the first numPictures matching Twynes
-            const pictureUris = matchingTwynes.slice(0, numPictures).map(twyne => twyne.pictureUri);
+            // Get the s3UriThumbnail or s3FilePath of the first numPictures matching Twynes
+            const s3UriThumbnails = matchingTwynes.slice(0, numPictures).map(twyne => twyne.thumbnailUrl || twyne.s3FilePath);
     
-            return pictureUris;
+            return s3UriThumbnails;
         } catch (error) {
-            console.error('Failed to get picture URIs by storyline ID:', error);
+            console.error('Failed to get s3UriThumbnail or s3FilePath by storyline ID:', error);
         }
     }
 

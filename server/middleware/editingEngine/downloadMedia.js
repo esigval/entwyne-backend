@@ -1,7 +1,6 @@
 import fs from 'fs';
 import axios from 'axios';
 import path from 'path';
-import renderingOrder from './renderingOrder.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -37,8 +36,7 @@ const ensureDirectoryExists = (dirPath) => {
     }
 };
 
-const downloadAndSaveFiles = async (storylineId) => {
-    const order = await renderingOrder(storylineId);
+const downloadAndSaveFiles = async (storylineId, order) => {
     const videoDir = path.join(__dirname, 'quedVideos');
     const imageDir = path.join(__dirname, 'images');
 
