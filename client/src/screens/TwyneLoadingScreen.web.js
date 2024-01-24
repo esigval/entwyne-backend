@@ -12,6 +12,7 @@ import gsap from 'gsap';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import DesktopWrapper from '../components/DesktopWrapper';
 
 const TwyneLoadingScreen = ({ route }) => {
     gsap.registerPlugin(MotionPathPlugin);
@@ -180,10 +181,11 @@ const TwyneLoadingScreen = ({ route }) => {
         TwynesMobile;
 
     return (
+        <DesktopWrapper>
         <View style={styles.container}>
             <View style={styles.backgroundSvg}>
                 {Platform.OS === 'web' ? (
-                    <svg width="450" height="1000" viewBox="0 0 305 812" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="100%" height="100%" viewBox="0 0 305 812" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <pattern id="image1" patternUnits="userSpaceOnUse" width="64" height="34.5">
                                 <svg width="64" height="34.5">
@@ -233,6 +235,7 @@ const TwyneLoadingScreen = ({ route }) => {
                 <Text id="progressText" className="progressText" style={styles.progressText}>{progress}%</Text>
             </View>
         </View>
+        </DesktopWrapper>
     );
 };
 
@@ -241,6 +244,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor:'#fff',
+        position: 'relative',
+        height: '100%',
     },
     backgroundSvg: {
         position: 'absolute',

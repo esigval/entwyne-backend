@@ -28,8 +28,8 @@ const FinalRenderVideo = ({ storylineId }) => {
           url={videoUrl}
           playing
           controls
-          width='320px'
-          height='240px'
+          width='100%'
+          
           light={thumbnailUrl}
         />
       )}

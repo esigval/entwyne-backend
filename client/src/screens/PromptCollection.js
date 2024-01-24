@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import DesktopWrapper from '../components/DesktopWrapper';
 
 import MarketingPromptCollectorCard from '../components/MarketingPromptCollector';
 
@@ -42,6 +43,7 @@ const PromptCollectionScreen = ({ route }) => {
     
 
     return (
+        <DesktopWrapper>
         <View style={styles.container}>
             <Text style={styles.headerText}>Prompts</Text>
             <FlatList
@@ -69,6 +71,7 @@ const PromptCollectionScreen = ({ route }) => {
                 // }
             />
         </View>
+        </DesktopWrapper>
     );
 };
 

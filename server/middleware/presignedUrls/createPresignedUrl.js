@@ -13,7 +13,7 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-const createPresignedUrl = (bucketName, promptId, expires = 60) => {
+const createPresignedUrl = async (bucketName, promptId, expires = 60) => {
   // Generate a unique key using the video name and a timestamp
   const timestamp = moment().format('YYYYMMDDHHmmss');
   const key = `video/${promptId}_${timestamp}.webm`;

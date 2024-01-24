@@ -7,6 +7,7 @@
 /lambdas/node_modules
 lambda/transcribeAudioLambda/node_modules
 lambda/renderVideoLambda/node_modules
+lambda/sendRenderDemo/node_modules
 
 # testing
 /coverage

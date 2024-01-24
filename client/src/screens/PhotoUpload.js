@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Pressable, Image, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { fadeIn, fadeOut, fadeTransition } from '../functions/fadeAnimations.js';
 import couplePhoto from '../assets/images/CoupleFinished.png';
 import { WebFileUpload } from '../components/WebFileUpload.js/WebFileUpload.js'; // Import your WebFileUpload component
+import DesktopWrapper from '../components/DesktopWrapper';
+
 
 const PhotoUpload = ({ route }) => {
     const navigation = useNavigation();
@@ -19,7 +21,7 @@ const PhotoUpload = ({ route }) => {
 
 
     // const { data, newTwyneId, storyId, promptDetail, promptId } = route.params;
-    //const momentVideo = data.thumbnailUrl;
+    // const momentVideo = data.thumbnailUrl;
     const momentVideo = couplePhoto;
     const promptId = '65a59778e91d4c46ebf40ed6';
 
@@ -103,55 +105,62 @@ const PhotoUpload = ({ route }) => {
 
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.headerText}>Photo Upload</Text>
-            <Image
-                style={styles.image}
-                source={momentVideo}
-            />
-            <View style={styles.notesContainer}>
-                <Text style={styles.textContent}>{directorNotes}</Text>
+        <DesktopWrapper>
+            <View style={styles.container}>
+                <Text style={styles.headerText}>Photo Upload</Text>
+                <Image
+                    style={styles.image}
+                    source={momentVideo}
+                />
+                <View style={styles.notesContainer}>
+                    <Text style={styles.textContent}>{directorNotes}</Text>
+                </View>
+
+
+                {/* File Upload Component */}
+                <WebFileUpload onFilesSelect={handleFilesSelect} />
+
+
+                {/* Display Image Thumbnails */}
+                <View style={styles.thumbnailContainer}>
+                    {imageThumbnails.map((image, index) => (
+                        <View key={image.name} style={styles.thumbnail}>
+                            <Image
+                                source={{ uri: image.preview }}
+                                style={styles.imagePreview}
+                            />
+                            {/* Remove Button */}
+                            <Pressable style={styles.removeButton} onPress={() => handleRemoveThumbnail(image.name)}>
+                                <Text style={styles.removeButtonText}>X</Text>
+                            </Pressable>
+                        </View>
+                    ))}
+                </View>
+
+
+
+
+                <View style={styles.buttonContainer}>
+                    <Text style={styles.textAboveButton}>I'm ready to submit</Text>
+                    {/* Submit Button */}
+
+                    <Pressable
+                        style={isUploadable ? (isUploaded ? styles.buttonUploaded : styles.buttonActive) : styles.buttonInactive}
+                        onPress={handleSubmit}
+                        disabled={!isUploadable || isLoading}
+                    >
+                        {isLoading ? (
+                            <ActivityIndicator size="small" color="#FFF" />
+                        ) : isUploaded ? (
+                            <Text style={styles.buttonText}>Complete!</Text>
+                        ) : (
+                            <Text style={styles.buttonText}>Submit</Text>
+                        )}
+                    </Pressable>
+
+                </View>
             </View>
-
-
-            {/* File Upload Component */}
-            <WebFileUpload onFilesSelect={handleFilesSelect} />
-
-
-            {/* Display Image Thumbnails */}
-            <View style={styles.thumbnailContainer}>
-                {imageThumbnails.map((image, index) => (
-                    <View key={image.name} style={styles.thumbnail}>
-                        <Image
-                            source={{ uri: image.preview }}
-                            style={styles.imagePreview}
-                        />
-                        {/* Remove Button */}
-                        <Pressable style={styles.removeButton} onPress={() => handleRemoveThumbnail(image.name)}>
-                            <Text style={styles.removeButtonText}>X</Text>
-                        </Pressable>
-                    </View>
-                ))}
-            </View>
-
-
-
-
-            <View style={styles.buttonContainer}>
-                <Text style={styles.textAboveButton}>I'm ready to submit</Text>
-                {/* Submit Button */}
-
-                <Pressable
-                    style={isUploadable ? (isUploaded ? styles.buttonUploaded : styles.buttonActive) : styles.buttonInactive}
-                    onPress={handleSubmit}
-                    disabled={!isUploadable || isLoading}
-                >
-                    <Text style={styles.buttonText}>
-                        {isLoading ? 'Uploading...' : isUploaded ? 'Uploaded!' : 'Submit'}
-                    </Text>
-                </Pressable>
-            </View>
-        </View>
+        </DesktopWrapper>
     );
 };
 
@@ -165,8 +174,13 @@ const styles = StyleSheet.create({
         // Other styles as needed...
     },
     buttonUploaded: {
-        backgroundColor: '#4CAF50', // Green or any other color indicating success
-        // ... other styles similar to buttonActive
+        backgroundColor: '#F55353', // Active color (blue)
+        padding: 15,
+        borderRadius: 20,
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 5,
     },
     buttonActive: {
         backgroundColor: '#143F6B', // Active color (blue)
@@ -217,6 +231,7 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         backgroundColor: '#fff',
         position: 'relative',
+        height: '100%',
     },
     removeButtonText: {
         color: 'white',
@@ -239,7 +254,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '90%',
-        height: 200, // You might want to adjust this
+        height: 300, // You might want to adjust this
         borderRadius: 10,
         marginBottom: 20,
     },

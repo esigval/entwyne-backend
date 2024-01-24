@@ -1,24 +1,37 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, ActivityIndicator } from 'react';
 import { View, Text, Animated, StyleSheet, Dimensions, Pressable, Image, ScrollView } from 'react-native';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native'
 import FadeInView from '../components/FadeInView.js';
+import couplePhoto from '../assets/images/CoupleFinished.png';
 import { DataContext } from '../utils/dataContext.js';
+import DesktopWrapper from '../components/DesktopWrapper';
 
 
 const DirectorReview = ({ route }) => {
+    const [isLoading, setIsLoading] = useState(false);
     const { twynes, prompts } = useContext(DataContext);
-    const { data, storyId, newTwyneId, promptDetail, promptId } = route.params;
-    console.log('promptId', promptId)
-    const transcription = data.transcription;
-    const directorNotes = data.directorReview;
-    const sentiment = data.sentimentAnalysis;
-    const score = data.directorReviewScore;
+    // const { data, storyId, newTwyneId, promptDetail, promptId } = route.params;
+    
+    // const transcription = data.transcription;
+    //const directorNotes = data.directorReview;
+    //const sentiment = data.sentimentAnalysis;
+    //const score = data.directorReviewScore;
     const prompt = promptDetail;
     const navigation = useNavigation();
-    const momentVideo = data.thumbnailUrl;
+    const momentVideo = { couplePhoto };
     const mediaType = 'video';
+
+    const data = 'filler';
+    const promptId = '65a59778e91d4c46ebf40ed6';
+    console.log('promptId', promptId)
+    const transcription = 'filler';
+    const directorNotes = 'filler';
+    const sentiment = 'filler';
+    const score = 'filler';
+    const promptDetail = 'filler';
+    const newTwyneId = 'filler';
 
     const handleDeleteTwyne = () => {
         axios.delete(`${API_BASE_URL}/v1/deleteTwyne/${newTwyneId}`)
@@ -36,6 +49,7 @@ const DirectorReview = ({ route }) => {
     };
 
     const handleConfirmTwyne = () => {
+        setIsLoading(true);
         axios.get(`${API_BASE_URL}/v1/confirmTwyne?promptId=${promptId}&newTwyneId=${newTwyneId}`)
             .then(response => {
                 if (response.status === 200) {
@@ -55,50 +69,56 @@ const DirectorReview = ({ route }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-                <Text style={styles.headerText}>Director Review</Text>
-                <View style={styles.transcriptionContainer}>
-                    <Text style={styles.textContent}>{prompt}</Text>
-                </View>
-                <Image
-                    style={styles.image}
-                    source={{ uri: momentVideo }}
-                />
-                <View style={styles.transcriptionContainer}>
-                    <Text style={styles.subHeaderText}>Transcription</Text>
-                    <Text style={styles.textContent}>{transcription}</Text>
-                </View>
-                <View style={styles.notesContainer}>
-                    <Text style={styles.subHeaderText}>Director Feedback</Text>
-                    <Text style={styles.textContent}>{directorNotes}</Text>
-                </View>
-                <View style={styles.splitContainer}>
-                    <View style={styles.column}>
-                        <Text style={styles.subHeaderText}>Sentiment</Text>
-                        <Text style={styles.textContent}>{sentiment}</Text>
+        <DesktopWrapper>
+            <View style={styles.container}>
+                <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+                    <Text style={styles.headerText}>Director Review</Text>
+                    <View style={styles.transcriptionContainer}>
+                        <Text style={styles.textContent}>{prompt}</Text>
                     </View>
-                    <View style={styles.column}>
-                        <Text style={styles.subHeaderText}>Score</Text>
-                        <Text style={styles.textContent}>{score}</Text>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: momentVideo }}
+                    />
+                    <View style={styles.transcriptionContainer}>
+                        <Text style={styles.subHeaderText}>Transcription</Text>
+                        <Text style={styles.textContent}>{transcription}</Text>
                     </View>
-                </View>
-            </ScrollView>
-            <View style={styles.buttonContainer}>
-                <Pressable
-                    style={styles.button}
-                    onPress={() => {
-                        navigation.navigate('CameraCapture', { promptDetail, promptId, storyId, fromScreen: 'DirectorReview' });
+                    <View style={styles.notesContainer}>
+                        <Text style={styles.subHeaderText}>Director Feedback</Text>
+                        <Text style={styles.textContent}>{directorNotes}</Text>
+                    </View>
+                    <View style={styles.splitContainer}>
+                        <View style={styles.column}>
+                            <Text style={styles.subHeaderText}>Sentiment</Text>
+                            <Text style={styles.textContent}>{sentiment}</Text>
+                        </View>
+                        <View style={styles.column}>
+                            <Text style={styles.subHeaderText}>Score</Text>
+                            <Text style={styles.textContent}>{score}</Text>
+                        </View>
+                    </View>
+                </ScrollView>
+                <View style={styles.buttonContainer}>
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => {
+                            navigation.navigate('CameraCapture', { promptDetail, promptId, storyId, fromScreen: 'DirectorReview' });
 
-                    }}
-                >
-                    <Text style={styles.buttonText}>Film Again</Text>
-                </Pressable>
-                <Pressable style={styles.buttonNext}>
-                    <Text style={styles.buttonNextText} onPress={handleConfirmTwyne}>Submit</Text>
-                </Pressable>
+                        }}
+                    >
+                        <Text style={styles.buttonText}>Film Again</Text>
+                    </Pressable>
+                    <Pressable style={styles.buttonNext}>
+                        {isLoading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Text style={styles.buttonNextText} onPress={handleConfirmTwyne}>Submit</Text>
+                        )}
+                    </Pressable>
+                </View>
             </View>
-        </View>
+        </DesktopWrapper>
     );
 };
 
@@ -111,7 +131,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         paddingTop: 50,
         backgroundColor: '#fff',
-        position: 'absolute',
+        position: 'relative',
+        height: '100%',
     },
     scrollView: {
         width: '100%',
@@ -121,7 +142,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingBottom: 100, // This should be the height of your buttonContainer
     },
-    
+
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -182,7 +203,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     buttonText: {
-        fontSize: 14,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#143F6B',
     },

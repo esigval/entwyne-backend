@@ -37,7 +37,6 @@ const saveTwyne = async (req, res, next) => {
             thumbnailUrl: `https://${process.env.S3_POST_BUCKET_NAME}.s3.amazonaws.com/thumbnails${jpgKey}`,
             videoUri: videoUri,
             audioUri: `s3://${process.env.S3_POST_BUCKET_NAME}/audio/${key}.mp3`,
-            transcription: "We had a wonderful time on the clouds. It was awesome",
             storylineId: storylineId,
             beatTag: "narrative",
 

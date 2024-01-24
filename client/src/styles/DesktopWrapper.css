@@ -1,0 +1,19 @@
+/* DesktopWrapper.css */
+.container {
+    display: flex;
+    flex-direction: column; /* Or 'row', depending on your layout */
+    align-items: center; /* Centers children horizontally */
+    justify-content: center; /* Centers children vertically */
+    background: linear-gradient(45deg, #143F6B, #F55353, #FFD696
+    );
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    z-index: -10;
+  }
+  
+  .contentContainer {
+    max-width: 768px;
+    width: 100%;
+    height: 100%;
+  }
+  

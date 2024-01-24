@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native'
 import FadeInView from '../components/FadeInView.js';
+import DesktopWrapper from '../components/DesktopWrapper';
 
 
 // Usage in your app
@@ -85,6 +86,7 @@ const ProcessingMomentComponent = ({route}) => {
   }, [data, navigation]);
 
   return (
+    <DesktopWrapper>
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Animated.View style={[styles.loadingBar, { width: loadingAnim }]} />
@@ -99,6 +101,7 @@ const ProcessingMomentComponent = ({route}) => {
         <Text style={styles.checkingText}>{currentCheck}</Text>
       </View>
     </View>
+    </DesktopWrapper>
   );
 };
 

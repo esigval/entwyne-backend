@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Platform } from 'react-native';
+import DesktopWrapper from './src/components/DesktopWrapper';
 import { NavigationContainer } from '@react-navigation/native';
 import AppHeader from './src/components/AppHeader';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
@@ -11,7 +12,7 @@ import ShareYourStoryScreen from './src/components/QRCode.js';
 import VideoConfirmationScreen from './src/screens/VideoConfirmationScreen.js';
 import FullScreenMediaScreen from './src/screens/FullScreenMediaPlayer.js';
 import WebMarketingHome from './src/components/webMarketing.js';
-import DirectorChat from './src/screens/DirectorChat.js';
+import DirectorChat from './src/screens/DirectorChat';
 import TwyneLoadingScreen from './src/screens/TwyneLoadingScreen';
 import ErrorBoundary from './src/utils/ErrorBoundary.js';
 import DeliverTwyne from './src/screens/DeliverTwyne.js';
@@ -47,14 +48,15 @@ const App = () => {
             <AppHeader />
             <NavigationContainer>
               <Stack.Navigator>
+              <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
+              <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={defaultScreenOptions} />
+              
                 <Stack.Screen name="Home" component={TabNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name="CameraCapture" component={CameraCapture} options={{ headerShown: false }} />
-                <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={defaultScreenOptions} />
                 <Stack.Screen name="ProcessingMoment" component={ProcessingMomentComponent} options={{ headerShown: false }} />
                 <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
                 <Stack.Screen name="TitleDetails" component={TitleDetails} options={{ headerShown: false }} />
                 <Stack.Screen name="ProcessingPrompts" component={ProcessingPromptsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
                 <Stack.Screen name="Marketing" component={WebMarketingHome} options={{ headerShown: false }} />
                 <Stack.Screen name="TwyneLoadingScreen" component={TwyneLoadingScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="DirectorChat" component={DirectorChat} options={{ headerShown: false }} />

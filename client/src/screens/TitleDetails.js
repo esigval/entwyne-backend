@@ -6,6 +6,7 @@ import { Route } from 'react-native-tab-view';
 import axios from 'axios';
 import couplePhoto from '../assets/images/CoupleFinished.png';
 import { useNavigation } from '@react-navigation/native';
+import DesktopWrapper from '../components/DesktopWrapper';
 
 const TitleDetails = ({ route }) => {
   const navigation = useNavigation();
@@ -16,7 +17,6 @@ const TitleDetails = ({ route }) => {
   const { storylineId } = route.params;
 
   const momentVideo = couplePhoto;
-  const promptId = '65a59778e91d4c46ebf40ed6';
 
   const sendDetails = async () => {
 
@@ -38,6 +38,7 @@ const TitleDetails = ({ route }) => {
   };
 
   return (
+    <DesktopWrapper>
     <View style={styles.container}>
       <Text style={styles.headerText}>Final Details!</Text>
       <Image
@@ -75,6 +76,7 @@ const TitleDetails = ({ route }) => {
         </Pressable>
       </View>
     </View>
+    </DesktopWrapper>
   );
 };
 
@@ -86,6 +88,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     backgroundColor: '#fff',
     position: 'relative',
+    height: '100%',
   },
   image: {
     width: '90%',

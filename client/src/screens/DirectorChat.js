@@ -1,6 +1,6 @@
 // DirectorChat.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { MessageBubble } from '../components/MessageBubble';
 import { MessageInput } from '../components/MessageInput';
 import { useNavigation } from '@react-navigation/native'
@@ -9,6 +9,7 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { sendMessageToServer } from '../services/chatService.js';
+import DesktopWrapper from '../components/DesktopWrapper';
 
 // Mock chat messages
 const mockMessages = [
@@ -140,6 +141,7 @@ const DirectorChat = () => {
   const scrollViewRef = useRef();
 
   return (
+    <DesktopWrapper>
     <View style={styles.container}>
       <ScrollView
         style={styles.messagesContainer}
@@ -172,12 +174,15 @@ const DirectorChat = () => {
         isTyping={isTyping}
       />
     </View>
+    </DesktopWrapper>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    height: '100%',
   },
   messagesContainer: {
     padding: 10,

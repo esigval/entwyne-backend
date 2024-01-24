@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Button, Text, StyleSheet, Pressable, Android, Animated } from 'react-native';
+import { View, Button, Text, StyleSheet, Pressable, Android, Animated, Platform } from 'react-native';
 import uploadVideoToS3 from '../functions/uploadVideoToS3';
 import { useNavigation } from '@react-navigation/native'
+import DesktopWrapper from '../components/DesktopWrapper';
 
 
 const WebCamera = ({ route }) => {
@@ -220,6 +221,7 @@ const WebCamera = ({ route }) => {
     };
 
     return (
+        <DesktopWrapper>
         <View style={styles.container}>
             <Animated.View style={{ ...styles.container, opacity: fadeAnim }}>
 
@@ -307,6 +309,7 @@ const WebCamera = ({ route }) => {
             </Animated.View>
 
         </View>
+        </DesktopWrapper>
     );
 };
 
@@ -318,6 +321,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         position: 'relative',
         paddingTop: 30,
+        height: `100%`,
     },
     placeholderLine: {
         height: 10, // Same height as the animated line

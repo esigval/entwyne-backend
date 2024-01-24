@@ -44,7 +44,7 @@ const assembleMainMedia = async (storylineId, coupleName, marriageDate, musicNam
     execSync(commandAddMusic);
 
     let key;
-    /*try {
+    try {
         key = await uploadFinalVideoToS3(storylineId, `final_${storylineId}.mp4`);
         // Cleanup files and directories after successful upload
         const pathsToClean = [
@@ -57,7 +57,7 @@ const assembleMainMedia = async (storylineId, coupleName, marriageDate, musicNam
         console.error('Failed to upload video or clean up files:', error);
     }
     console.timeEnd('assembleMainMedia');
-*/
+    
     return key;
 };
 
