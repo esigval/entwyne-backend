@@ -12,7 +12,6 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     console.log('checkMomentProcess route hit');
 
-
     const twyneId = req.query.newTwyneId;
     const storyId = req.query.storyId;
     console.log('storyId:', storyId)

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext, ActivityIndicator } from 'react';
-import { View, Text, Animated, StyleSheet, Dimensions, Pressable, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, Text, Animated, StyleSheet, Dimensions, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native'
@@ -12,17 +12,17 @@ import DesktopWrapper from '../components/DesktopWrapper';
 const DirectorReview = ({ route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { twynes, prompts } = useContext(DataContext);
-    // const { data, storyId, newTwyneId, promptDetail, promptId } = route.params;
+    const { data, storyId, newTwyneId, promptDetail, promptId } = route.params;
     
-    // const transcription = data.transcription;
-    //const directorNotes = data.directorReview;
-    //const sentiment = data.sentimentAnalysis;
-    //const score = data.directorReviewScore;
-    const prompt = promptDetail;
-    const navigation = useNavigation();
-    const momentVideo = { couplePhoto };
+    const transcription = data.transcription;
+    const directorNotes = data.directorReview;
+    const sentiment = data.sentimentAnalysis;
+    const score = data.directorReviewScore;
+    const momentVideo = data.thumbnailUrl;
     const mediaType = 'video';
-
+    const navigation = useNavigation();
+    /*const prompt = promptDetail;
+    
     const data = 'filler';
     const promptId = '65a59778e91d4c46ebf40ed6';
     console.log('promptId', promptId)
@@ -31,7 +31,7 @@ const DirectorReview = ({ route }) => {
     const sentiment = 'filler';
     const score = 'filler';
     const promptDetail = 'filler';
-    const newTwyneId = 'filler';
+    const newTwyneId = 'filler';*/
 
     const handleDeleteTwyne = () => {
         axios.delete(`${API_BASE_URL}/v1/deleteTwyne/${newTwyneId}`)

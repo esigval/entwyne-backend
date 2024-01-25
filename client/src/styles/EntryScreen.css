@@ -1,0 +1,29 @@
+/* Define the keyframes for the first path */
+@keyframes slide1 {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+/* Define the keyframes for the second path */
+@keyframes slide2 {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(15px); /* Slightly different translation */
+  }
+}
+
+/* Apply the animation to the first path */
+.animatedPath1 {
+  animation: slide1 5s infinite ease-in-out;
+}
+
+/* Apply the animation to the second path, with a slight delay */
+.animatedPath2 {
+  animation: slide2 5.2s infinite ease-in-out; /* Slightly longer duration */
+}

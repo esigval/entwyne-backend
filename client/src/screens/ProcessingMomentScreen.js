@@ -142,10 +142,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 50,
+    color: '#FFF',
   },
   standardText: {
     fontSize: 36,
-    color: '#333',
+    color: '#FFF',
     textAlign: 'center',
   },
 

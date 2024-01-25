@@ -22,6 +22,7 @@ import DirectorReview from './src/screens/DirectorMomentReviewScreen.js';
 import PhotoUpload from './src/screens/PhotoUpload.js';
 import ProcessingPromptsScreen from './src/screens/ProcessingPromptsScreen';
 import TitleDetails from './src/screens/TitleDetails.js';
+import EntryScreen from './src/screens/EntryScreen.web';
 
 
 
@@ -48,11 +49,11 @@ const App = () => {
             <AppHeader />
             <NavigationContainer>
               <Stack.Navigator>
-              <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
-              <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={defaultScreenOptions} />
-              
+              <Stack.Screen name="EntryScreen" component={EntryScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Home" component={TabNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name="CameraCapture" component={CameraCapture} options={{ headerShown: false }} />
+                <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
+                <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={defaultScreenOptions} />
                 <Stack.Screen name="ProcessingMoment" component={ProcessingMomentComponent} options={{ headerShown: false }} />
                 <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
                 <Stack.Screen name="TitleDetails" component={TitleDetails} options={{ headerShown: false }} />
@@ -63,7 +64,7 @@ const App = () => {
                 <Stack.Screen name="ShareYourStoryScreen" component={ShareYourStoryScreen} />
                 <Stack.Screen name="VideoConfirmation" component={VideoConfirmationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="FullScreenMediaScreen" component={FullScreenMediaScreen} />
-                <Stack.Screen name="PromptCollection" component={PromptCollectionScreen} />
+                <Stack.Screen name="PromptCollection" component={PromptCollectionScreen} options={{ headerShown: false }} />
               </Stack.Navigator>
             </NavigationContainer>
           </View>

@@ -118,21 +118,17 @@ const TwyneLoadingScreen = ({ route }) => {
         // Start the thumbnail animation
         Animated.timing(thumbnailAnim, {
             toValue: 100,
-            duration: 3000, // Duration of the animation
+            duration: 6000, // Duration of the animation
             useNativeDriver: true // Use native driver for better performance
-        }).start(() => {
-            // Handle animation end
-            // navigation.navigate('NextScreen'); // Navigate to the next screen
-        });
-
-        // Start progress update
-        // Start progress update
+        }).start();
+    
+        // Start progress update and path animations
         const interval = setInterval(() => {
             setProgress((oldProgress) => {
-                const newProgress = oldProgress + 5;
+                const newProgress = oldProgress + 1; // Manual progress update
                 if (newProgress >= 100) {
                     clearInterval(interval);
-
+    
                     // Define the paths and their corresponding animations
                     const pathsAndAnimations = [
                         { id: 'path1', animation: 'line-animation-1', reverseAnimation: 'line-animation-reverse-1' },
@@ -140,39 +136,50 @@ const TwyneLoadingScreen = ({ route }) => {
                         { id: 'path3', animation: 'line-animation-3', reverseAnimation: 'line-animation-reverse-3' },
                         { id: 'path4', animation: 'line-animation-4', reverseAnimation: 'line-animation-reverse-4' },
                     ];
-
+    
                     // For each path
                     pathsAndAnimations.forEach(({ id, animation, reverseAnimation }) => {
                         // Get the path element
                         const path = document.getElementById(id);
-
+    
                         // Remove the first animation class
                         path.classList.remove(animation);
-
+    
                         // Add the second animation class
                         path.classList.add(reverseAnimation);
-
-                        path.addEventListener('animationend', () => {
-                            // Navigate to the DeliverTwyne screen
-                            setTimeout(() => {
-                                navigation.navigate('DeliverTwyne', { storylineId: storylineId });
-                            }, 500);
-                        });
                     });
-                    const statusText = document.getElementById('statusText');
-                    statusText.textContent = 'All Done!';
-
-
-                    // Add the pop-fade animation
-                    statusText.style.animation = 'pop-fade 2s forwards';
-
                 }
                 return newProgress;
             });
-        }, 400); // Update progress every 300ms
-
+        }, 80); // Update progress every 400ms
+    
         return () => clearInterval(interval); // Clean up interval on component unmount
     }, []);
+    
+    useEffect(() => {
+        const checkStatusInterval = setInterval(async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/v1/getRenderStatus/${storylineId}`);
+                if (response.data.status === 'complete') {
+                    clearInterval(checkStatusInterval);
+    
+                    // Update the status text to 'All Done!'
+                    const statusText = document.getElementById('statusText');
+                    statusText.textContent = 'All Done!';
+                    statusText.style.animation = 'pop-fade 2s forwards';
+    
+                    // Navigate to the next screen after a delay
+                    setTimeout(() => {
+                        navigation.navigate('DeliverTwyne', { storylineId });
+                    }, 2000); // delay before navigating, adjust as needed
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }, 5000); // check every 5 seconds
+    
+        return () => clearInterval(checkStatusInterval); // clean up interval on unmount
+    }, [storylineId, navigation]);
 
     // Calculate thumbnail positions based on animation value here...
 

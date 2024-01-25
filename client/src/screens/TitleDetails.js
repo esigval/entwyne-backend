@@ -14,13 +14,13 @@ const TitleDetails = ({ route }) => {
   const [coupleName, setCoupleName] = useState('');
   const [marriageDate, setMarriageDate] = useState('');
 
-  const { storylineId } = route.params;
+  const { storylineId, data } = route.params;
 
-  const momentVideo = couplePhoto;
+  const momentVideo = data.thumbnailUrl;
 
   const sendDetails = async () => {
 
-    if (musicName && coupleName && marriageDate) {
+    if (coupleName && marriageDate) {
       try {
         const response = await axios.post(`${API_BASE_URL}/v1/confirmVideoRender`, {
           storylineId,

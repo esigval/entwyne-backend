@@ -26,16 +26,16 @@ const mockMessages = [
   // ... additional mock messages
 ];
 
-const DirectorChat = () => {
+const DirectorChat = ({route}) => {
   const [selectedValue, setSelectedValue] = useState();
   const [data, setData] = useState([]);
   const [messages, setMessages] = useState(mockMessages);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const navigation = useNavigation();
-  const route = useRoute();
   const storyId = route.params?.storyId;
   const threadId = route.params?.threadId;
+  console.log('storyId:', storyId);
 
 
   const onSend = async () => {

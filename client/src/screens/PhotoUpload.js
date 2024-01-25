@@ -20,10 +20,10 @@ const PhotoUpload = ({ route }) => {
     const isUploadable = imageThumbnails.length > 0;
 
 
-    // const { data, newTwyneId, storyId, promptDetail, promptId } = route.params;
-    // const momentVideo = data.thumbnailUrl;
-    const momentVideo = couplePhoto;
-    const promptId = '65a59778e91d4c46ebf40ed6';
+    const { data, newTwyneId, storyId, promptDetail, promptId } = route.params;
+    const momentVideo = data.thumbnailUrl;
+    // const momentVideo = couplePhoto;
+    // const promptId = '65a59778e91d4c46ebf40ed6';
 
 
 
@@ -98,7 +98,7 @@ const PhotoUpload = ({ route }) => {
         setIsUploaded(true);
         setTimeout(() => {
             fadeOut();
-            navigation.navigate('TitleDetails', { storylineId });
+            navigation.navigate('TitleDetails', { storylineId, data, newTwyneId, storyId, promptDetail, promptId});
         }, 1000);
     };
 
