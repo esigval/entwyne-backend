@@ -40,7 +40,7 @@ const assembleMainMedia = async (storylineId, coupleName, marriageDate, musicNam
 
     const musicFilePath = path.join(__dirname, 'music', musicName);
     const finalOutputPath = path.join(__dirname, 'renderedVideos', `final_${storylineId}.mp4`);
-    const commandAddMusic = `ffmpeg -i "${transitionOutput}" -i "${musicFilePath}" -filter_complex "[1:a]volume=0.2[music];[0:a][music]amix=inputs=2:duration=first[a]" -map 0:v -map "[a]" -c:v libx264 -shortest "${finalOutputPath}"`;
+    const commandAddMusic = `ffmpeg -i "${transitionOutput}" -i "${musicFilePath}" -filter_complex "[1:a]volume=0.1[music];[0:a][music]amix=inputs=2:duration=first[a]" -map 0:v -map "[a]" -c:v libx264 -shortest "${finalOutputPath}"`;
     execSync(commandAddMusic);
 
     let key;

@@ -24,7 +24,6 @@ const ProcessingMomentComponent = ({route}) => {
 
   const hasNavigated = useRef(false);
   
-  
   console.log('newTwyneId:', newTwyneId);
 
   useEffect(() => {
@@ -46,7 +45,7 @@ const ProcessingMomentComponent = ({route}) => {
       loadingAnim,
       {
         toValue: Dimensions.get('window').width,  // Animate to full width of the screen
-        duration: 5000,  // Duration of the animation
+        duration: 15000,  // Duration of the animation
         useNativeDriver: false,
       }
     ).start();

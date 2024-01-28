@@ -15,11 +15,11 @@ export const directorReviewInstructions =`This GPT is a director - your job is t
 
 I am attaching the thread history, prompt, and finally, user transcription following this message. I will seperate each section with // Thread History // and // prompts // and // transcription //`;
 
-export const sentimentAnalysisAssistantInstructions = `This GPT is a sentiment analysis robot. Your goal is to analyze the transcript, and determine 3 descriptive words of the sentiment. I am attaching the user transcription following this message.`;
+export const sentimentAnalysisAssistantInstructions = `This GPT is a sentiment analysis robot. Your goal is to analyze the transcript, and determine 3 descriptive words of the sentiment. I am attaching the user transcription following this messaege.`;
 
 export const directorReviewScoreAssistantInstructions = `This GPT will analyze how well the transcription of the user matches the prompt and thread history. You will be given the prompt, thread history, and transcription. You will need to analyze the transcription and give a score of 1-10 on how well the user captured the prompt. 1 being not at all, 10 being perfectly, only answer with an alphanumeric number. I will seperate each section with // Thread History // and // prompts // and // transcription //`;
 
-export const primerAssistantInstrucitons = `This GPT's job is to analyze the thread history and prompts, and give a primer to the user on what to say next. The primer should be 2 or 3 words. The output should be categorized into individual primers for each supplied prompts, organized into the following schema: 
+export const primerAssistantInstrucitons = `This GPT's job is to analyze the thread history and prompts, and give a primer to the user on what to say next. The primer should be 2 or 3 words, and they should specific to people, places or things communicated during the thread history, and should use the users words. The output should be categorized into individual primers for each supplied prompts, organized into the following schema: 
 
 These should match the prompts in order, and be in a bracket.
 

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ImageBackground, Image, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DesktopWrapper from '../components/DesktopWrapper';
 import logo from '../assets/entwyneLogoColor.png';
@@ -10,13 +10,16 @@ import { API_BASE_URL } from '../../config';
 if (Platform.OS === 'web') {
     require('../styles/EntryScreen.css');
 }
+import SlideInModal from '../components/SlideInModal.js';
 
 const EntryScreen = ({ }) => {
+    const [isLoading, setIsLoading] = useState(false);
     const AnimatedPath = Animated.createAnimatedComponent(Path);
     const animation = useSharedValue(0);
     const navigation = useNavigation();
 
     const createStory = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.post(`${API_BASE_URL}/v1/createStory`);
             const { _id, threadId } = response.data.updatedStory;
@@ -24,6 +27,7 @@ const EntryScreen = ({ }) => {
         } catch (error) {
             console.error(error);
         }
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -51,8 +55,14 @@ const EntryScreen = ({ }) => {
                     and beyond, to preserve and share the moments that matter the most.
                 </Text>
                 <TouchableOpacity style={styles.button} onPress={createStory}>
+            <View style={styles.innerContainer}>
+                {isLoading ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
                     <Text style={styles.buttonText}>Try it Now</Text>
-                </TouchableOpacity>
+                )}
+            </View>
+        </TouchableOpacity>
                 <Text style={styles.footerText}>Opens a Demo Experience.</Text>
                 <Svg width="100%" height="100%" viewBox="0 0 305 812" style={styles.backgroundSvg}>
                     <Path
@@ -130,7 +140,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 20,
-        backgroundColor: '#0000ff', // Replace with the color of your button
+        backgroundColor: '#143F6B', // Replace with the color of your button
         padding: 10,
         borderRadius: 20,
         // Additional styles for the button
@@ -146,6 +156,12 @@ const styles = StyleSheet.create({
         color: '#000',
         marginTop: 10,
         // Additional styles for the footer text
+    },
+    innerContainer: {
+        height: 50, // Adjust as needed
+        width: 200, // Adjust as needed
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

@@ -45,6 +45,7 @@ import finalRender from './routes/getFinalRender.js';
 import confirmVideoRender from './routes/confirmVideoRender.js';
 import getStorylines from './routes/getStorylines.js';
 import getRenderStatus from './routes/getRenderStatus.js';
+import getPrimers from './routes/getPrimers.js';
 // import modelResponse from './routes/assistants/modelResponse.js';
 // const collectCharactersRouter = require('./routes/collectCharacters');
 
@@ -85,6 +86,7 @@ app.use(`/v1/finalRender`, finalRender);
 app.use(`/v1/confirmVideoRender`, confirmVideoRender);
 app.use(`/v1/getStorylines`, getStorylines);
 app.use(`/v1/getRenderStatus`, getRenderStatus)
+app.use(`/v1/getPrimers`, getPrimers);
 // app.use('/v1/assistants/modelResponse', modelResponse);
 // app.use('/collectCharacters', collectCharactersRouter);
 

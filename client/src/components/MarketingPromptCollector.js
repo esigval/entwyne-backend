@@ -10,6 +10,9 @@ const MarketingPromptCollectorCard = ({ promptId, title, prompt, storyId, primer
         navigation.navigate('CameraCapture', {promptDetail: prompt, promptId: promptId, storyId: storyId, primers });
     };
 
+    const handleSendToPress = () => {
+    };
+
     return (
         <View style={styles.cardContainer}>
             <Text style={styles.headerText}>{title}</Text>
@@ -18,6 +21,9 @@ const MarketingPromptCollectorCard = ({ promptId, title, prompt, storyId, primer
                 <TouchableOpacity onPress={handleRequestTwynePress} style={styles.buttonStyle}>
                     <Icon name="camera" size={20} color="#FFFFFF" style={styles.iconStyle} />
                     <Text style={styles.buttonText}>Capture</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleSendToPress} style={styles.buttonStyle}>
+                    <Text style={styles.buttonText}>Send To</Text>
                 </TouchableOpacity>
             </View>
         </View>

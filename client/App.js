@@ -50,10 +50,11 @@ const App = () => {
             <NavigationContainer>
               <Stack.Navigator>
               <Stack.Screen name="EntryScreen" component={EntryScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={defaultScreenOptions} />
                 <Stack.Screen name="Home" component={TabNavigator} options={{ headerShown: false }} />
+                
                 <Stack.Screen name="CameraCapture" component={CameraCapture} options={{ headerShown: false }} />
                 <Stack.Screen name="DirectorReview" component={DirectorReview} options={{ headerShown: false }} />
-                <Stack.Screen name="PhotoUpload" component={PhotoUpload} options={defaultScreenOptions} />
                 <Stack.Screen name="ProcessingMoment" component={ProcessingMomentComponent} options={{ headerShown: false }} />
                 <Stack.Screen name="DeliverTwyne" component={DeliverTwyne} options={{ headerShown: false }} />
                 <Stack.Screen name="TitleDetails" component={TitleDetails} options={{ headerShown: false }} />

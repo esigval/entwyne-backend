@@ -10,12 +10,13 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config.js';
 import { sendMessageToServer } from '../services/chatService.js';
 import DesktopWrapper from '../components/DesktopWrapper';
+import SlideInModal from '../components/SlideInModal';
 
 // Mock chat messages
 const mockMessages = [
   {
     id: 1,
-    text: "To understand your story, I will need to ask a few questions, and at the end we'll move on to the next step to make interviews!",
+    text: "Hi there! I am your personal memory director! For this demo, we will discuss a brief story in about 3-4 questions about what drew you to your partner and what you look forward to in the future. At the end we'll move on to the next step to capture your answers!",
     isDirector: true,
   },
   {
@@ -26,17 +27,23 @@ const mockMessages = [
   // ... additional mock messages
 ];
 
-const DirectorChat = ({route}) => {
+const DirectorChat = ({ route }) => {
   const [selectedValue, setSelectedValue] = useState();
+  const [directorResponded, setDirectorResponded] = useState(false);
   const [data, setData] = useState([]);
   const [messages, setMessages] = useState(mockMessages);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigation = useNavigation();
   const storyId = route.params?.storyId;
   const threadId = route.params?.threadId;
   console.log('storyId:', storyId);
 
+
+  const handleButtonPress = () => {
+    setIsModalVisible(true); // This will show the modal when button is pressed
+  };
 
   const onSend = async () => {
     if (inputText.trim()) {
@@ -50,6 +57,8 @@ const DirectorChat = ({route}) => {
       setMessages(prevMessages => [...prevMessages, newMessage]);
       setInputText('');
       setIsTyping(false);
+
+
 
       // Add a loading placeholder message
       const loadingMessageId = messages.length + 2;
@@ -75,6 +84,7 @@ const DirectorChat = ({route}) => {
 
           // Replace the loading message with the actual response
           setMessages(prevMessages => prevMessages.map(m => m.id === loadingMessageId ? assistantMessage : m));
+          setDirectorResponded(true); // Indicate that the director's message has been sent
         }
 
         if (responseData.message === 'NavigatetoCapture') {
@@ -138,21 +148,23 @@ const DirectorChat = ({route}) => {
     }
   };
 
+  const resetDirectorResponded = () => setDirectorResponded(false);
+
   const scrollViewRef = useRef();
 
   return (
     <DesktopWrapper>
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.messagesContainer}
-        ref={scrollViewRef}
-        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
-      >
-        {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
-        ))}
-      </ScrollView>
-      {/*
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.messagesContainer}
+          ref={scrollViewRef}
+          onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+        >
+          {messages.map((message) => (
+            <MessageBubble key={message.id} message={message} />
+          ))}
+        </ScrollView>
+        {/*
   data.length > 0 ? (
     <Picker
       selectedValue={selectedValue}
@@ -167,13 +179,20 @@ const DirectorChat = ({route}) => {
     <Text>Loading templates...</Text> // Or any other placeholder
   )
 */}
-      <MessageInput
-        inputText={inputText}
-        handleInputChange={handleInputChange} // Corrected from onInputChange to handleInputChange
-        sendMessage={onSend} // Corrected from onSend to sendMessage
-        isTyping={isTyping}
+        <MessageInput
+          inputText={inputText}
+          handleInputChange={handleInputChange}
+          sendMessage={onSend}
+          isTyping={isTyping}
+          onCameraPress={handleButtonPress} onMicPress={handleButtonPress}
+          directorResponded={directorResponded}
+  resetDirectorResponded={resetDirectorResponded}
+        />
+        <SlideInModal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
       />
-    </View>
+      </View>
     </DesktopWrapper>
   );
 };

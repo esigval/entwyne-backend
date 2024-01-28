@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, Image, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { API_BASE_URL } from '../../config.js';
 import { useNavigation } from '@react-navigation/native';
@@ -15,15 +15,30 @@ const PhotoUpload = ({ route }) => {
     const [files, setFiles] = useState([]); // Add this line
     const [isLoading, setIsLoading] = useState(false);
     const [isUploaded, setIsUploaded] = useState(false);
+    const [primers, setPrimers] = useState([]);
 
-    const directorNotes = 'Now We’re Going to Fill in Some Moments Between the Film...';
+    const directorNotes = 'A Few Ideas for Photos';
     const isUploadable = imageThumbnails.length > 0;
-
 
     const { data, newTwyneId, storyId, promptDetail, promptId } = route.params;
     const momentVideo = data.thumbnailUrl;
-    // const momentVideo = couplePhoto;
-    // const promptId = '65a59778e91d4c46ebf40ed6';
+    
+    /*const storyId = '65b2bf30ace0b8b7419e8336';
+    const momentVideo = couplePhoto;
+    const promptId = '65a59778e91d4c46ebf40ed6';*/
+
+    useEffect(() => {
+        const fetchPrimers = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/v1/getPrimers/${storyId}`); // Replace with your actual API path
+                setPrimers(response.data);
+            } catch (err) {
+                console.error('Failed to fetch primers:', err);
+            }
+        };
+
+        fetchPrimers();
+    }, [storyId]);
 
 
 
@@ -36,14 +51,23 @@ const PhotoUpload = ({ route }) => {
         setFiles(updatedFiles);
     };
 
-    const handleFilesSelect = (files) => {
-        setFiles(files);
-        // Set the thumbnails for images
-        setImageThumbnails(files.map(file => ({
+    const handleFilesSelect = (newFiles) => {
+        // Concatenate the new files with the already existing ones
+        const updatedFiles = [...files, ...newFiles];
+
+        // Update the files state
+        setFiles(updatedFiles);
+
+        // Update the thumbnails for images
+        const updatedImageThumbnails = [...imageThumbnails, ...newFiles.map(file => ({
             name: file.name,
             preview: URL.createObjectURL(file)
-        })));
+        }))];
+
+        // Set the image thumbnails state
+        setImageThumbnails(updatedImageThumbnails);
     };
+
 
     const handleSubmit = async () => {
         if (!isUploadable || isLoading) return;
@@ -98,9 +122,19 @@ const PhotoUpload = ({ route }) => {
         setIsUploaded(true);
         setTimeout(() => {
             fadeOut();
-            navigation.navigate('TitleDetails', { storylineId, data, newTwyneId, storyId, promptDetail, promptId});
+            navigation.navigate('TitleDetails', { storylineId, data, newTwyneId, storyId, promptDetail, promptId });
         }, 1000);
     };
+
+    useEffect(() => {
+        // This will be called when the component is unmounted
+        return () => {
+            // Revoke the object URL
+            imageThumbnails.forEach(thumbnail => URL.revokeObjectURL(thumbnail.preview));
+        };
+    }, [imageThumbnails]);
+
+    const colors = ['#8C8C9E', '#F5A8A8', '#FFEBD9']; // Add more colors if you want
 
 
 
@@ -115,6 +149,16 @@ const PhotoUpload = ({ route }) => {
                 <View style={styles.notesContainer}>
                     <Text style={styles.textContent}>{directorNotes}</Text>
                 </View>
+                <View style={styles.tagsContainer}>
+    {primers.map((primer, index) => {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        return (
+            <View key={index} style={[styles.tag, {backgroundColor: color}]}>
+                <Text style={styles.tagText}>{primer}</Text>
+            </View>
+        );
+    })}
+</View>
 
 
                 {/* File Upload Component */}
@@ -254,7 +298,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '90%',
-        height: 300, // You might want to adjust this
+        height: 100, // You might want to adjust this
         borderRadius: 10,
         marginBottom: 20,
     },
@@ -264,6 +308,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         borderRadius: 10,
         marginBottom: 10,
+    },
+    tagsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        marginBottom: 20, // Adjust as needed
+    },
+
+    tag: {
+        backgroundColor: '#eee', // Adjust as needed
+        borderRadius: 20, // Adjust as needed
+        padding: 10, // Adjust as needed
+        margin: 5, // Adjust as needed
+    },
+
+    tagText: {
+        color: '#333', // Adjust as needed
+        fontSize: 16, // Adjust as needed
     },
     notesContainer: {
         width: '90%',

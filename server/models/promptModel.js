@@ -177,6 +177,18 @@ class Prompts {
         }
     }
 
+    static async getPrimersFromPrompts(storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const primers = await collection.distinct('primers', { storyId });
+            return primers;
+        } catch (error) {
+            console.error('Error in getPrimersFromPrompts:', error);
+            throw error;
+        }
+    }
+
 
     // I want to find prompts that match the storyId exist 
 

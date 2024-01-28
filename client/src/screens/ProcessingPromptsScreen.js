@@ -92,7 +92,7 @@ const creatingStoryLoadingComponent = ({route}) => {
       </View>
       <View style={styles.contentContainer}>
         <FadeInView style={styles.fadeView}>
-          <Text style={styles.standardText}>Awesome! We're Going to Set-up Your Interview Questions. In the Meantime, Find a Comfortable Place to Film</Text>
+          <Text style={styles.standardText}>One Moment While We Assemble Our Interviews</Text>
         </FadeInView>
         <Text style={styles.checkingText}>{currentCheck}</Text>
       </View>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   standardText: {
     fontSize: 36,
-    color: '#333',
+    color: '#E0E0E0',
     textAlign: 'center',
   },
 
