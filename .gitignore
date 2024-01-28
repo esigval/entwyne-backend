@@ -32,3 +32,5 @@ dev-server.ppk
 nessh.pem
 /tools/FFMPEG
 production-server-entwyne.ppk
+entwyne-production.pem
+production-server.ppk

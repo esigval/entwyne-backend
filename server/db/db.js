@@ -5,6 +5,7 @@ import fs from 'fs';
 dotenv.config();
 const dbName = process.env.MONGODB_DB;
 const url = process.env.MONGODB_URI;
+const caBundle = './global-bundle.pem';
 
 console.log('Attempting to connect to the database...');
 console.log(url);
@@ -18,7 +19,10 @@ const connect = async () => {
       return db;
     }
 
-    const client = new MongoClient(url);
+    const client = new MongoClient(url, {
+      tlsCAFile: caBundle,
+    });
+
     await client.connect();
     console.log('Connected successfully to the database');
     db = client.db(dbName);

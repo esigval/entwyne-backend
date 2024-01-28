@@ -1,0 +1,86 @@
+@keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  .line-animation-1 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 2s linear forwards;
+    animation-delay: 0.1s;
+  }
+  
+  .line-animation-2 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 2.1s linear forwards;
+    animation-delay: 0.3s;
+  }
+  
+  .line-animation-3 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 2.4s linear forwards;
+    animation-delay: 0.2s;
+  }
+  
+  .line-animation-4 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 2.2s linear forwards;
+    animation-delay: 0.5s;
+  }
+  @keyframes pop-fade {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0; }
+}
+  @keyframes undraw {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 1000;
+    }
+  }
+  .pop-fade {
+    transition: opacity 0.5s, transform 0.5s;
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  
+  .line-animation-reverse-1 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    animation: undraw 2s linear forwards;
+    animation-delay: 0.1s;
+  }
+  
+  .line-animation-reverse-2 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    animation: undraw 2.1s linear forwards;
+    animation-delay: 0.3s;
+  }
+  
+  .line-animation-reverse-3 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    animation: undraw 2.4s linear forwards;
+    animation-delay: 0.2s;
+  }
+  
+  .line-animation-reverse-4 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    animation: undraw 2.2s linear forwards;
+    animation-delay: 0s;
+  }
+
+  .thumbnail {
+    position: absolute;
+    width: 30px; /* Thumbnail size */
+    height: 30px;
+    /* Additional styles (e.g., border, border-radius for circular thumbnails) */
+  }
