@@ -151,7 +151,7 @@ const TwyneLoadingScreen = ({ route }) => {
                 }
                 return newProgress;
             });
-        }, 240); // Update progress every 400ms
+        }, 600); // Update progress every 400ms
     
         return () => clearInterval(interval); // Clean up interval on component unmount
     }, []);

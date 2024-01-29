@@ -7,7 +7,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "serve": "serve -s web-build"
+    "serve": "serve -s web-build",
+    "build:web": "npx expo export:web"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "4.0.1",

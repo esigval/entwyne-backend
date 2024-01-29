@@ -90,6 +90,6 @@ app.use(`/v1/getPrimers`, getPrimers);
 // app.use('/v1/assistants/modelResponse', modelResponse);
 // app.use('/collectCharacters', collectCharactersRouter);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Example app listening on port ${port}`);
 });

@@ -12,7 +12,6 @@
       "**/*"
     ],
     "extra": {
-      "localNodeServer": "http://192.168.0.137:3001"
     },
     "android": {
       "permissions": [
@@ -20,7 +19,7 @@
       ]
     },
     "web": {
-      "favicon": "./web/favicon.ico"
+      "favicon": "./web/favicon.png"
     }
     }
 }

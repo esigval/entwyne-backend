@@ -15,7 +15,6 @@ const connect = async () => {
   try {
     // Updated MongoClient options for SSL
     const client = new MongoClient(url, {
-        ssl: true,
         tlsCAFile: caBundle // use tlsCAFile instead of sslCA
       });
       
