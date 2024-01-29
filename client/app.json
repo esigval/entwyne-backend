@@ -18,6 +18,9 @@
       "permissions": [
         "WRITE_EXTERNAL_STORAGE"
       ]
+    },
+    "web": {
+      "favicon": "./web/favicon.ico"
     }
     }
 }

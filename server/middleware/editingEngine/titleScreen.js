@@ -1,3 +1,5 @@
+import { createCanvas, registerFont } from 'canvas';
+import fs from 'fs';
 import { exec } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,18 +9,47 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const createTitleCard = async (name, date, outputFolder) => {
+    const width = 1920;
+    const height = 1080;
+
+    // Register font
+    const fontPath = path.join(__dirname, 'fonts/Allura-Regular.ttf');
+    registerFont(fontPath, { family: 'Allura-Regular' });
+
+
+    // Create canvas and context after registering the font
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+
+    // Background color
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, width, height);
+
+
+
+
+    // Font settings
+    ctx.font = '78px "Allura-Regular"';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+
+    // Draw text
+    ctx.fillText(name, width / 2, height / 2 - 100);
+    ctx.font = '36px "Allura-Regular"';
+    ctx.fillText(date, width / 2, height / 2 + 50);
+
+    // Save the image
+    const imagePath = path.join(outputFolder, 'titleCard.jpg');
+    const buffer = canvas.toBuffer('image/jpeg');
+    fs.writeFileSync(imagePath, buffer);
+
+    // Convert image to video using FFmpeg
     const titleOutputPath = path.join(outputFolder, 'titleCard.mp4');
-    const fontPath = './fonts/Allura-Regular.ttf';
+    // const ffmpegPath = path.join(__dirname, '../../bin/ffmpeg'); // Adjust your ffmpeg path
+    const ffmpegCommand = `ffmpeg -loop 1 -i ${imagePath} -vf "scale=in_range=jpeg:out_range=mpeg,format=yuv420p" -t 5 -c:v libx264 -r 30 ${titleOutputPath}`;
 
-    // Prepare the drawtext parameters
-    const drawTextName = `drawtext=fontfile=${fontPath}:text='${name}':fontcolor=white:fontsize=78:x=(w-text_w)/2:y=(h-text_h)/2-100`;
-    const drawTextDate = `drawtext=fontfile=${fontPath}:text='${date}':fontcolor=white:fontsize=36:x=(w-text_w)/2:y=(h-text_h)/2+50`;
 
-    // FFMPEG command to create a title card with two levels of text
-    const command = `ffmpeg -f lavfi -i color=c=black:s=1920x1080:d=5 -f lavfi -i anullsrc=r=44100:cl=stereo -vf "[in]${drawTextName}, ${drawTextDate}[out]" -pix_fmt yuv420p -c:v libx264 -c:a aac -shortest -r 30 -video_track_timescale 15360 ${titleOutputPath}`;
-
-    // Execute the command
-    exec(command, (error, stdout, stderr) => {
+    exec(ffmpegCommand, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error: ${error.message}`);
             return;

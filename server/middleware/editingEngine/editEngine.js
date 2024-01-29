@@ -1,6 +1,6 @@
 import prepareConcateFileText from "./preparingConcateFileLocal.js";
 import prepareRenderingOrder from "./prepareRenderingOrder.js";
-import editsFromStoryline from "./transformStorylinetoEdits.js";
+import editsFromStoryline from "./transformStorylineToEdits.js";
 
 const editEngine = async (storylineId) => {
     await editsFromStoryline(storylineId); // Funcitonal Item

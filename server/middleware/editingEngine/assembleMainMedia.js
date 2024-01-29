@@ -12,6 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const assembleMainMedia = async (storylineId, coupleName, marriageDate, musicName, order) => {
+    // const ffmpegPath = path.join(__dirname, '../../bin/ffmpeg'); // Change this to your actual ffmpeg path
 
     console.time('assembleMainMedia');
     // Assuming processImagesToVideo function handles the conversion of images to videos

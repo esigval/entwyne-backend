@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 
 dotenv.config();
-const dbName = process.env.MONGODB_DB;
-const url = process.env.MONGODB_URI;
+const dbName = process.env.MONGO_DOCUMENT_DB_NAME;
+const url = process.env.MONGODB_AMZ_URI;
 const caBundle = './global-bundle.pem';
 
 console.log('Attempting to connect to the database...');

@@ -6,7 +6,8 @@
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "serve": "serve -s web-build"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "4.0.1",
@@ -67,11 +68,13 @@
     "@babel/plugin-transform-shorthand-properties": "7.23.3",
     "@babel/plugin-transform-template-literals": "7.23.3",
     "@babel/preset-env": "7.23.7",
+    "@types/react-native": "0.73.0",
     "babel-plugin-inline-dotenv": "1.7.0",
     "css-loader": "6.8.1",
     "eslint": "8.56.0",
     "jest": "29.7.0",
     "prettier": "3.1.1",
+    "serve": "14.2.1",
     "style-loader": "3.3.3"
   },
   "private": true

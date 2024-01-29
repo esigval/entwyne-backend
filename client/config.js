@@ -1,2 +1,2 @@
 // config.js
-export const API_BASE_URL = "http://192.168.0.137:3001" || 'default_base_url';
+export const API_BASE_URL = "172.31.90.225:8080" || 'default_base_url';
