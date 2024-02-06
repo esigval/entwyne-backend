@@ -25,7 +25,7 @@ startDatabase();
 import getStoriesRouter from './routes/getStories.js';
 import getPromptsRouter from './routes/getPrompts.js';
 import getTwynesRouter from './routes/getTwynes.js';
-import getS3PresignedUrlRouter from './routes/getS3PresignedUrl.js';
+import saveMomentRouter from './routes/saveMoment.js';
 import saveVideoUri from './routes/saveVideoUri.js';
 import createThread from './routes/createThread.js';
 import createStory from './routes/createStory.js';
@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 app.use('/v1/stories', getStoriesRouter);
 app.use('/v1/prompts', getPromptsRouter);
 app.use('/v1/twynes', getTwynesRouter);
-app.use('/v1/getS3PresignedUrl', getS3PresignedUrlRouter);
+app.use('/v1/saveMoment', saveMomentRouter);
 app.use('/v1/saveVideoUri', saveVideoUri);
 app.use('/v1/assistants/createThread', createThread);
 app.use('/v1/createStory', createStory);
