@@ -8,6 +8,8 @@
 lambda/transcribeAudioLambda/node_modules
 lambda/renderVideoLambda/node_modules
 lambda/sendRenderDemo/node_modules
+lambda/processMedia/node_modules
+lambda/extractionBucket/node_modules
 
 # testing
 /coverage

@@ -1,19 +1,44 @@
-const fs = require('fs');
-const { exec } = require('child_process');
-const path = require('path');
-const util = require('util');
+import fs from 'fs';
+import { exec } from 'child_process';
+import path from 'path';
+import util from 'util';
 const execPromise = util.promisify(exec);
-const { S3, GetObjectCommand } = require('@aws-sdk/client-s3'); // Import AWS SDK for JavaScript v3 modules
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import { createReadStream } from 'fs';
 
-// Create an S3 client
-const s3 = new S3();
+const s3 = new S3Client({ region: 'us-east-1' }); // replace 'us-east-1' with your region
+
+function getStorylineIdFromKey(key) {
+  const parts = key.split('/');
+  if (parts.length < 3) {
+    throw new Error('Invalid key format');
+  }
+  const storylineId = parts[1];
+  return storylineId;
+}
+
+async function uploadFileToS3(bucket, key, filePath) {
+  const fileStream = createReadStream(filePath);
+
+  const upload = new Upload({
+    client: s3,
+    params: {
+      Bucket: bucket,
+      Key: key,
+      Body: fileStream
+    }
+  });
+
+  await upload.done();
+}
 
 // Adjusted for Lambda's writable tmp directory
-const IMAGES_DIR = '/tmp/pictures';
+const VIDEOS_DIR = '/tmp/pictures';
 const OUTPUT_DIR = '/tmp/output';
 
 // Adjusted path for FFmpeg binary included in the deployment package or Lambda layer
-const ffmpegPath = '/bin/ffmpeg'; // Assuming FFmpeg binary is placed in /opt directory of Lambda layer
+const ffmpegPath = '/bin/ffmpeg';
 
 // Function to download a file from S3
 const downloadFileFromS3 = async (bucket, key, downloadPath) => {
@@ -44,44 +69,44 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 }
 
 // Adjusted function to use promises for synchronous execution
-async function processImage(imagePath) {
-  const imageName = path.basename(imagePath, path.extname(imagePath));
-  const outputVideoPath = path.join(OUTPUT_DIR, `${imageName}.mp4`);
+async function processVideo(videoPath) {
+  const videoName = path.basename(videoPath, path.extname(videoPath));
+  const outputVideoPath = path.join(OUTPUT_DIR, `${videoName}.mp4`);
 
-  const ffmpegCommand = `${ffmpegPath} -loop 1 -i "${imagePath}" ` +
-    `-f lavfi -i anullsrc=r=44100:cl=stereo -ar 44100 -ac 2 ` +
-    `-filter_complex ` +
-    `"[0:v]scale=1920:1080:force_original_aspect_ratio=decrease,boxblur=20:20[blurred]; ` +
-    `[0:v]scale=-2:1080:flags=lanczos[fg]; ` +
-    `[blurred]pad=1920:1080:(ow-iw)/2:(oh-ih)/2[bg]; ` +
-    `[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1" ` +
-    `-t 5 -c:v libx264 -r 30 -pix_fmt yuv420p "${outputVideoPath}"`;
+  const ffmpegCommand = `${ffmpegPath} -i "${videoPath}" ` +
+    `-c:v libx264 -crf 23 -preset fast -c:a aac -b:a 192k ` +
+    `-vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" ` +
+    `-r 30 -pix_fmt yuv420p -ar 44100 -ac 2 "${outputVideoPath}"`;
 
   try {
-    console.log(`Processing ${imagePath}...`);
+    console.log(`Processing ${videoPath}...`);
     const { stdout, stderr } = await execPromise(ffmpegCommand);
-    console.log(`Processed ${imagePath}, output saved to ${outputVideoPath}`);
+    console.log(`Processed ${videoPath}, output saved to ${outputVideoPath}`);
   } catch (error) {
-    console.error(`Error processing ${imagePath}:`, error);
+    console.error(`Error processing ${videoPath}:`, error);
   }
 }
 
 // Example handler function for AWS Lambda
 exports.handler = async (event) => {
-  // Your logic to populate the IMAGES_DIR with images, e.g., download from S3
-  for (const file of event.files) {
-    const filePath = path.join(IMAGES_DIR, file.name);
-    await downloadFileFromS3(file.bucket, file.key, filePath);
-  }
+  // Your logic to populate the VIDEOS_DIR with videos, e.g., download from S3
+  for (const record of event.Records) {
+    const bucket = record.s3.bucket.name;
+    const key = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' '));
+    const filePath = path.join(VIDEOS_DIR, path.basename(key));
+    await downloadFileFromS3(bucket, key, filePath);
 
-  // Process each image
-  const files = fs.readdirSync(IMAGES_DIR);
-  for (const file of files) {
-    if (/\.(jpg|jpeg|png|gif)$/i.test(file)) {
-      const filePath = path.join(IMAGES_DIR, file);
-      await processImage(filePath);
+    // Process the video
+    if (/\.(mp4|avi|webm)$/i.test(filePath)) {
+      await processVideo(filePath);
     }
-  }
 
-  // Your logic to handle the processed videos, e.g., upload them to S3
+    // Upload the processed video to S3
+    const outputFilePath = path.join('/tmp/output', path.basename(filePath));
+    const storylineId = getStorylineIdFromKey(key);
+    const newKey = `${storylineId}/${path.basename(outputFilePath)}`;
+
+    // Upload the processed video to the S3 bucket
+    await uploadFileToS3(process.env.CONCAT_BUCKET, newKey, outputFilePath);
+  }
 };

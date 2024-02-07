@@ -2,6 +2,7 @@ import express from 'express';
 import createPresignedUrl from '../middleware/presignedUrls/createPresignedUrl.js';
 import saveTwyne from '../middleware/saveTwyne.js';
 import Twyne from '../models/twyneModel.js';
+import { buckets } from '../config.js';
 const router = express.Router();
 
 router.get('/',
@@ -13,7 +14,7 @@ router.get('/',
     }
 
     try {
-      const { presignedUrl, key } = await createPresignedUrl(process.env.S3_BUCKET_NAME, promptId);
+      const { presignedUrl, key } = await createPresignedUrl(buckets.EXTRACTION_BUCKET, promptId);
       console.log('presignedUrl:', presignedUrl); // Make sure presignedUrl is correct
       req.key = key; // Attach the key to the req object
       req.promptId = promptId; // Attach the promptId to the req object

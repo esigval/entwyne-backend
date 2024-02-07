@@ -14,9 +14,11 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 const createPresignedPicturesUrl = async (bucketName, fileName, fileType, expires = 60) => {
+  // Get the base name from the environment variables
+  const baseName = process.env.IMAGES_BASE_NAME;
   // Generate a unique key using the file name and a timestamp
   const timestamp = moment().format('YYYYMMDDHHmmss');
-  const key = `pictures/${timestamp}_${fileName}`; // Unique key with timestamp and original filename
+  const key = `${baseName}/${timestamp}_${fileName}`; // Unique key with timestamp and original filename
   console.log('mime type', fileType);
 
   const params = {

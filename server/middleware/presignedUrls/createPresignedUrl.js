@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import moment from 'moment';
 import dotenv from 'dotenv';
+import storylineModel from '../../models/storylineModel.js';
 
 dotenv.config();
 
@@ -14,9 +15,14 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 const createPresignedUrl = async (bucketName, promptId, expires = 60) => {
+  // Get storylineId from the database
+  const storylineId = await storylineModel.getStorylineId(promptId);
+
+  // Get the base name from the environment variables
+  const baseName = process.env.VIDEOS_BASE_NAME;
   // Generate a unique key using the video name and a timestamp
   const timestamp = moment().format('YYYYMMDDHHmmss');
-  const key = `video/${promptId}_${timestamp}.webm`;
+  const key = `${baseName}/${storylineId}/${promptId}_${timestamp}.webm`;
 
   const params = {
     Bucket: bucketName,

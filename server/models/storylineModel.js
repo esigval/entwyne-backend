@@ -7,12 +7,14 @@ class StorylineModel {
         storyId,
         storylineParts = [],
         bRoll = [],
+        videoSettings,
         finalRender,
     }) {
         this._id = _id;
         this.storyId = storyId;
         this.storylineParts = storylineParts;
         this.bRoll = bRoll;
+        this.videoSettings = videoSettings;
         this.finalRender = finalRender;
     }
 
@@ -188,6 +190,18 @@ class StorylineModel {
             return document ? new StorylineModel(document) : null;
         } catch (error) {
             console.error("Error in StorylineModel.findStorylineByStoryId:", error);
+            throw error;
+        }
+    }
+
+    static async findStorylineByPromptId(promptId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(StorylineModel.collectionName);
+            const document = await collection.findOne({ "storylineParts.promptId": new ObjectId(promptId) });
+            return document ? new StorylineModel(document) : null;
+        } catch (error) {
+            console.error("Error in StorylineModel.findStorylineByPromptId:", error);
             throw error;
         }
     }

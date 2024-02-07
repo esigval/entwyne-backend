@@ -4,6 +4,7 @@ import Prompts from '../models/promptModel.js';
 import Twynes from '../models/twyneModel.js';
 import StorylineModel from '../models/storylineModel.js';
 import dotenv from 'dotenv';
+import { buckets } from '../config.js';
 dotenv.config();
 
 const router = express.Router();
@@ -18,7 +19,7 @@ router.get('/', async (req, res) => {
 
     try {
         const { presignedUrl, key } = await createPresignedPicturesUrl(
-            process.env.S3_POST_BUCKET_NAME,
+            buckets.EXTRACTION_BUCKET,
             fileName,
             fileType
         );

@@ -8,12 +8,19 @@ async function createStorylineFromTemplate(templateName, storyId) {
         if (!storylineTemplateParts) {
             throw new Error("No storyline parts found for the given template name.");
         }
-        // console.log("storylineTemplateParts:", storylineTemplateParts);
+
+        // Retrieve video settings based on the template name
+        const videoSettings = await StorylineTemplate.getVideoSettings(templateName);
+        if (!videoSettings) {
+            throw new Error("No video settings found for the given template name.");tyhik
+        }
+
 
         // Prepare the data for the new storyline
         const storylineData = {
             storyId: storyId,
             storylineParts: storylineTemplateParts,
+            videoSettings: videoSettings,
         };
 
         // Create the new storyline
