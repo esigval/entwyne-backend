@@ -11,6 +11,7 @@ class Twyne {
         beatTag,
         createdAt,
         filename,
+        s3ProcessedUri,
         s3FilePath,
         s3Uri,
         s3UriThumbnail,
@@ -20,6 +21,7 @@ class Twyne {
         transcription,
         transcriptionUrl,
         videoUri,
+        videoSettingsObjectID,
         webmFilePath,
         pictureUri,
         mediaType,
@@ -31,6 +33,10 @@ class Twyne {
         this.beatTag = beatTag;
         this.createdAt = createdAt;
         this.filename = filename;
+        this.s3ProcessedUri= [{
+            s3ProcessedUri: s3ProcessedUri,
+            videoSettings: videoSettingsObjectID
+          }];
         this.s3FilePath = s3FilePath;
         this.s3Uri = s3Uri;
         this.s3UriThumbnail = s3UriThumbnail;

@@ -105,7 +105,7 @@ exports.handler = async (event) => {
     const outputFilePath = path.join('/tmp/output', path.basename(filePath));
     const storylineId = getStorylineIdFromKey(key);
     const newKey = `${storylineId}/${path.basename(outputFilePath)}`;
-
+I
     // Upload the processed video to the S3 bucket
     await uploadFileToS3(process.env.CONCAT_BUCKET, newKey, outputFilePath);
   }

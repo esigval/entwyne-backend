@@ -2,6 +2,7 @@ import { connect } from '../db/db.js';
 import Twyne from '../models/twyneModel.js';
 import Prompts from '../models/promptModel.js';
 import { ObjectId } from 'mongodb'; // Import ObjectId
+import { buckets } from '../config.js';
 
 const saveTwyne = async (req, res, next) => {
     const { promptId, key, presignedUrl, videoUri } = req;
@@ -31,12 +32,12 @@ const saveTwyne = async (req, res, next) => {
             associatedPromptId: promptIdObjectId, // Use the ObjectId here
             filename: key,
             createdAt: new Date(),
-            s3FilePath: `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${key}`,
-            s3Uri: `s3://${process.env.S3_BUCKET_NAME}/${key}`,
-            s3UriThumbnail: `s3://${process.env.S3_POST_BUCKET_NAME}/thumbnails/${key}`,
-            thumbnailUrl: `https://${process.env.S3_POST_BUCKET_NAME}.s3.amazonaws.com/thumbnails${jpgKey}`,
+            s3FilePath: `https://${buckets.EXTRACTION_BUCKET}.s3.amazonaws.com/${storylineId}/${key}`,
+            s3Uri: `s3://${buckets.EXTRACTION_BUCKET}/${storylineId}/${key}`,
+            s3UriThumbnail: `s3://${buckets.THUMBNAIL_BUCKET}/${storylineId}/${key}`,
+            thumbnailUrl: `https://${buckets.THUMBNAIL_BUCKET}.s3.amazonaws.com/${storylineId}/${jpgKey}`,
             videoUri: videoUri,
-            audioUri: `s3://${process.env.S3_POST_BUCKET_NAME}/audio/${key}.mp3`,
+            audioUri: `s3://${buckets.AUDIO_BUCKET}/audio/${key}.flac`,
             storylineId: storylineId,
             beatTag: "narrative",
 

@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-transcribe": "3.481.0",
-    "mongodb": "6.3.0"
+    "@aws-sdk/client-transcribe-streaming": "3.509.0",
+    "mongodb": "6.3.0",
+    "music-metadata": "7.14.0"
   }
 }
