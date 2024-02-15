@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Stories API
+  description: API for managing stories in the application.
+  version: "1.0.0"
+servers:
+- url: http://localhost:3001/v1
+  description: Development server
+paths:
+  /stories:
+    get:
+      tags:
+      - Stories
+      summary: List all stories
+      description: Returns a list of all stories in the application.
+      responses:
+        '200':
+          description: A JSON array of stories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Story'
+    post:
+      tags:
+      - Stories
+      summary: Create a new story
+      description: Creates a new story with the given details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Story'
+      responses:
+        '201':
+          description: Story created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Story'
+  /stories/{storyId}:
+    parameters:
+    - in: path
+      name: storyId
+      required: true
+      schema:
+        type: string
+        format: oid # Custom format to indicate an ObjectId
+      description: The ID of the story to fetch or delete.
+    get:
+      tags:
+      - Stories
+      summary: Get a single story
+      description: Returns details of a specific story by ID.
+      responses:
+        '200':
+          description: A single story
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Story'
+    delete:
+      tags:
+      - Stories
+      summary: Delete a story
+      description: Deletes a specific story by ID.
+      responses:
+        '204':
+          description: Story deleted
+  /users:
+    post:
+      tags:
+      - Users
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{userId}:
+    parameters:
+    - in: path
+      name: userId
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Users
+      summary: Find a single user
+      responses:
+        '200':
+          description: User found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    delete:
+      tags:
+      - Users
+      summary: Delete a user
+      responses:
+        '204':
+          description: User deleted successfully
+    patch:
+      tags:
+      - Users
+      summary: Update a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    Story:
+      type: object
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: The unique identifier for the story.
+        storyName:
+          type: string
+          description: The name of the story.
+        threadId:
+          type: string
+          description: The thread ID associated with the story.
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        hashedPassword:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        profile:
+          type: object
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            avatarUrl:
+              type: string
+            bio:
+              type: string
+        settings:
+          type: object
+          properties:
+            notifications:
+              type: object
+              properties:
+                email:
+                  type: boolean
+                push:
+                  type: boolean
+        status:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+      - username
+      - email

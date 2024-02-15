@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "transcribeAudio",
+  "name": "@transcribe/audio",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
