@@ -69,6 +69,20 @@ paths:
       responses:
         '204':
           description: Story deleted
+  /prompts:
+    get:
+      tags:
+      - Prompts
+      summary: Get all prompts
+      responses:
+        '200':
+          description: Prompts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prompt'
   /users:
     post:
       tags:
@@ -197,3 +211,27 @@ components:
       required:
       - username
       - email
+    Prompt:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+        order:
+          type: integer
+        storyName:
+          type: string
+        prompt:
+          type: string
+        twyneId:
+          type: string
+        mediaType:
+          type: string
+        promptTitle:
+          type: string
+        collected:
+          type: boolean
+        primers:
+          type: array
+          items:
+            type: string

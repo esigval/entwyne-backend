@@ -188,6 +188,17 @@ class Prompts {
             throw error;
         }
     }
+    static async findAll() {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({}).toArray();
+            return prompts;
+        } catch (error) {
+            console.error("Error in Prompts.findAll:", error);
+            throw error;
+        }
+    }
 
 
     // I want to find prompts that match the storyId exist 
