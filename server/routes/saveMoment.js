@@ -1,7 +1,6 @@
 import express from 'express';
 import createPresignedUrl from '../middleware/presignedUrls/createPresignedUrl.js';
-import saveTwyne from '../middleware/saveTwyne.js';
-import Twyne from '../models/twyneModel.js';
+import saveMoment from '../middleware/saveMoment.js';
 import { buckets } from '../config.js';
 const router = express.Router();
 
@@ -26,14 +25,14 @@ router.get('/',
       res.status(500).send('Internal Server Error');
     }
   },
-  saveTwyne, // saveTwyne middleware runs next
+  saveMoment, // saveMoment middleware runs next
 
   async (req, res) => { // Make this function async
     const presignedUrl = await req.presignedUrl;
     console.log('req.presignedUrl:', presignedUrl); // Make sure presignedUrl is correct
-    console.log('newTwyneId:', res.locals.newTwyneId); // Access the new ObjectId from the res.locals object
-    // Send response after saveTwyne middleware has run
-    res.json({ presignedUrl: presignedUrl, newTwyneId: res.locals.newTwyneId });
+    console.log('newMomentId:', res.locals.newMomentId); // Access the new ObjectId from the res.locals object
+    // Send response after saveMoment middleware has run
+    res.json({ presignedUrl: presignedUrl, newMomentId: res.locals.newMomentId });
 }
 );
 

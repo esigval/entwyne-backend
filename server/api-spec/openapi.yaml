@@ -4,9 +4,230 @@ info:
   description: API for managing stories in the application.
   version: "1.0.0"
 servers:
-- url: http://localhost:3001/v1
+- url: http://ec2-54-196-0-54.compute-1.amazonaws.com:3001/v1
   description: Development server
+- url: http://localhost:3001/v1
+  description: Local server
 paths:
+  /uploadSaveMoment:
+    get:
+      tags:
+      - "Moments"
+      summary: "Save a moment"
+      description: "This route is used to return a presigned URL and process the moment according to video settings."
+      parameters:
+      - in: query
+        name: promptId
+        required: true
+        schema:
+          type: string
+          description: "ID of the prompt"
+      - in: query
+        name: videoUri
+        required: true
+        schema:
+          type: string
+          description: "URI of the video"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presignedUrl:
+                    type: string
+                    description: "Presigned URL"
+                  newMomentId:
+                    type: string
+                    description: "ID of the new moment"
+        400:
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Error message"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Error message"
+  /confirmMoment:
+    get:
+      tags:
+      - "Moments"
+      summary: "Confirm a moment"
+      description: "This route is used to save the moment to the prompt and sets collected to true."
+      parameters:
+      - in: query
+        name: promptId
+        required: true
+        schema:
+          type: string
+          description: "ID of the prompt"
+      - in: query
+        name: momentId
+        required: true
+        schema:
+          type: string
+          description: "ID of the new moment"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Success message"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Error message"
+  /deleteMoment/{id}:
+    delete:
+      tags:
+      - "Moments"
+      summary: "Delete a moment"
+      description: "This route is used to delete a moment."
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          description: "ID of the moment to delete"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Success message"
+        404:
+          description: "Moment not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Error message"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Error message"
+  /moments:
+    get:
+      tags:
+      - "Moments"
+      summary: "List all moments"
+      description: "This route is used to list all moments."
+      responses:
+        201:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Moment'
+        400:
+          description: "Invalid input, object invalid"
+        500:
+          description: "An error occurred while creating the moment"
+  /assistants/userInput:
+    post:
+      tags:
+      - "Twyne Director"
+      summary: "Handle user input"
+      description: "This route is used to handle user input, process it, and respond with the Moment Director."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: "User input message"
+                storyId:
+                  type: string
+                  description: "ID of the story"
+                templateName:
+                  type: string
+                  description: "Name of the template"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        500:
+          description: "Error processing user input"
+
+  /prompts/{id}:
+    get:
+      tags:
+      - Prompts
+      summary: Retrieve a prompt by ID with selective fields
+      description: Fetch a single prompt with the option to select specific fields in the response.
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for the prompt.
+      - in: query
+        name: fields
+        required: false
+        schema:
+          type: string
+        description: order, storyId, prompt, momentId, mediaType, promptTitle, collected, primers.
+      responses:
+        '200':
+          description: A single prompt object with selective fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prompt'
+        '400':
+          description: Bad request when invalid fields are specified.
+        '404':
+          description: A prompt with the specified ID was not found.
   /stories:
     get:
       tags:
@@ -22,17 +243,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Story'
+  /createStory:
     post:
       tags:
       - Stories
       summary: Create a new story
       description: Creates a new story with the given details.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Story'
       responses:
         '201':
           description: Story created
@@ -40,6 +256,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Story'
+  /getStorylinePrompts/{StorylineId}:
+    get:
+      summary: Retrieve multiple prompts by storylineId with selective fields
+      operationId: findPromptsByStorylineId
+      tags:
+      - Prompts
+      description: Fetch prompts associated with a specific storylineId, with an option to select specific fields in the response.
+      parameters:
+      - in: query
+        name: storylineId
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for the storyline.
+      - in: query
+        name: fields
+        required: false
+        schema:
+          type: string
+        description: Comma-separated list of fields to include in the response. Available fields include order, storyName, prompt, momentId, mediaType, promptTitle, collected, primers.
+      responses:
+        '200':
+          description: An array of prompt objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prompt'
+        '400':
+          description: Bad request. Possible reasons invalid storylineId or fields format.
+        '404':
+          description: No prompts found for the provided storylineId.
   /stories/{storyId}:
     parameters:
     - in: path
@@ -101,6 +350,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+
   /users/{userId}:
     parameters:
     - in: path
@@ -148,6 +398,81 @@ paths:
                 $ref: '#/components/schemas/User'
 components:
   schemas:
+    schemas:
+    Moment:
+      type: object
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: The unique identifier for the moment.
+        associatedPromptId:
+          type: string
+          description: The associated prompt ID for the moment.
+        audioUri:
+          type: string
+          description: The audio URI for the moment.
+        beatTag:
+          type: string
+          description: The beat tag for the moment.
+        createdAt:
+          type: string
+          description: The creation time for the moment.
+        filename:
+          type: string
+          description: The filename for the moment.
+        s3ProcessedUri:
+          type: array
+          items:
+            type: object
+            properties:
+              s3ProcessedUri:
+                type: string
+                description: The processed URI for the moment.
+              videoSettings:
+                type: string
+                description: The video settings for the moment.
+        s3FilePath:
+          type: string
+          description: The file path for the moment.
+        s3Uri:
+          type: string
+          description: The URI for the moment.
+        s3UriThumbnail:
+          type: string
+          description: The thumbnail URI for the moment.
+        sentiment:
+          type: string
+          description: The sentiment for the moment.
+        thumbnail:
+          type: string
+          description: The thumbnail for the moment.
+        thumbnailUrl:
+          type: string
+          description: The thumbnail URL for the moment.
+        transcription:
+          type: string
+          description: The transcription for the moment.
+        transcriptionUrl:
+          type: string
+          description: The transcription URL for the moment.
+        videoUri:
+          type: string
+          description: The video URI for the moment.
+        webmFilePath:
+          type: string
+          description: The webm file path for the moment.
+        pictureUri:
+          type: string
+          description: The picture URI for the moment.
+        mediaType:
+          type: string
+          description: The media type for the moment.
+        storylineId:
+          type: string
+          description: The storyline ID for the moment.
     Story:
       type: object
       properties:
@@ -219,11 +544,11 @@ components:
           format: date-time
         order:
           type: integer
-        storyName:
+        storyId:
           type: string
         prompt:
           type: string
-        twyneId:
+        momentId:
           type: string
         mediaType:
           type: string
@@ -235,3 +560,12 @@ components:
           type: array
           items:
             type: string
+    AIResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      - storyId
+      - templateName

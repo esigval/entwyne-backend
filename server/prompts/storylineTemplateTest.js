@@ -7,7 +7,7 @@ const storylineTest = {
       "length": 5,
       "contentType": "Establishing Shot",
       "storybeat": "Opening",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Family home or vehicle packed for the adventure.",
       "promptTitle": "Journey's Starting Point"
     },
@@ -18,7 +18,7 @@ const storylineTest = {
       "length": 5,
       "contentType": "Title",
       "storybeat": "Opening",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Title screen with something like 'Sigvaldsens' Thanksgiving Expedition'.",
       "promptTitle": "Family Adventure Title"
     },
@@ -29,7 +29,7 @@ const storylineTest = {
       "length": 15,
       "contentType": "Interview Footage",
       "storybeat": "Middle",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Interview family members about their initial emotions and expectations.",
       "promptTitle": "Emotional Expectations Interview"
     },
@@ -40,7 +40,7 @@ const storylineTest = {
       "length": 3,
       "contentType": "B-Roll Footage",
       "storybeat": "Middle",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Family members preparing, packing, and getting into the car.",
       "promptTitle": "Family Preparation Scene"
     },
@@ -51,7 +51,7 @@ const storylineTest = {
       "length": 15,
       "contentType": "Interview Footage",
       "storybeat": "Middle",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Family's reactions upon encountering the entrance to the cave.",
       "promptTitle": "Cave Entrance Reactions"
     },
@@ -62,7 +62,7 @@ const storylineTest = {
       "length": 3,
       "contentType": "B-Roll Footage",
       "storybeat": "Middle",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Shots of the cave entrance, family members hesitating or exploring.",
       "promptTitle": "Cave Entrance Atmosphere"
     },
@@ -73,7 +73,7 @@ const storylineTest = {
       "length": 15,
       "contentType": "Interview Footage",
       "storybeat": "Middle",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Discuss Ana's experience with the cave and holding Owen's hand.",
       "promptTitle": "Ana's Fear Management"
     },
@@ -84,7 +84,7 @@ const storylineTest = {
       "length": 3,
       "contentType": "B-Roll Footage",
       "storybeat": "Middle",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Inside the cave: Ana nervous, Owen reassures, Rowan's curiosity.",
       "promptTitle": "Siblings in the Cave"
     },
@@ -95,7 +95,7 @@ const storylineTest = {
       "length": 1,
       "contentType": "Montage Footage",
       "storybeat": "Climax",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Ana smiling post-fear, Rowan exploring fearlessly.",
       "promptTitle": "Kids' Cave Victory"
     },
@@ -106,7 +106,7 @@ const storylineTest = {
       "length": 1,
       "contentType": "Montage Footage",
       "storybeat": "Climax",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Family's arrival at the restaurant, the darkness surrounding them.",
       "promptTitle": "Dinner Tree Arrival"
     },
@@ -117,7 +117,7 @@ const storylineTest = {
       "length": 1,
       "contentType": "Montage Footage",
       "storybeat": "Climax",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "The ridiculously large steak servings at the table.",
       "promptTitle": "Giant Steak Challenge"
     },
@@ -128,7 +128,7 @@ const storylineTest = {
       "length": 1,
       "contentType": "Montage Footage",
       "storybeat": "Climax",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Family eating, chatting, laughing around the dinner table.",
       "promptTitle": "Joyful Family Dinner"
     },
@@ -139,7 +139,7 @@ const storylineTest = {
       "length": 1,
       "contentType": "Montage Footage",
       "storybeat": "Climax",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Exhausted but satisfied family leaving the restaurant, driving home.",
       "promptTitle": "Adventure Conclusion"
     },
@@ -150,7 +150,7 @@ const storylineTest = {
       "length": 5,
       "contentType": "Credits",
       "storybeat": "Closing",
-      "twyneId": null,
+      "momentId": null,
       "shotDescription": "Credits with family names and a thank you note.",
       "promptTitle": "Thanksgiving Credits"
     }

@@ -7,7 +7,7 @@ router.post('/', async (req, res) => {
     try {
         const { videoUri } = req.body;
         const db = await connect();
-        const collection = db.collection('twynes');
+        const collection = db.collection('moments');
         await collection.insertOne({ videoUri });
         res.status(200).send({ message: 'Video URI saved successfully.' });
     } catch (err) {

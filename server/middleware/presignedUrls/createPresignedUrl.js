@@ -16,7 +16,7 @@ const s3 = new AWS.S3();
 
 const createPresignedUrl = async (bucketName, promptId, expires = 60) => {
   // Get storylineId from the database
-  const storylineId = await storylineModel.getStorylineId(promptId);
+  const storylineId = await storylineModel.findStorylineByPromptId(promptId);
 
   // Get the base name from the environment variables
   const baseName = process.env.VIDEOS_BASE_NAME;

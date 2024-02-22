@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
 
-class Twyne {
+class Moment {
     constructor({
         _id,
         associatedPromptId,
@@ -53,19 +53,35 @@ class Twyne {
     }
 
     static get collectionName() {
-        return 'twynes'; // Name of the collection in the database
+        return 'moment'; // Name of the collection in the database
     }
 
+    static async listAll() {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+    
+            // Get all Moments
+            const allMoments = await collection.find({}).toArray();
+    
+            return allMoments;
+        } catch (error) {
+            console.error('Failed to get all moments:', error);
+        }
+    }
+
+    
+    
     static async getpictureUribyStorylineId(storylineId, numPictures) {
         try {
             const db = await connect();
-            const collection = db.collection(Twyne.collectionName);
+            const collection = db.collection(Moment.collectionName);
     
-            // Get all Twynes that match the storylineId
-            const matchingTwynes = await collection.find({ storylineId: new ObjectId(storylineId) }).toArray();
+            // Get all Moments that match the storylineId
+            const matchingMoments = await collection.find({ storylineId: new ObjectId(storylineId) }).toArray();
     
-            // Get the s3UriThumbnail or s3FilePath of the first numPictures matching Twynes
-            const s3UriThumbnails = matchingTwynes.slice(0, numPictures).map(twyne => twyne.thumbnailUrl || twyne.s3FilePath);
+            // Get the s3UriThumbnail or s3FilePath of the first numPictures matching Moments
+            const s3UriThumbnails = matchingMomentfs.slice(0, numPictures).map(moment => moment.thumbnailUrl || moment.s3FilePath);
     
             return s3UriThumbnails;
         } catch (error) {
@@ -74,14 +90,14 @@ class Twyne {
     }
 
 
-    static async getId(twyneInstance) {
+    static async getId(momentInstance) {
         try {
             const db = await connect();
-            const collection = db.collection(Twyne.collectionName);
-            const twyne = await collection.findOne({ _id: new ObjectId(twyneInstance._id) });
-            return twyne;
+            const collection = db.collection(Moment.collectionName);
+            const moment = await collection.findOne({ _id: new ObjectId(momentInstance._id) });
+            return moment;
         } catch (error) {
-            console.error("Error in Twyne.getId:", error);
+            console.error("Error in Moment.getId:", error);
             throw error;
         }
     }
@@ -89,54 +105,54 @@ class Twyne {
     static async findByStorylineIdWithThumbnail(id) {
         try {
             const db = await connect();
-            const collection = db.collection(Twyne.collectionName);
-            const twynes = await collection.find({ id, thumbnailUrl: { $ne: null } }).toArray();
-            return twynes;
+            const collection = db.collection(Moment.collectionName);
+            const moments = await collection.find({ id, thumbnailUrl: { $ne: null } }).toArray();
+            return moments;
         } catch (error) {
-            console.error("Error in Twyne.findByStorylineIdWithThumbnail:", error);
+            console.error("Error in Moment.findByStorylineIdWithThumbnail:", error);
             throw error;
         }
     }
-    static async findByTwyneIdWithDetails(twyneId) {
+    static async findByMomentIdWithDetails(momentId) {
         try {
             const db = await connect();
-            const collection = db.collection(Twyne.collectionName);
-            const twyne = await collection.findOne({ _id: new ObjectId(twyneId) });
-            if (twyne && twyne.transcription && twyne.thumbnailUrl) {
-                return twyne;
+            const collection = db.collection(Moment.collectionName);
+            const moment = await collection.findOne({ _id: new ObjectId(momentId) });
+            if (moment && moment.transcription && moment.thumbnailUrl) {
+                return moment;
             } else {
                 return null;
             }
         } catch (error) {
-            console.error("Error in Twyne.findByTwyneIdWithDetails:", error);
+            console.error("Error in Moment.findByMomentIdWithDetails:", error);
             throw error;
         }
     }
 
-    static async deleteOne(twyneId) {
+    static async deleteOne(momentId) {
         try {
             const db = await connect();
-            const collection = db.collection(Twyne.collectionName);
-            const result = await collection.deleteOne({ _id: new ObjectId(twyneId) });
+            const collection = db.collection(Moment.collectionName);
+            const result = await collection.deleteOne({ _id: new ObjectId(momentId) });
             return result;
         } catch (error) {
-            console.error("Error in Twyne.delete:", error);
+            console.error("Error in Moment.delete:", error);
             throw error;
         }
     }
 
-    static async createPictureTwynes({ associatedPromptId, key, storylineId }) {
+    static async createPictureMoments({ associatedPromptId, key, storylineId }) {
         try {
             const db = await connect();
-            const collection = db.collection(Twyne.collectionName);
+            const collection = db.collection(Moment.collectionName);
     
             // Check if the S3 bucket name is set
             if (!process.env.S3_POST_BUCKET_NAME) {
                 throw new Error('S3_POST_BUCKET_NAME environment variable is not set');
             }
     
-            // Create a new instance of Twyne
-            const newTwyne = {
+            // Create a new instance of Moment
+            const newMoment = {
                 _id: new ObjectId(),
                 associatedPromptId: new ObjectId(associatedPromptId),
                 filename: key,
@@ -149,24 +165,24 @@ class Twyne {
             };
     
             // Insert the new instance into the database
-            await collection.insertOne(newTwyne);
+            await collection.insertOne(newMoment);
     
-            // Return the newTwyne object
-            return newTwyne;
+            // Return the newMoment object
+            return newMoment;
         } catch (error) {
-            console.error("Error in Twyne.createPictureTwynes:", error);
+            console.error("Error in Moment.createPictureMoments:", error);
             throw error; // Rethrow the error for the caller to handle
         }
     }
     
 
-    static async getTwyneUrls(twyneId) {
+    static async getMomentUrls(momentId) {
         const db = await connect();
-        const collection = db.collection(Twyne.collectionName);
-        const twyne = await collection.findOne({ _id: new ObjectId(twyneId) });
+        const collection = db.collection(Moment.collectionName);
+        const moment = await collection.findOne({ _id: new ObjectId(momentId) });
     
         // Return the s3FilePath and s3Uri properties
-        return { s3FilePath: twyne.s3FilePath, s3Uri: twyne.s3Uri };
+        return { s3FilePath: moment.s3FilePath, s3Uri: moment.s3Uri };
     }
 
 }
@@ -175,4 +191,4 @@ class Twyne {
 
 
 
-export default Twyne;
+export default Moment;

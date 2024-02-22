@@ -1,6 +1,6 @@
 import express from 'express';
 import StorylineModel from '../models/storylineModel.js';
-import Twynes from '../models/twyneModel.js';
+import Moments from '../models/momentModel.js';
 
 
 const router = express.Router();

@@ -31,7 +31,7 @@ const startTranscription = async () => {
 
         // Uncomment and modify if MongoDB update is required
         const db = await connect(); // Connect to MongoDB
-        const collection = db.collection('twynes'); // Replace with your collection name
+        const collection = db.collection('moments'); // Replace with your collection name
         const update = { $set: { transcriptionFileUri: transcriptionOutputUri } };
         await collection.updateOne({ audioFileUri: audioFileUri }, update);
         console.log("MongoDB record updated successfully");

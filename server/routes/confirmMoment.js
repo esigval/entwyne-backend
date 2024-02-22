@@ -1,29 +1,29 @@
 import express from 'express';
 import Prompts from '../models/promptModel.js';
-import Twynes from '../models/twyneModel.js';
+import Moments from '../models/momentModel.js';
 import StorylineModel from '../models/storylineModel.js';
 
 const router = express.Router();
 
 
 router.get('/', async (req, res) => {
-    console.log('confirmTwyne.js hit');
+    console.log('confirmMoment.js hit');
 
 
-    const { promptId, newTwyneId } = req.query;
+    const { promptId, newMomentId } = req.query;
     console.log('promptId', promptId);
-    console.log('newTwyneId', newTwyneId);
+    console.log('newMomentId', newMomentId);
     
     try {
         // get storylineId from Prompt
         const storylineId = await Prompts.getStorylineId(promptId);
-        // save Twyne to Prompt
-        const saveTwyneId = await Prompts.saveTwyneToPrompt(promptId, newTwyneId);
-        // get Twyne Urls 
-        const twyneUrls = await Twynes.getTwyneUrls(newTwyneId);
-        console.log('twnye Urls', twyneUrls)
+        // save Moment to Prompt
+        const saveMomentId = await Prompts.saveMomentToPrompt(promptId, newMomentId);
+        // get Moment Urls 
+        const momentUrls = await Moments.getMomentUrls(newMomentId);
+        console.log('twnye Urls', momentUrls)
         // save Urls to Storyline Model
-        const updatedStoryline = await StorylineModel.updateStorylinePartWithS3Url(storylineId, promptId, twyneUrls.s3FilePath, twyneUrls.s3Uri, newTwyneId);
+        const updatedStoryline = await StorylineModel.updateStorylinePartWithS3Url(storylineId, promptId, momentUrls.s3FilePath, momentUrls.s3Uri, newMomentId);
         console.log(storylineId);
         // Update Collection Status
         const collectedResult = await Prompts.setCollectedtoTrue(promptId);

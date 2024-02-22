@@ -2,8 +2,8 @@ import express from 'express';
 import { openai } from '../services/openAiAssistant.js';
 import { findThreadByStoryId, pollRunStatus } from '../utils/userInputUtils.js';
 import { addMessageToThread, createRun, checkRun, retrieveNewMessagesFromThread, submitToolOutputs } from '../utils/assistantFunctions.js';
-import { StorylineDirectorAssistantv1 } from '../services/assistants.js';
-import { instructions } from '../prompts/assistantInstructions.js';
+import { StorylineDirectorAssistantv1, TestBotAssistant } from '../services/assistants.js';
+import { instructions, testBotInstructions } from '../prompts/assistantInstructions.js';
 import storyEngine from '../middleware/storylineEngine/storyEngine.js';
 import StorylineTemplate from '../models/storylineTemplateModel.js';
 import processInBackground from '../middleware/userInput/userInputScripts.js';
@@ -12,7 +12,9 @@ const router = express.Router();
 
 // Route to handle user input
 router.post('/', async (req, res) => {
+    console.log('User input received:', req.body);
     const { message, storyId, templateName } = req.body;
+
 
     console.log(`POST request received. User input: ${message}, storyId: ${storyId}`);
 
@@ -28,7 +30,7 @@ router.post('/', async (req, res) => {
         console.log('template:', template);
 
         // Run the Thread on the Assistant and capture the run object
-        const run = await createRun(threadId, StorylineDirectorAssistantv1, template);
+        const run = await createRun(threadId, TestBotAssistant, testBotInstructions, template);
         console.log('Run created:', run);
 
         // Poll the run status
@@ -38,10 +40,11 @@ router.post('/', async (req, res) => {
         // Check the final status of the run
         if (finalRunStatus.status === 'requires_action' || finalRunStatus.status === 'queued') {
             // Immediately respond to the client
-            res.status(200).json({ message: 'NavigatetoCapture' });
+            res.status(200).json({ message: 'BlueButton' });
+            //res.status(200).json({ message: 'NavigatetoCapture' });
 
             // Process the run in the background
-            processInBackground(threadId, run, finalRunStatus, templateName, storyId, instructions);
+            // processInBackground(threadId, run, finalRunStatus, templateName, storyId, instructions);
 
             return;
             // ... (handle action required)

@@ -1,5 +1,5 @@
 import express from 'express';
-import Twyne from '../models/twyneModel.js'; // Adjust the path to your Twyne model file
+import Moment from '../models/momentModel.js'; // Adjust the path to your Moment model file
 import Story from '../models/storyModel.js'; // Adjust the path to your Story model file
 import directorReviewAssistant from '../middleware/assistants/directorReviewAssistant.js';
 import sentimentAnalysisAssistant from '../middleware/assistants/sentimentAnalysisAssistant.js';
@@ -8,43 +8,43 @@ import { directorReviewInstructions, sentimentAnalysisAssistantInstructions,dire
 
 const router = express.Router();
 
-// Route to create a new thread
+// Route to analyze a moment if transcription is completed.
 router.get('/', async (req, res) => {
     console.log('checkMomentProcess route hit');
 
-    const twyneId = req.query.newTwyneId;
+    const momentId = req.query.newMomentId;
     const storyId = req.query.storyId;
     console.log('storyId:', storyId)
     const threadId = await Story.findThreadByStoryId(storyId);
     const prompts = req.query.prompts;
-    console.log('twyneId:', twyneId);
+    console.log('momentId:', momentId);
 
     try {
-        const twyne = await Twyne.findByTwyneIdWithDetails(twyneId);
+        const moment = await Moment.findByMomentIdWithDetails(momentId);
 
-        if (twyne) {
+        if (moment) {
             console.log('sending to director review assistant');
             const [directorReview, sentimentAnalysis, directorReviewScore] = await Promise.all([
-                directorReviewAssistant(directorReviewInstructions, threadId, prompts, twyne.transcription),
-                sentimentAnalysisAssistant(sentimentAnalysisAssistantInstructions, twyne.transcription),
-                directorReviewScoreAssistant(directorReviewScoreAssistantInstructions, threadId, prompts, twyne.transcription),
+                directorReviewAssistant(directorReviewInstructions, threadId, prompts, moment.transcription),
+                sentimentAnalysisAssistant(sentimentAnalysisAssistantInstructions, moment.transcription),
+                directorReviewScoreAssistant(directorReviewScoreAssistantInstructions, threadId, prompts, moment.transcription),
             ]);
             console.log('directorReview:', directorReview);
             console.log('sentimentAnalysis:', sentimentAnalysis);
             console.log('directorReviewScore:', directorReviewScore);
-            // Return the associatedPromptId if the twyne has both transcription and thumbnailUrl
+            // Return the associatedPromptId if the moment has both transcription and thumbnailUrl
             res.json({
-                promptId: twyne.associatedPromptId,
-                thumbnailUrl: twyne.thumbnailUrl,
-                transcription: twyne.transcription,
+                promptId: moment.associatedPromptId,
+                thumbnailUrl: moment.thumbnailUrl,
+                transcription: moment.transcription,
                 directorReview: directorReview,
                 sentimentAnalysis: sentimentAnalysis,
                 directorReviewScore: directorReviewScore,
                 promptDetail: prompts,
             });
         } else {
-            // If twyne does not have both transcription and thumbnailUrl
-            res.status(404).send('Required details not found for the given Twyne');
+            // If moment does not have both transcription and thumbnailUrl
+            res.status(404).send('Required details not found for the given Moment');
         }
     } catch (error) {
         console.error('Error in checking moment:', error);

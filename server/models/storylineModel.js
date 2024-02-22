@@ -71,14 +71,14 @@ class StorylineModel {
         }
     }
 
-    static async updateBrollWithTwyneId(storylineId, fileType, bRollShotLength, twyneId, s3FilePath, s3Uri) {
+    static async updateBrollWithMomentId(storylineId, fileType, bRollShotLength, momentId, s3FilePath, s3Uri) {
         try {
             const db = await connect();
             const collection = db.collection(StorylineModel.collectionName);
 
-            // Convert storylineId and twyneId from string to ObjectId
+            // Convert storylineId and momentId from string to ObjectId
             const objectId = new ObjectId(storylineId);
-            const objectTwyneId = new ObjectId(twyneId);
+            const objectMomentId = new ObjectId(momentId);
 
             // Get the storyline document
             const storyline = await collection.findOne({ _id: objectId });
@@ -99,7 +99,7 @@ class StorylineModel {
                     $push: {
                         "bRoll": {
                             order: order,
-                            twyneId: objectTwyneId,
+                            momentId: objectMomentId,
                             shotLength: bRollShotLength,
                             fileType: fileType,
                             s3FilePath: s3FilePath,
@@ -117,7 +117,7 @@ class StorylineModel {
             // Construct the bRoll object to return
             const bRollData = {
                 order: order,
-                twyneId: objectTwyneId,
+                momentId: objectMomentId,
                 shotLength: bRollShotLength,
                 fileType: fileType,
                 s3FilePath: s3FilePath,
@@ -134,7 +134,7 @@ class StorylineModel {
         }
     }
 
-    static async updateStorylinePartWithS3Url(storylineId, promptId, s3FilePath, s3UriPath, twyneId) {
+    static async updateStorylinePartWithS3Url(storylineId, promptId, s3FilePath, s3UriPath, momentId) {
         try {
             const db = await connect();
             const collection = db.collection(StorylineModel.collectionName);
@@ -142,7 +142,7 @@ class StorylineModel {
             // Update the specific storyline part with the s3FilePath and s3UriPath
             const updateResult = await collection.updateOne(
                 { _id: new ObjectId(storylineId), "storylineParts.promptId": new ObjectId(promptId) },
-                { $set: { "storylineParts.$.s3FilePath": s3FilePath, "storylineParts.$.s3UriPath": s3UriPath, "storylineParts.$.twyneId": new ObjectId(twyneId) } }
+                { $set: { "storylineParts.$.s3FilePath": s3FilePath, "storylineParts.$.s3UriPath": s3UriPath, "storylineParts.$.momentId": new ObjectId(momentId) } }
             );
 
             return updateResult;

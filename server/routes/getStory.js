@@ -1,11 +1,11 @@
 import express from 'express';
 const router = express.Router();
+import Story from '../models/storyModel.js';
 
-router.get('/', async (req, res) => {
+router.get('/:storyId', async (req, res) => {
     try {
-        const collection = req.db.collection('twynes');
-        const docs = await collection.find({}).toArray();
-        res.json(docs);
+        const story = await Story.findById(req.params.storyId);
+        res.json(story);
     } catch (err) {
         console.error('Failed to get stories:', err);
         res.status(500).send('Error in getStories');
@@ -13,4 +13,3 @@ router.get('/', async (req, res) => {
 });
 
 export default router;
-

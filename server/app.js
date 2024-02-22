@@ -21,34 +21,51 @@ async function startDatabase() {
 
 startDatabase();
 
-import getStoriesRouter from './routes/getStories.js';
-import getPromptsRouter from './routes/getPrompts.js';
-import getTwynesRouter from './routes/getTwynes.js';
-import saveMomentRouter from './routes/saveMoment.js';
-import saveVideoUri from './routes/saveVideoUri.js';
-import createThread from './routes/createThread.js';
-import createStory from './routes/createStory.js';
-import deleteStory from './routes/deleteStory.js';
-import deleteTwyne from './routes/deleteTwyne.js';
-import userInput from './routes/userInput.js';
-import getTemplateName from './routes/getTemplateName.js'
-import buildStoryline from './routes/buildStoryline.js'
-import checkMomentProcess from './routes/checkMomentProcess.js';
-import confirmTwyne from './routes/confirmTwyne.js';
-import collectPictures from './routes/collectPictures.js';
-import getThumbnails from './routes/getThumbnails.js'; 
-import checkPromptLoading from './routes/checkPromptLoading.js';  
-import getStoryPrompts from './routes/getStoryPrompts.js';
-import getTitleDetails from './routes/sendTitleDetails.js';
-import finalRender from './routes/getFinalRender.js';
-import confirmVideoRender from './routes/confirmVideoRender.js';
-import getStorylines from './routes/getStorylines.js';
-import getRenderStatus from './routes/getRenderStatus.js';
-import getPrimers from './routes/getPrimers.js';
+// User management routes
 import createUser from './routes/createUser.js';
 import deleteUser from './routes/deleteUser.js';
 import updateUser from './routes/updateUser.js';
 import getUser from './routes/getUser.js';
+
+// Story-related routes
+import getStoriesRouter from './routes/getStories.js';
+import getStory from './routes/getStory.js';
+import createStory from './routes/createStory.js';
+import deleteStory from './routes/deleteStory.js';
+import getStorylines from './routes/getStorylines.js';
+
+// Prompt-related routes
+import getPromptsRouter from './routes/getPrompts.js';
+import checkPromptLoading from './routes/checkPromptLoading.js';
+import getStoryPrompts from './routes/getStoryPrompts.js';
+import getStorylinePrompts from './routes/getStorylinePrompts.js';
+
+// Moment (story segments) routes
+import getMomentsRouter from './routes/getMoments.js';
+import deleteMoment from './routes/deleteMoment.js';
+import confirmMoment from './routes/confirmMoment.js';
+import saveMomentRouter from './routes/saveMoment.js';
+import checkMomentProcess from './routes/checkMomentProcess.js';
+import collectPictures from './routes/collectPictures.js';
+
+// Utility routes for media processing and additional functionalities
+import saveVideoUri from './routes/saveVideoUri.js';
+import getThumbnails from './routes/getThumbnails.js';
+import getTitleDetails from './routes/sendTitleDetails.js'; // Note: The import path may need correction to match the file name
+import finalRender from './routes/getFinalRender.js';
+import confirmVideoRender from './routes/confirmVideoRender.js';
+import getRenderStatus from './routes/getRenderStatus.js';
+import getPrimers from './routes/getPrimers.js';
+
+// Routes for handling assistant interactions
+import createThread from './routes/createThread.js';
+import userInput from './routes/userInput.js';
+
+// Routes for template management and story building
+import getTemplateName from './routes/getTemplateName.js';
+import buildStoryline from './routes/buildStoryline.js';
+
+
 
 const app = express();
 
@@ -71,19 +88,20 @@ app.use('/v1/users', getUser);
 app.use('/v1/stories', getStoriesRouter);
 app.use('/v1/createStory', createStory);
 app.use('/v1', deleteStory);
-
+app.use('/v1/stories', getStory);
 app.use('/v1/getStorylines', getStorylines);
 
 // Prompts
 app.use('/v1/prompts', getPromptsRouter);
 app.use('/v1/checkPromptLoading', checkPromptLoading);
 app.use('/v1/getStoryPrompts', getStoryPrompts);
+app.use('/v1/getStorylinePrompts', getStorylinePrompts);
 
-// Twynes
-app.use('/v1/twynes', getTwynesRouter);
-app.use('/v1', deleteTwyne);
-app.use('/v1/confirmTwyne', confirmTwyne); 
-app.use('/v1/saveMoment', saveMomentRouter);
+// Moments
+app.use('/v1/moments', getMomentsRouter);
+app.use('/v1', deleteMoment);
+app.use('/v1/confirmMoment', confirmMoment); 
+app.use('/v1/uploadSaveMoment', saveMomentRouter);
 app.use('/v1/checkMomentProcess', checkMomentProcess);
 app.use(`/v1/collectPictures`, collectPictures);
 
@@ -97,7 +115,7 @@ app.use(`/v1/getRenderStatus`, getRenderStatus)
 app.use(`/v1/getPrimers`, getPrimers);
 app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Assistant
+// Assistant Interaction
 app.use('/v1/assistants/createThread', createThread);
 app.use('/v1/assistants/userInput', userInput);
 

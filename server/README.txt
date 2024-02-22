@@ -9,3 +9,4 @@ docker pull 126425568953.dkr.ecr.us-east-1.amazonaws.com/client-secure-developme
 ## Production Pulls
 
 docker run -p 3001:3001 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-production
+docker run -p 3001:3001 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-development:latest

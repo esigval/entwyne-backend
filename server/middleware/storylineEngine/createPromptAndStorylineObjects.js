@@ -28,7 +28,7 @@ const createPromptAndStorylineObjects = async (dataFeed, storyId, templateName) 
                 storyId: storyId,
                 storylineId: storylineId,
                 prompt: feedItem.prompt,
-                twyneId: null, // or any specific value
+                momentId: null, // or any specific value
                 mediaType: part.mediaType, // Using mediaType from the storyline part
                 promptTitle: feedItem.promptTitle,
                 primers: feedItem.primers

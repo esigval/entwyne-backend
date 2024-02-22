@@ -1,7 +1,7 @@
 import express from 'express';
 import createPresignedPicturesUrl from '../middleware/presignedUrls/createPicturesPresignedUrl.js';
 import Prompts from '../models/promptModel.js';
-import Twynes from '../models/twyneModel.js';
+import Moments from '../models/momentModel.js';
 import StorylineModel from '../models/storylineModel.js';
 import dotenv from 'dotenv';
 import { buckets } from '../config.js';
@@ -24,12 +24,12 @@ router.get('/', async (req, res) => {
             fileType
         );
 
-        // Save the new Twyne to the database
+        // Save the new Moment to the database
         const storylineId = await Prompts.getStorylineId(promptId);
-        const twyneResult = await Twynes.createPictureTwynes({ associatedPromptId: promptId, key, storylineId });
-        console.log('Picture Twyne Created:', twyneResult);
+        const momentResult = await Moments.createPictureMoments({ associatedPromptId: promptId, key, storylineId });
+        console.log('Picture Moment Created:', momentResult);
 
-        const { updateResult, bRollData } = await StorylineModel.updateBrollWithTwyneId(storylineId, fileType, bRollShotLength, twyneResult._id, twyneResult.s3FilePath, twyneResult.s3Uri);
+        const { updateResult, bRollData } = await StorylineModel.updateBrollWithMomentId(storylineId, fileType, bRollShotLength, momentResult._id, momentResult.s3FilePath, momentResult.s3Uri);
         console.log('Broll Updated:', bRollData);
 
         // Return both the presigned URL and the key (or URL) to the client

@@ -6,7 +6,7 @@ class Prompts {
         order,
         storyName,
         prompt,
-        twyneId,
+        momentId,
         mediaType,
         promptTitle,
         collected,
@@ -16,7 +16,7 @@ class Prompts {
         this.order = order;
         this.storyName = storyName;
         this.prompt = prompt;
-        this.twyneId = twyneId ?? null;
+        this.momentId = momentId ?? null;
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
         this.collected = collected ?? false;
@@ -27,6 +27,74 @@ class Prompts {
         return 'prompts'; // Name of the collection in the database
     }
 
+    static async findByIdFlex(id, fields) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            
+            // Default fields to return
+            let projection = { _id: 1, storylineId: 1, storylineName: 1 };
+            
+            // Add optional fields if specified
+            if (typeof fields === 'string') {
+                fields.split(',').forEach(field => {
+                    projection[field] = 1; // Add field to projection
+                });
+            } else if (typeof fields === 'object') {
+                projection = { ...projection, ...fields };
+            }
+    
+            // Check if id is a valid ObjectId before converting
+            if (!ObjectId.isValid(id)) {
+                throw new Error('Invalid ObjectId format');
+            }
+    
+            // Find the document with the given ID and specified fields
+            const prompt = await collection.findOne({ _id: new ObjectId(id) }, { projection });
+    
+            return prompt;
+        } catch (error) {
+            console.error('Error in Prompts.findById:', error);
+            throw error;
+        }
+    }
+
+    static async findByStorylineIdFlex(storylineId, fields) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            
+            // Default fields to return
+            let projection = { _id: 1, storylineId: 1, storylineName: 1 };
+            
+            // Add optional fields if specified
+            if (typeof fields === 'string') {
+                fields.split(',').forEach(field => {
+                    projection[field.trim()] = 1; // Add field to projection
+                });
+            } else if (typeof fields === 'object') {
+                projection = { ...projection, ...fields };
+            }
+    
+            // Construct query object based on expected type of storylineId
+            let query = {};
+            if (ObjectId.isValid(storylineId)) {
+                query.storylineId = new ObjectId(storylineId);
+            } else {
+                query.storylineId = storylineId; // Assuming storylineId is a string
+            }
+    
+            // Find documents with the given storylineId and specified fields
+            const prompts = await collection.find(query, { projection }).toArray();
+    
+            return prompts;
+        } catch (error) {
+            console.error('Error in Prompts.findByStorylineIdFlex:', error);
+            throw error;
+        }
+    }
+    
+    
     static async create(data) {
         try {
             const db = await connect();
@@ -159,20 +227,20 @@ class Prompts {
         }
     }
 
-    static async saveTwyneToPrompt(promptId, twyneId) {
+    static async saveMomentToPrompt(promptId, momentId) {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
     
-            // Update the twyneId in the document with the given promptId
+            // Update the momentId in the document with the given promptId
             const updateResult = await collection.updateOne(
                 { _id: new ObjectId(promptId) },
-                { $set: { twyneId: twyneId } }
+                { $set: { momentId: momentId } }
             );
     
             return updateResult;
         } catch (error) {
-            console.error('Error in saveTwyneToPrompt:', error);
+            console.error('Error in saveMomentToPrompt:', error);
             throw error;
         }
     }

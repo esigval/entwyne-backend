@@ -5,7 +5,7 @@ import fs from 'fs';
 dotenv.config();
 const dbName = process.env.MONGO_DOCUMENT_DB_NAME;
 const url = process.env.MONGODB_URI;
-// const caBundle = './global-bundle.pem';
+//const caBundle = './global-bundle.pem';
 
 console.log('Attempting to connect to the database...');
 console.log(url);

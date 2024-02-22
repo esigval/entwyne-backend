@@ -1,5 +1,5 @@
 import express from 'express';
-import Twynes from '../models/twyneModel.js';
+import Moments from '../models/momentModel.js';
 
 const router = express.Router();
 
@@ -9,9 +9,9 @@ router.get('/', async (req, res) => {
     const storylineId = req.query.storylineId;
     
     try {
-        const pictureUris = await Twynes.getpictureUribyStorylineId(storylineId, 4); // Get the first 4 pictureUris
+        const pictureUris = await Moments.getpictureUribyStorylineId(storylineId, 4); // Get the first 4 pictureUris
         res.send({ pictureUris });
-        console.log('Picture Twynes Collected', pictureUris);
+        console.log('Picture Moments Collected', pictureUris);
 
     } catch (err) {
         console.error('Failed Pictures:', err);

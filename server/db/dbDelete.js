@@ -8,7 +8,7 @@ const deletePrompts = async () => {
 };
 
 // Function to delete all documents from the 'twynes' collection
-const deleteTwynes = async () => {
+const deleteMoments = async () => {
     const db = await connect();
     await db.collection('twynes').deleteMany({});
     console.log('All twynes deleted');
@@ -30,6 +30,6 @@ const deleteStorylines = async () => {
 
 // Call the functions
 deletePrompts();
-deleteTwynes();
+deleteMoments();
 deleteStories();
 deleteStorylines();

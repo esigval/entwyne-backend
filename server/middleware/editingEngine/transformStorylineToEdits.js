@@ -30,10 +30,10 @@ const transformStorylineToEdits = (storyline) => {
 
     // Process storyline parts
     storyline.storylineParts.forEach(part => {
-        const twyneId = part.twyneId['$oid'] ? part.twyneId['$oid'] : part.twyneId;  // Handle both direct ObjectId and object with $oid
+        const momentId = part.momentId['$oid'] ? part.momentId['$oid'] : part.momentId;  // Handle both direct ObjectId and object with $oid
         const edit = new Edit(
             part._id, 
-            twyneId, // sourceMediaID
+            momentId, // sourceMediaID
             storylineId,    // storylineId
             part.s3FilePath,      // filePath
             part.mediaType,       // mediaType
@@ -58,10 +58,10 @@ const transformStorylineToEdits = (storyline) => {
 
     // Process bRollo8y
     storyline.bRoll.forEach(broll => {
-        const twyneId = broll.twyneId['$oid'] ? broll.twyneId['$oid'] : broll.twyneId;  // Handle both direct ObjectId and object with $oid
+        const momentId = broll.momentId['$oid'] ? broll.momentId['$oid'] : broll.momentId;  // Handle both direct ObjectId and object with $oid
         const edit = new Edit(
             broll._id,
-            twyneId, // sourceMediaID
+            momentId, // sourceMediaID
             storylineId,     // storylineId
             broll.s3FilePath,      // filePath
             broll.fileType,        // mediaType

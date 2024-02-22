@@ -7,7 +7,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Your family's journey starts. Where does it begin?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Journey's Starting Point"
 },
@@ -20,7 +20,7 @@
   },
   "storyName": "Test Story",
   "prompt": "B-Roll family prep. What does anticipation look like?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Family Preparation Scene"
 },
@@ -33,7 +33,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Interview about Hidden Forest Cave. First impressions?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Cave Entrance Reactions"
 },
@@ -46,7 +46,7 @@
   },
   "storyName": "Test Story",
   "prompt": "B-Roll Cave Entrance. How's everyone's mood?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Cave Entrance Atmosphere"
 },
@@ -59,7 +59,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Interview about handling fear. How did Ana cope?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Ana's Fear Management"
 },
@@ -72,7 +72,7 @@
   },
   "storyName": "Test Story",
   "prompt": "B-Roll Cave Interior. What's the siblings' dynamic like?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Siblings in the Cave"
 },
@@ -85,7 +85,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Describe the feeling starting this family Thanksgiving trip?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Emotional Expectations Interview"
 },
@@ -98,7 +98,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Add a Title. What encapsulates your family's adventure?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "text/still",
   "promptTitle": "Family Adventure Title"
 },
@@ -111,7 +111,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Montage Massive Steak. Who had eyes bigger than stomach?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Giant Steak Challenge"
 },
@@ -124,7 +124,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Montage Dinner Enjoyment. What makes a perfect family meal?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Joyful Family Dinner"
 },
@@ -137,7 +137,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Montage Evening End. How do you wrap up adventure?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Adventure Conclusion"
 },
@@ -150,7 +150,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Add Credits. Who are your Thanksgiving adventure stars?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "text",
   "promptTitle": "Thanksgiving Credits"
 },
@@ -163,7 +163,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Montage Cave Triumph. What victory did the kids feel?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Kids' Cave Victory"
 },
@@ -176,7 +176,7 @@
   },
   "storyName": "Test Story",
   "prompt": "Montage Cowboy Dinner Tree Arrival. How did you feel?",
-  "twyneId": null,
+  "momentId": null,
   "mediaType": "video",
   "promptTitle": "Dinner Tree Arrival"
 }]

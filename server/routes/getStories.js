@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/:', async (req, res) => {
     try {
         const collection = req.db.collection('stories');
         const docs = await collection.find({}).toArray();

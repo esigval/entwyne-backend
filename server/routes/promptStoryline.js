@@ -2,7 +2,7 @@
 // The storyline will serve two functions, 1) to provide a template for the user to follow, and 2) to provide a template for the AI to follow to create prompts.
 // Create DB entry that stores the story instance
 // Use Template to Create Instance
-// Use Instance to Create Prompt for Twynes ()
+// Use Instance to Create Prompt for Moments ()
 
 // 
 
@@ -35,11 +35,11 @@ Id
 Name
 templateId
 mediacotainerId
- - twyneId
+ - momentId
  - promptId
 length
 
-// Design the twyneMedia schema
+// Design the momentMedia schema
 
 id int AI PK 
 filename varchar(255) 
@@ -56,7 +56,7 @@ promptId
 
 id int AI PK
 prompt text
-twyneId 
+momentId 
 promptInboundLink
 
 
