@@ -4,28 +4,19 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'js-yaml';
 import fs from 'fs';
 
-
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import express from 'express';
 import cors from 'cors';
 import { connect } from './db/db.js';
-
-let db;
-
-async function startDatabase() {
-    try {
-        db = await connect();
-    } catch (err) {
-        console.error('Failed to connect to the database:', err);
-    }
-}
-
-startDatabase();
+import { config } from './config.js';
 
 // User management routes
 import createUser from './routes/createUser.js';
 import deleteUser from './routes/deleteUser.js';
 import updateUser from './routes/updateUser.js';
 import getUser from './routes/getUser.js';
+import userLogin from './routes/userLogin.js';
 
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
@@ -65,7 +56,20 @@ import userInput from './routes/userInput.js';
 import getTemplateName from './routes/getTemplateName.js';
 import buildStoryline from './routes/buildStoryline.js';
 
+const environment = process.env.NODE_ENV || 'local';
+const currentConfig = config[environment];
 
+let db;
+
+async function startDatabase() {
+    try {
+        db = await connect();
+    } catch (err) {
+        console.error('Failed to connect to the database:', err);
+    }
+}
+
+startDatabase();
 
 const app = express();
 
@@ -73,16 +77,38 @@ const swaggerDocument = YAML.load(fs.readFileSync('./api-spec/openapi.yaml', 'ut
 app.use(express.json());
 const port = 3001;
 
+// Set up MongoDB connection for sessions
+const sessionStore = MongoStore.create({
+  mongoUrl: currentConfig.MONGODB_URI, // Use your MongoDB connection string
+  collectionName: 'sessions'
+});
+
+// Session middleware configuration
+app.use(session({
+  secret: currentConfig.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 1000 * 60 * 60 * 24
+  }
+}));
+
 app.use(cors());
 app.use((req, res, next) => {
   req.db = db;
   next();
 });
+
+// API routes
+
 // Users
 app.use('/v1/users', createUser);
 app.use('/v1/users', deleteUser);
 app.use('/v1/users', updateUser);
 app.use('/v1/users', getUser);
+app.use('/v1/login', userLogin);
 
 // Stories
 app.use('/v1/stories', getStoriesRouter);

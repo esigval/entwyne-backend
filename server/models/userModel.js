@@ -8,7 +8,7 @@ class User {
         _id,
         username,
         email,
-        hashedPassword,
+        password,
         createdAt,
         updatedAt,
         profile,
@@ -19,7 +19,7 @@ class User {
         this._id = _id;
         this.username = username;
         this.email = email;
-        this.hashedPassword = hashedPassword;
+        this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.profile = profile ? {
@@ -67,6 +67,24 @@ class User {
         }
         return new User(result.value);
     }
+
+    static async findByUsernameOrEmail(login) {
+        console.log('login:', login);
+        const db = await connect();
+        const query = {
+            $or: [
+                { username: login },
+                { email: login }
+            ]
+        };
+    
+        const result = await db.collection('users').findOne(query);
+        if (!result) {
+            throw new Error('User not found');
+        }
+        return new User(result);
+    }
+    
 
     static async findById(userId) {
         const db = await connect();
