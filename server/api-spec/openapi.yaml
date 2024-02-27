@@ -363,7 +363,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRegistration'
       responses:
         '201':
           description: User created successfully
@@ -509,7 +509,19 @@ components:
         threadId:
           type: string
           description: The thread ID associated with the story.
-
+    UserRegistration:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+      - username
+      - email
+      - password
     User:
       type: object
       properties:

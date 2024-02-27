@@ -5,6 +5,9 @@ dotenv.config();
 export const modelVersion35 = `gpt-3.5-turbo-1106`;
 export const modelVersion = `gpt-4-1106-preview`;
 
+export const tokenExpiration = `1h`;
+export const refreshTokenExpiration = `30d`;
+
 // Config settings for S3 buckets
 export const config = {
   production: {
@@ -25,6 +28,8 @@ export const config = {
     PROD_ENV: process.env.PROD_ENV,
 
     SESSION_SECRET: process.env.PROD_SESSION_SECRET,
+    REFRESH_TOKEN_SECRET: process.env.PROD_REFRESH_TOKEN_SECRET,
+    SESSION_TRACKING_SECRET: process.env.PROD_SESSION_TRACKING_SECRET
     
   },
   development: {
@@ -44,7 +49,9 @@ export const config = {
 
     // 
     
-    SESSION_SECRET: process.env.DEV_SESSION_SECRET
+    SESSION_SECRET: process.env.DEV_SESSION_SECRET,
+    REFRESH_TOKEN_SECRET: process.env.DEV_REFRESH_TOKEN_SECRET,
+    SESSION_TRACKING_SECRET: process.env.DEV_SESSION_TRACKING_SECRET
   },
 
   local: {
@@ -57,7 +64,9 @@ export const config = {
 
     // SESSION
     
-    SESSION_SECRET: process.env.LOCAL_SESSION_SECRET
+    SESSION_SECRET: process.env.LOCAL_SESSION_SECRET,
+    REFRESH_TOKEN_SECRET: process.env.LOCAL_REFRESH_TOKEN_SECRET,
+    SESSION_TRACKING_SECRET: process.env.LOCAL_SESSION_TRACKING_SECRET
   }
 };
 

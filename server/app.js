@@ -17,6 +17,8 @@ import deleteUser from './routes/deleteUser.js';
 import updateUser from './routes/updateUser.js';
 import getUser from './routes/getUser.js';
 import userLogin from './routes/userLogin.js';
+import userToken from './routes/userToken.js';
+import handleRefreshToken from './routes/handleRefreshToken.js';
 
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
@@ -78,14 +80,14 @@ app.use(express.json());
 const port = 3001;
 
 // Set up MongoDB connection for sessions
-const sessionStore = MongoStore.create({
+/*const sessionStore = MongoStore.create({
   mongoUrl: currentConfig.MONGODB_URI, // Use your MongoDB connection string
   collectionName: 'sessions'
-});
+});*/
 
 // Session middleware configuration
-app.use(session({
-  secret: currentConfig.SESSION_SECRET,
+/*app.use(session({
+  secret: currentConfig.SESSION_TRACKING_SECRET,
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
@@ -93,7 +95,7 @@ app.use(session({
     secure: process.env.NODE_ENV === "production",
     maxAge: 1000 * 60 * 60 * 24
   }
-}));
+}));*/
 
 app.use(cors());
 app.use((req, res, next) => {
@@ -109,6 +111,8 @@ app.use('/v1/users', deleteUser);
 app.use('/v1/users', updateUser);
 app.use('/v1/users', getUser);
 app.use('/v1/login', userLogin);
+app.use('/v1/token', userToken);
+app.use('/v1/refreshToken', handleRefreshToken);
 
 // Stories
 app.use('/v1/stories', getStoriesRouter);
