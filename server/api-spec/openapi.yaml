@@ -219,12 +219,56 @@ paths:
         500:
           description: "Error processing user input"
 
+  /prompts:
+
+    get:
+      tags:
+      - Prompts
+      summary: Get all prompts
+      responses:
+        '200':
+          description: Prompts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prompt'
+    post:
+      tags:
+      - Prompts
+      summary: Create a new prompt
+      operationId: createPrompt
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Prompt'
+      responses:
+        '201':
+          description: Prompt created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  createPrompt:
+                    $ref: '#/components/schemas/Prompt'
+        '500':
+          description: Error creating a new prompt
   /prompts/{id}:
     get:
       tags:
       - Prompts
       summary: Retrieve a prompt by ID with selective fields
       description: Fetch a single prompt with the option to select specific fields in the response.
+      security:
+      - BearerAuth: []
       parameters:
       - in: path
         name: id
@@ -251,19 +295,23 @@ paths:
           description: A prompt with the specified ID was not found.
   /stories:
     get:
+      summary: Get a list of stores by users
+      operationId: getStories
       tags:
-      - Stories
-      summary: List all stories
-      description: Returns a list of all stories in the application.
+      - Story
+      security:
+      - BearerAuth: []
       responses:
         '200':
-          description: A JSON array of stories
+          description: A specific story
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Story'
+                $ref: '#/components/schemas/GetStories'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Story not found
   /createStory:
     post:
       tags:
@@ -339,20 +387,29 @@ paths:
       responses:
         '204':
           description: Story deleted
-  /prompts:
-    get:
+
+  /refreshToken:
+    post:
       tags:
-      - Prompts
-      summary: Get all prompts
+      - Users
+      summary: Refresh user's token
+      operationId: refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Token'
       responses:
         '200':
-          description: Prompts retrieved successfully
+          description: Access token successfully refreshed
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Prompt'
+                $ref: '#/components/schemas/AccessToken'
+        '401':
+          description: Unauthorized, token is null
+        '403':
+          description: Forbidden, token verification failed
   /users:
     post:
       tags:
@@ -418,6 +475,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
 components:
+  securitySchemes:
+    BearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for
   schemas:
     schemas:
     Moment:
@@ -494,7 +556,7 @@ components:
         storylineId:
           type: string
           description: The storyline ID for the moment.
-    Story:
+    GetStories:
       type: object
       properties:
         _id:
@@ -623,3 +685,20 @@ components:
       - message
       - storyId
       - templateName
+    AccessToken:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: The refreshed access token
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The refresh token
+
+
+security:
+- BearerAuth: []
+

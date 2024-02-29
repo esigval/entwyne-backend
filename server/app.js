@@ -28,6 +28,7 @@ import deleteStory from './routes/deleteStory.js';
 import getStorylines from './routes/getStorylines.js';
 
 // Prompt-related routes
+import createPrompt from './routes/createPrompt.js';
 import getPromptsRouter from './routes/getPrompts.js';
 import checkPromptLoading from './routes/checkPromptLoading.js';
 import getStoryPrompts from './routes/getStoryPrompts.js';
@@ -114,7 +115,7 @@ app.use('/v1/login', userLogin);
 app.use('/v1/token', userToken);
 app.use('/v1/refreshToken', handleRefreshToken);
 
-// Stories
+// Stories (protected)
 app.use('/v1/stories', getStoriesRouter);
 app.use('/v1/createStory', createStory);
 app.use('/v1', deleteStory);
@@ -122,6 +123,7 @@ app.use('/v1/stories', getStory);
 app.use('/v1/getStorylines', getStorylines);
 
 // Prompts
+app.use('/v1/prompts', createPrompt);
 app.use('/v1/prompts', getPromptsRouter);
 app.use('/v1/checkPromptLoading', checkPromptLoading);
 app.use('/v1/getStoryPrompts', getStoryPrompts);

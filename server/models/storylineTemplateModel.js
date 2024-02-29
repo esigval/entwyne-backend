@@ -17,6 +17,7 @@ class StorylineTemplate {
         storylineParts,
         bRoll,
         videoSettings, 
+        userId,
     }) {
         this._id = _id;
         this.templateName = templateName;
@@ -31,6 +32,7 @@ class StorylineTemplate {
         this.storylineParts = storylineParts || []; 
         this.bRoll = bRoll || []; 
         this.videoSettings = videoSettings || null; 
+        this.userId = userId;
     }
 
     static get collectionName() {

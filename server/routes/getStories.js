@@ -1,11 +1,12 @@
 import express from 'express';
+import Story from '../models/storyModel.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // replace with the actual path to your middleware
 const router = express.Router();
 
-router.get('/:', async (req, res) => {
+router.get('/', validateTokenMiddleware, async (req, res) => {
     try {
-        const collection = req.db.collection('stories');
-        const docs = await collection.find({}).toArray();
-        res.json(docs);
+        const stories = await Story.findByUserId(req.userId);
+        res.json(stories);
     } catch (err) {
         console.error('Failed to get stories:', err);
         res.status(500).send('Error in getStories');
@@ -13,5 +14,3 @@ router.get('/:', async (req, res) => {
 });
 
 export default router;
-
-

@@ -26,6 +26,7 @@ class Moment {
         pictureUri,
         mediaType,
         storylineId,
+        userId
     } = {}) {
         this._id = _id;
         this.associatedPromptId = associatedPromptId;
@@ -50,6 +51,7 @@ class Moment {
         this.pictureUri = pictureUri
         this.mediaType = mediaType;
         this.storylineId = storylineId;
+        this.userId = userId;
     }
 
     static get collectionName() {

@@ -3,24 +3,28 @@ import { ObjectId } from 'mongodb';
 
 class Prompts {
     constructor({
+        _id = new ObjectId(),
         order,
-        storyName,
+        storyId,
         prompt,
         momentId,
         mediaType,
         promptTitle,
         collected,
         primers,
+        userId,
     }) {
+        this._id = _id;
         this.created = new Date();
         this.order = order;
-        this.storyName = storyName;
+        this.storyId = new ObjectId(storyId);
         this.prompt = prompt;
         this.momentId = momentId ?? null;
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
         this.collected = collected ?? false;
         this.primers = primers ?? [];
+        this.userId = userId;
     }
 
     static get collectionName() {

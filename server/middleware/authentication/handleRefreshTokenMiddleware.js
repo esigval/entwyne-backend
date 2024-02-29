@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { config, tokenExpiration } from '../config.js';
+import { config, tokenExpiration } from '../../config.js';
 
 const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];

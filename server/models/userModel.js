@@ -14,7 +14,8 @@ class User {
         profile,
         settings,
         status,
-        roles
+        roles,
+        userId,
     } = {}) {
         this._id = _id;
         this.username = username;
@@ -36,6 +37,7 @@ class User {
         } : {};
         this.status = status;
         this.roles = roles;
+        this.userId = userId;
     }
 
     static async create(userData) {

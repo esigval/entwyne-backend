@@ -9,13 +9,15 @@ class StorylineModel {
         bRoll = [],
         videoSettings,
         finalRender,
+        userId,
     }) {
         this._id = _id;
-        this.storyId = storyId;
+        this.storyId = new ObjectId(storyId);
         this.storylineParts = storylineParts;
         this.bRoll = bRoll;
         this.videoSettings = videoSettings;
         this.finalRender = finalRender;
+        this.userId = new ObjectId(userId);
     }
 
 

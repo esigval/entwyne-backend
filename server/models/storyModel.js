@@ -4,15 +4,58 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ threadId, created, storyName, storyline }) {
+    constructor({ threadId, created, storyName, storyline, userId }) {
+        this._id = new ObjectId();
         this.threadId = threadId;
         this.created = created || new Date(); // Default to current date if not provided
         this.storyName = storyName;
         this.storyline = storyline || []; // Default to empty array if not provided
+        this.userId = userId;
     }
 
     static get collectionName() {
         return 'stories'; // Name of the collection in the database
+    }
+
+    static async findByIdAndUserId(storyId, userId) {
+        try {
+            if (!ObjectId.isValid(storyId)) {
+                throw new Error(`Invalid ObjectId string: ${storyId}`);
+            }
+            if (!ObjectId.isValid(userId)) {
+                throw new Error(`Invalid ObjectId string: ${userId}`);
+            }
+    
+            // Convert to ObjectId if necessary
+            storyId = storyId instanceof ObjectId ? storyId : new ObjectId(storyId);
+            userId = userId instanceof ObjectId ? userId : new ObjectId(userId);
+    
+            console.log("storyId", storyId);
+            console.log("userId", userId);
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            const result = await collection.findOne({ _id: storyId, userId: userId });
+            if (result) {
+                return new Story(result);
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error("Error in Story.findByIdAndUserId:", error);
+            throw error;
+        }
+    }
+
+    static async findByUserId(userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            const result = await collection.find({ userId: new ObjectId(userId) }).toArray();
+            return result.map(doc => new Story(doc)); // return an array of Story instances
+        } catch (error) {
+            console.error("Error in Story.findByUserId:", error);
+            throw error;
+        }
     }
 
     static async create(data) {
