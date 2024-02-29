@@ -5,6 +5,8 @@ import { config } from '../config.js';
 dotenv.config();
 
 const environment = process.env.NODE_ENV || 'local';
+
+console.log(environment);
 const currentConfig = config[environment];
 
 console.log(currentConfig);
