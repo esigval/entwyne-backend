@@ -6,6 +6,7 @@ docker push 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-developme
 
 ### Docker Pull and Run Server Development
 
+docker rm -f 
 docker pull 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-development:latest 
 docker run -e NODE_ENV=development -p 3001:3001 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-development:latest 
 

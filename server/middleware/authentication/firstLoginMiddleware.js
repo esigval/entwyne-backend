@@ -30,6 +30,9 @@ export const firstLoginMiddleware = async (req, res, next) => {
         const token = jwt.sign({ id: user._id }, currentConfig.SESSION_SECRET, { expiresIn: '1h' });
         const refreshToken = jwt.sign({ id: user._id }, currentConfig.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
+        // Store the refresh token in the database
+        await User.findUserIdAndUpdateTokenStatus(user._id, refreshToken);
+
         req.token = token;
         req.refreshToken = refreshToken;
         req.user = user; // Attach the user data (excluding the password) to req for use in the final route handler

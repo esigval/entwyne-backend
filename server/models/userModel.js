@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { connect } from '../db/db.js';
 import dotenv from 'dotenv';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ class User {
         status,
         roles,
         userId,
+        refreshToken
     } = {}) {
         this._id = _id;
         this.username = username;
@@ -42,6 +44,7 @@ class User {
         this.status = status;
         this.roles = roles;
         this.userId = userId;
+        this.refreshToken = refreshToken;
     }
 
     static async create(userData) {
@@ -65,6 +68,61 @@ class User {
         }
         return new User({ _id: result.insertedId, ...userData });
     }
+
+    static async deleteRefreshToken(userId) {
+        const db = await connect();
+    
+        // Delete the refresh token
+        const result = await db.collection('users').updateOne(
+            { _id: new ObjectId(userId) },
+            { $unset: { refreshToken: "" } }
+        );
+    
+        if (result.modifiedCount === 0) {
+            throw new Error('No user found with this id');
+        }
+    }
+
+    static async findUserAndCompareToken(userId, refreshToken) {
+        const db = await connect();
+    
+        // Find the user
+        const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    
+        if (!user) {
+            throw new Error('No user found');
+        }
+    
+        // Compare the given refresh token with the stored hashed refresh token
+        const match = await bcrypt.compare(refreshToken, user.refreshToken);
+    
+        if (!match) {
+            throw new Error('Invalid refresh token');
+        }
+    
+        // If the tokens match, return the user
+        return new User(user);
+    }
+    
+    static async findUserIdAndUpdateTokenStatus(userId, refreshToken) {
+        console.log('userId:', userId);
+        const db = await connect();
+    
+        // Hash the refresh token
+        const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    
+        const result = await db.collection('users').findOneAndUpdate(
+            { _id: new ObjectId(userId) },
+            { $set: { refreshToken: hashedRefreshToken } },
+            { returnOriginal: false, projection: { password: 0 } }
+        );
+    
+        if (!result) {
+            throw new Error('No user found to update');
+        }
+        return new User(result);
+    }
+    
     static async findByIdAndDelete(userId) {
         const db = await connect();
         const result = await db.collection('users').deleteOne({ _id: new ObjectId(userId) });

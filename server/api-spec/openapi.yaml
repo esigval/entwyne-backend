@@ -29,7 +29,16 @@ paths:
           description: User not found
         '500':
           description: Server error
-
+  /logout:
+    post:
+      tags:
+      - "Users"
+      summary: User logout
+      responses:
+        '200':
+          description: Logout successful
+        '500':
+          description: Server error
   /uploadSaveMoment:
     get:
       tags:

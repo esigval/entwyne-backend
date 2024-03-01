@@ -16,6 +16,8 @@ import updateUser from './routes/updateUser.js';
 import getUser from './routes/getUser.js';
 import userLogin from './routes/userLogin.js';
 import handleRefreshToken from './routes/handleRefreshToken.js';
+import userLogout from './routes/userLogout.js';
+// import userLogout from './routes/userLogout.js';
 
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
@@ -97,6 +99,7 @@ app.use('/v1/users', deleteUser);
 app.use('/v1/users', updateUser);
 app.use('/v1/login', userLogin);
 app.use('/v1/refreshToken', handleRefreshToken);
+app.use('/v1/logout', userLogout); // protected
 
 // TBD - when do we need to get a userId?
 app.use('/v1/users', getUser);
