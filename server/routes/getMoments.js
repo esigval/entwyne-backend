@@ -1,11 +1,13 @@
 import express from 'express';
 import Moment from '../models/momentModel.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', validateTokenMiddleware, async (req, res) => {
+    const userId = req.userId;
     try {
-        const docs = await Moment.listAll();
+        const docs = await Moment.listAll(userId);
         res.json(docs);
     } catch (err) {
         console.error('Failed to get moments:', err);
@@ -14,4 +16,3 @@ router.get('/', async (req, res) => {
 });
 
 export default router;
-

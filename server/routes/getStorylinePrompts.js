@@ -1,9 +1,10 @@
 import express from 'express';
 import Prompts from '../models/promptModel.js'; // Make sure to import the Prompts class
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 
 const router = express.Router();
 
-router.get('/:storylineId', async (req, res) => {
+router.get('/:storylineId', validateTokenMiddleware, async (req, res) => {
     try {
         const id = req.params.id;
         const fields = req.query.fields;

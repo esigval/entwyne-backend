@@ -84,7 +84,9 @@ class User {
         if (!result) {
             throw new Error('User not found');
         }
-        return new User(result);
+        // Parse out the password before returning the user
+        const { password, ...userWithoutPassword } = result;
+        return new User(userWithoutPassword);
     }
     
 
@@ -101,7 +103,9 @@ class User {
         if (!result) {
             throw new Error('No user found');
         }
-        return new User(result);
+        // Parse out the password before returning the user
+        const { password, ...userWithoutPassword } = result;
+        return new User(userWithoutPassword);
     }
 
     static async findAll() {

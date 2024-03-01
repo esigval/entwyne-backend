@@ -13,6 +13,7 @@ class Prompts {
         collected,
         primers,
         userId,
+        assigneeId,
     }) {
         this._id = _id;
         this.created = new Date();
@@ -25,6 +26,7 @@ class Prompts {
         this.collected = collected ?? false;
         this.primers = primers ?? [];
         this.userId = userId;
+        this.assigneeId = assigneeId ? new ObjectId(assigneeId) : "unassigned";
     }
 
     static get collectionName() {
@@ -273,7 +275,75 @@ class Prompts {
     }
 
 
-    // I want to find prompts that match the storyId exist 
+    // I want a method that finds all prompts that match the userId
+    static async findByUserId(userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({ userId: new ObjectId(userId) }).toArray();
+            return prompts;
+        } catch (error) {
+            console.error("Error in Prompts.findByUserId:", error);
+            throw error;
+        }
+    }
+
+    static async deleteByPromptId(promptId, userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+    
+            // Find the prompt first to check the owner
+            const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
+            console.log('prompt:', prompt);
+            if (!prompt) {
+                throw new Error('Prompt not found');
+            }
+    
+            // Check if the userId of the prompt matches the authenticated user's id
+            if (prompt.userId.toString() !== userId.toString()) {
+                console.log('prompt.userId:', prompt.userId);
+                throw new Error('User is not authorized to delete this prompt');
+            }
+    
+            // If the user is authorized, delete the prompt
+            const result = await collection.deleteOne({ _id: new ObjectId(promptId) });
+            return result;
+        } catch (error) {
+            console.error("Error in Prompts.deleteByPromptId:", error);
+            throw error;
+        }
+    }
+
+    static async updateByPromptId(promptId, userId, data) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+    
+            // Find the prompt first to check the owner
+            const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
+            console.log('prompt:', prompt);
+            if (!prompt) {
+                throw new Error('Prompt not found');
+            }
+    
+            // Check if the userId of the prompt matches the authenticated user's id
+            if (prompt.userId.toString() !== userId.toString()) {
+                console.log('prompt.userId:', prompt.userId);
+                throw new Error('User is not authorized to update this prompt');
+            }
+    
+            // If the user is authorized, update the prompt
+            const result = await collection.updateOne({ _id: new ObjectId(promptId) }, { $set: data });
+            return result;
+        } catch (error) {
+            console.error("Error in Prompts.updateByPromptId:", error);
+            throw error;
+        }
+    }
+
+
+    
 
 }
 

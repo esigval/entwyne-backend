@@ -29,13 +29,16 @@ import getStorylines from './routes/getStorylines.js';
 
 // Prompt-related routes
 import createPrompt from './routes/createPrompt.js';
-import getPromptsRouter from './routes/getPrompts.js';
+import getPrompt from './routes/getPrompt.js';
+import getAllPrompts from './routes/getAllPrompts.js';
+import deletePrompt from './routes/deletePrompt.js';
+import updatePrompt from './routes/updatePrompt.js';
 import checkPromptLoading from './routes/checkPromptLoading.js';
 import getStoryPrompts from './routes/getStoryPrompts.js';
 import getStorylinePrompts from './routes/getStorylinePrompts.js';
 
 // Moment (story segments) routes
-import getMomentsRouter from './routes/getMoments.js';
+import getAllMoments from './routes/getMoments.js';
 import deleteMoment from './routes/deleteMoment.js';
 import confirmMoment from './routes/confirmMoment.js';
 import saveMomentRouter from './routes/saveMoment.js';
@@ -58,6 +61,9 @@ import userInput from './routes/userInput.js';
 // Routes for template management and story building
 import getTemplateName from './routes/getTemplateName.js';
 import buildStoryline from './routes/buildStoryline.js';
+
+// Documentation
+import instructions from './routes/instructions.js';
 
 const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];
@@ -106,14 +112,15 @@ app.use((req, res, next) => {
 
 // API routes
 
-// Users
-app.use('/v1/users', createUser);
+// Users (protected)
+app.use('/v1/users', createUser); // Not protected
 app.use('/v1/users', deleteUser);
 app.use('/v1/users', updateUser);
-app.use('/v1/users', getUser);
 app.use('/v1/login', userLogin);
-app.use('/v1/token', userToken);
 app.use('/v1/refreshToken', handleRefreshToken);
+
+// TBD - when do we need to get a userId?
+app.use('/v1/users', getUser);
 
 // Stories (protected)
 app.use('/v1/stories', getStoriesRouter);
@@ -122,16 +129,22 @@ app.use('/v1', deleteStory);
 app.use('/v1/stories', getStory);
 app.use('/v1/getStorylines', getStorylines);
 
-// Prompts
+// Prompts (protected)
 app.use('/v1/prompts', createPrompt);
-app.use('/v1/prompts', getPromptsRouter);
-app.use('/v1/checkPromptLoading', checkPromptLoading);
-app.use('/v1/getStoryPrompts', getStoryPrompts);
+app.use('/v1/prompts', getPrompt);
+app.use('/v1/getAllPrompts', getAllPrompts);
+app.use('/v1/prompts', deletePrompt);
+app.use('/v1/prompts', updatePrompt);
 app.use('/v1/getStorylinePrompts', getStorylinePrompts);
 
+// Prompts internal
+app.use('/v1/checkPromptLoading', checkPromptLoading);
+app.use('/v1/getStoryPrompts', getStoryPrompts);
+
 // Moments
-app.use('/v1/moments', getMomentsRouter);
-app.use('/v1', deleteMoment);
+app.use('/v1/getAllMoments', getAllMoments); // protected
+app.use('/v1/moments', deleteMoment); // protected
+app.use('/v1/moments', createMoment); 
 app.use('/v1/confirmMoment', confirmMoment); 
 app.use('/v1/uploadSaveMoment', saveMomentRouter);
 app.use('/v1/checkMomentProcess', checkMomentProcess);
@@ -155,9 +168,8 @@ app.use('/v1/assistants/userInput', userInput);
 app.use('/v1/getTemplate', getTemplateName);
 app.use('/v1/buildStoryline', buildStoryline);
 
-
-
-
+// Documentation
+app.use('/v1/instructions', instructions);
 
 
 app.listen(port, '0.0.0.0', () => {

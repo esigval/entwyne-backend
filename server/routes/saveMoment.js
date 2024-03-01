@@ -1,6 +1,7 @@
+// saveMoment.js Route
 import express from 'express';
 import createPresignedUrl from '../middleware/presignedUrls/createPresignedUrl.js';
-import saveMoment from '../middleware/saveMoment.js';
+import saveMoment from '../middleware/moments/saveMoment.js';
 import { buckets } from '../config.js';
 const router = express.Router();
 

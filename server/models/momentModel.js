@@ -28,8 +28,8 @@ class Moment {
         storylineId,
         userId
     } = {}) {
-        this._id = _id;
-        this.associatedPromptId = associatedPromptId;
+        this._id = new ObjectId(_id);
+        this.associatedPromptId = new ObjectId(associatedPromptId);
         this.audioUri = audioUri;
         this.beatTag = beatTag;
         this.createdAt = createdAt;
@@ -50,7 +50,7 @@ class Moment {
         this.webmFilePath = webmFilePath;
         this.pictureUri = pictureUri
         this.mediaType = mediaType;
-        this.storylineId = storylineId;
+        this.storylineId = new ObjectId(storylineId);
         this.userId = userId;
     }
 
@@ -58,17 +58,17 @@ class Moment {
         return 'moment'; // Name of the collection in the database
     }
 
-    static async listAll() {
+    static async listAllByUserId(userId) {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
     
-            // Get all Moments
-            const allMoments = await collection.find({}).toArray();
+            // Get all Moments for a specific user
+            const userMoments = await collection.find({ userId: new ObjectId(userId) }).toArray();
     
-            return allMoments;
+            return userMoments;
         } catch (error) {
-            console.error('Failed to get all moments:', error);
+            console.error('Failed to get all moments for user:', error);
         }
     }
 
@@ -185,6 +185,35 @@ class Moment {
     
         // Return the s3FilePath and s3Uri properties
         return { s3FilePath: moment.s3FilePath, s3Uri: moment.s3Uri };
+    }
+
+    static async deleteOne(momentId, userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+
+            // First, find the moment
+            const moment = await collection.findOne({ _id: new ObjectId(momentId) });
+            if (!moment) {
+                return { status: 404, message: 'Moment not found.' };
+            }
+
+            // Check if the user owns the moment
+            if (moment.userId.toString() !== userId.toString()) {
+                return { status: 403, message: 'You do not have permission to delete this moment.' };
+            }
+
+            // If the user owns the moment, delete it
+            const result = await collection.deleteOne({ _id: new ObjectId(momentId) });
+            if (result.deletedCount === 1) {
+                return { status: 200, message: 'Successfully deleted moment.' };
+            } else {
+                return { status: 404, message: 'Moment not found.' };
+            }
+        } catch (error) {
+            console.error("Error in DELETE /moment/:id:", error);
+            return { status: 500, message: 'Internal server error.' };
+        }
     }
 
 }

@@ -1,8 +1,8 @@
-import { connect } from '../db/db.js';
-import Moment from '../models/momentModel.js';
-import Prompts from '../models/promptModel.js';
+import { connect } from '../../db/db.js';
+import Moment from '../../models/momentModel.js';
+import Prompts from '../../models/promptModel.js';
 import { ObjectId } from 'mongodb'; // Import ObjectId
-import { buckets } from '../config.js';
+import { buckets } from '../../config.js';
 
 const saveMoment = async (req, res, next) => {
     const { promptId, key, presignedUrl, videoUri } = req;

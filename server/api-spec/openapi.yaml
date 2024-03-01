@@ -123,7 +123,7 @@ paths:
                   message:
                     type: string
                     description: "Error message"
-  /deleteMoment/{id}:
+  /moments/{id}:
     delete:
       tags:
       - "Moments"
@@ -167,7 +167,7 @@ paths:
                   message:
                     type: string
                     description: "Error message"
-  /moments:
+  /getAllMoments:
     get:
       tags:
       - "Moments"
@@ -218,6 +218,21 @@ paths:
                     type: string
         500:
           description: "Error processing user input"
+
+  /getAllPrompts:
+    get:
+      tags:
+      - Prompts
+      summary: Get all prompts
+      responses:
+        '200':
+          description: Prompts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prompt'
 
   /prompts:
 
@@ -291,6 +306,59 @@ paths:
                 $ref: '#/components/schemas/Prompt'
         '400':
           description: Bad request when invalid fields are specified.
+        '404':
+          description: A prompt with the specified ID was not found.
+    delete:
+      tags:
+      - Prompts
+      summary: Delete a prompt by ID
+      description: Delete a single prompt by its unique identifier.
+      security:
+      - BearerAuth: []
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for the prompt.
+      responses:
+        '200':
+          description: Prompt deleted successfully.
+        '400':
+          description: Bad request when invalid ID is specified.
+        '404':
+          description: A prompt with the specified ID was not found.
+    patch:
+      tags:
+      - Prompts
+      summary: Update a prompt by ID
+      description: Update a single prompt by its unique identifier.
+      security:
+      - BearerAuth: []
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for the prompt.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              schema:
+                $ref: '#/components/schemas/Prompt'
+      responses:
+        '200':
+          description: Prompt updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prompt'
+        '400':
+          description: Bad request when invalid ID or data is specified.
         '404':
           description: A prompt with the specified ID was not found.
   /stories:
@@ -674,6 +742,10 @@ components:
           type: boolean
         primers:
           type: array
+          items:
+            type: string
+        asssignee:
+          type: string
           items:
             type: string
     AIResponse:
