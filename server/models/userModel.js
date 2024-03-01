@@ -1,6 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { connect } from '../db/db.js';
 import dotenv from 'dotenv';
+import validator from 'validator';
+
 dotenv.config();
 
 class User {
@@ -19,7 +21,9 @@ class User {
     } = {}) {
         this._id = _id;
         this.username = username;
-        this.email = email;
+        if (!validator.isEmail(email)) {
+            throw new Error('Invalid email format');
+        }
         this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -42,6 +46,19 @@ class User {
 
     static async create(userData) {
         const db = await connect();
+    
+        // Check if a user with the given username or email already exists
+        const existingUser = await db.collection('users').findOne({
+            $or: [
+                { username: userData.username },
+                { email: userData.email }
+            ]
+        });
+    
+        if (existingUser) {
+            throw new Error('User creation failed: Username or email already exists');
+        }
+    
         const result = await db.collection('users').insertOne(userData);
         if (!result.insertedId) {
             throw new Error('User creation failed: No document was inserted');

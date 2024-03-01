@@ -23,7 +23,8 @@
     "mysql": "^2.18.1",
     "mysql2": "3.6.3",
     "openai": "4.20.1",
-    "swagger-ui-express": "5.0.0"
+    "swagger-ui-express": "5.0.0",
+    "validator": "13.11.0"
   },
   "name": "server",
   "version": "1.0.0",
