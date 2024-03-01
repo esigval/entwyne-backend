@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 import editEngine from '../middleware/editingEngine/editEngine.js';
 import assembleMainMediaFile from '../middleware/editingEngine/assembleMainMedia.js';
 import StorylineModel from '../models/storylineModel.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 dotenv.config();
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateTokenMiddleware, async (req, res) => {
   try {
     const { storylineId, musicName, coupleName, marriageDate } = req.body;
     console.log('storylineId', storylineId);

@@ -4,12 +4,13 @@ import Story from '../models/storyModel.js'; // Adjust the path to your Story mo
 import directorReviewAssistant from '../middleware/assistants/directorReviewAssistant.js';
 import sentimentAnalysisAssistant from '../middleware/assistants/sentimentAnalysisAssistant.js';
 import directorReviewScoreAssistant from '../middleware/assistants/directorReviewScoreAssistant.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 import { directorReviewInstructions, sentimentAnalysisAssistantInstructions,directorReviewScoreAssistantInstructions } from '../prompts/assistantInstructions.js';
 
 const router = express.Router();
 
 // Route to analyze a moment if transcription is completed.
-router.get('/', async (req, res) => {
+router.get('/', validateTokenMiddleware, async (req, res) => {
     console.log('checkMomentProcess route hit');
 
     const momentId = req.query.newMomentId;

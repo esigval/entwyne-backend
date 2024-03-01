@@ -1,9 +1,10 @@
 import express from 'express';
 import Moments from '../models/momentModel.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', validateTokenMiddleware, async (req, res) => {
     console.log('getting thumbnails');
 
     const storylineId = req.query.storylineId;

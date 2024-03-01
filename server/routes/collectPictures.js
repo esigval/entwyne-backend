@@ -5,11 +5,12 @@ import Moments from '../models/momentModel.js';
 import StorylineModel from '../models/storylineModel.js';
 import dotenv from 'dotenv';
 import { buckets } from '../config.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 dotenv.config();
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', validateTokenMiddleware, async (req, res) => {
     console.log('collecting pictures');
     const { promptId, fileName, fileType } = req.query;
     console.log('promptId', promptId);

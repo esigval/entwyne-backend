@@ -1,8 +1,9 @@
 import express from 'express';
 import Prompts from '../models/promptModel.js'; // Assuming the model is exported from this path
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 const router = express.Router();
 
-router.get('/:storyId', async (req, res) => {
+router.get('/:storyId', validateTokenMiddleware, async (req, res) => {
     try {
         const storyId = req.params.storyId;
         const primers = await Prompts.getPrimersFromPrompts(storyId);

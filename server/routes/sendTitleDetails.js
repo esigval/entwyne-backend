@@ -2,12 +2,13 @@ import express from 'express';
 import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
 import editEngine from '../middleware/editingEngine/editEngine.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 dotenv.config();
 
 const router = express.Router();
 const lambda = new AWS.Lambda();
 
-router.post('/', async (req, res) => {
+router.post('/', validateTokenMiddleware, async (req, res) => {
   try {
     const { storylineId, musicName, coupleName, marriageDate } = req.headers;
 

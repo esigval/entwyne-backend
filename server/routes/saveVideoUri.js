@@ -1,9 +1,10 @@
 import express from 'express';
 import { connect } from '../db/db.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateTokenMiddleware, async (req, res) => {
     try {
         const { videoUri } = req.body;
         const db = await connect();

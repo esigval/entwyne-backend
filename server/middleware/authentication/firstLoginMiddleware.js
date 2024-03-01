@@ -6,6 +6,7 @@ import { config } from '../../config.js'; // Assuming config.js is set up correc
 
 export const firstLoginMiddleware = async (req, res, next) => {
     const { email, password } = req; // Assuming email is used as the unique identifier
+    console.log('password:', password);
 
     try {
         // Fetch the user from the database to get the hashed password

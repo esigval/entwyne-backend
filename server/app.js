@@ -4,8 +4,6 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'js-yaml';
 import fs from 'fs';
 
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import express from 'express';
 import cors from 'cors';
 import { connect } from './db/db.js';
@@ -17,7 +15,6 @@ import deleteUser from './routes/deleteUser.js';
 import updateUser from './routes/updateUser.js';
 import getUser from './routes/getUser.js';
 import userLogin from './routes/userLogin.js';
-import userToken from './routes/userToken.js';
 import handleRefreshToken from './routes/handleRefreshToken.js';
 
 // Story-related routes
@@ -86,24 +83,6 @@ const swaggerDocument = YAML.load(fs.readFileSync('./api-spec/openapi.yaml', 'ut
 app.use(express.json());
 const port = 3001;
 
-// Set up MongoDB connection for sessions
-/*const sessionStore = MongoStore.create({
-  mongoUrl: currentConfig.MONGODB_URI, // Use your MongoDB connection string
-  collectionName: 'sessions'
-});*/
-
-// Session middleware configuration
-/*app.use(session({
-  secret: currentConfig.SESSION_TRACKING_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  store: sessionStore,
-  cookie: {
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 1000 * 60 * 60 * 24
-  }
-}));*/
-
 app.use(cors());
 app.use((req, res, next) => {
   req.db = db;
@@ -141,32 +120,31 @@ app.use('/v1/getStorylinePrompts', getStorylinePrompts);
 app.use('/v1/checkPromptLoading', checkPromptLoading);
 app.use('/v1/getStoryPrompts', getStoryPrompts);
 
-// Moments
+// Moments (protected)
 app.use('/v1/getAllMoments', getAllMoments); // protected
 app.use('/v1/moments', deleteMoment); // protected
-app.use('/v1/moments', createMoment); 
-app.use('/v1/confirmMoment', confirmMoment); 
-app.use('/v1/uploadSaveMoment', saveMomentRouter);
-app.use('/v1/checkMomentProcess', checkMomentProcess);
-app.use(`/v1/collectPictures`, collectPictures);
+app.use('/v1/confirmMoment', confirmMoment); // protected
+app.use('/v1/uploadSaveMoment', saveMomentRouter); // protected
+app.use('/v1/checkMomentProcess', checkMomentProcess); // protected
+app.use(`/v1/collectPictures`, collectPictures); // protected
 
-// Utility
-app.use('/v1/saveVideoUri', saveVideoUri);
-app.use(`/v1/getThumbnails`, getThumbnails);
-app.use(`/v1/getTitleDetails`, getTitleDetails);
-app.use(`/v1/finalRender`, finalRender);
-app.use(`/v1/confirmVideoRender`, confirmVideoRender);
-app.use(`/v1/getRenderStatus`, getRenderStatus)
-app.use(`/v1/getPrimers`, getPrimers);
+// Utility (protected)
+app.use('/v1/saveVideoUri', saveVideoUri); // protected
+app.use(`/v1/getThumbnails`, getThumbnails); // protected
+app.use(`/v1/getTitleDetails`, getTitleDetails); // protected
+app.use(`/v1/finalRender`, finalRender); // protected
+app.use(`/v1/confirmVideoRender`, confirmVideoRender); // protected
+app.use(`/v1/getRenderStatus`, getRenderStatus); // protected
+app.use(`/v1/getPrimers`, getPrimers); // protected
 app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Assistant Interaction
-app.use('/v1/assistants/createThread', createThread);
-app.use('/v1/assistants/userInput', userInput);
+// Assistant Interaction (protected)
+app.use('/v1/assistants/createThread', createThread); // protected
+app.use('/v1/assistants/userInput', userInput); // protected
 
-// Templates
-app.use('/v1/getTemplate', getTemplateName);
-app.use('/v1/buildStoryline', buildStoryline);
+// Templates (protected)
+app.use('/v1/getTemplate', getTemplateName); // protected
+app.use('/v1/buildStoryline', buildStoryline); // protected
 
 // Documentation
 app.use('/v1/instructions', instructions);

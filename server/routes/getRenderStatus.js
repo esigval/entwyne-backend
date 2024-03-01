@@ -1,11 +1,12 @@
 import express from 'express';
 import StorylineModel from '../models/storylineModel.js';
 import Moments from '../models/momentModel.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 
 
 const router = express.Router();
 
-router.get('/:storylineId', async (req, res) => {
+router.get('/:storylineId', validateTokenMiddleware, async (req, res) => {
     try {
         const { storylineId } = req.params;
         let storyline = await StorylineModel.findFinalRender(storylineId);

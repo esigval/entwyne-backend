@@ -1,10 +1,11 @@
 import express from 'express';
 import { instructions } from '../prompts/assistantInstructions.js';
 import storyEngine from '../middleware/storylineEngine/storyEngine.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateTokenMiddleware, async (req, res) => {
     
     console.log(instructions);
     const {storyId, threadId, templateName } = req.body;

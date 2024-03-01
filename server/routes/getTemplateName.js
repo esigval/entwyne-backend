@@ -1,7 +1,8 @@
 import express from 'express';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', validateTokenMiddleware, async (req, res) => {
     console.log('GET / route hit');
     try {
         const collection = req.db.collection('storylineTemplates');

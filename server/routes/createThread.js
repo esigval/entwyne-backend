@@ -1,10 +1,11 @@
 import express from 'express';
 import { openai } from '../services/openAiAssistant.js'; // Import the OpenAI instance
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 
 const router = express.Router();
 
 // Route to create a new thread
-router.post('/', async (req, res) => {
+router.post('/', validateTokenMiddleware, async (req, res) => {
     try {
         const emptyThread = await openai.beta.threads.create();
         console.log(emptyThread); // Optional, for logging purposes

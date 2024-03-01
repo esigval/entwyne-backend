@@ -7,11 +7,12 @@ import { instructions, testBotInstructions } from '../prompts/assistantInstructi
 import storyEngine from '../middleware/storylineEngine/storyEngine.js';
 import StorylineTemplate from '../models/storylineTemplateModel.js';
 import processInBackground from '../middleware/userInput/userInputScripts.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 
 const router = express.Router();
 
 // Route to handle user input
-router.post('/', async (req, res) => {
+router.post('/', validateTokenMiddleware, async (req, res) => {
     console.log('User input received:', req.body);
     const { message, storyId, templateName } = req.body;
 

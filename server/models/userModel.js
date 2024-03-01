@@ -84,9 +84,8 @@ class User {
         if (!result) {
             throw new Error('User not found');
         }
-        // Parse out the password before returning the user
-        const { password, ...userWithoutPassword } = result;
-        return new User(userWithoutPassword);
+        // Return the user with the password
+        return new User(result);
     }
     
 
@@ -103,8 +102,6 @@ class User {
         if (!result) {
             throw new Error('No user found');
         }
-        // Parse out the password before returning the user
-        const { password, ...userWithoutPassword } = result;
         return new User(userWithoutPassword);
     }
 

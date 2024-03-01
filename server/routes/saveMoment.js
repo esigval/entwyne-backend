@@ -1,11 +1,12 @@
-// saveMoment.js Route
+// saveMoment.js
 import express from 'express';
 import createPresignedUrl from '../middleware/presignedUrls/createPresignedUrl.js';
 import saveMoment from '../middleware/moments/saveMoment.js';
 import { buckets } from '../config.js';
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js'; // Import the middleware
 const router = express.Router();
 
-router.get('/',
+router.get('/',validateTokenMiddleware, 
   async (req, res, next) => {
     const promptId = req.query.promptId; // Assume prompt ID is passed as a query parameter
     const videoUri = decodeURIComponent(req.query.videoUri); // Assume video URI is passed as a query parameter
