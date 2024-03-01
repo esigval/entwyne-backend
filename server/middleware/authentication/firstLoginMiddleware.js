@@ -5,8 +5,10 @@ import User from '../../models/userModel.js'; // Assuming this is your user mode
 import { config } from '../../config.js'; // Assuming config.js is set up correctly
 
 export const firstLoginMiddleware = async (req, res, next) => {
-    const { email, password } = req; // Assuming email is used as the unique identifier
+    const { email, password } = req.body; // Assuming email is used as the unique identifier
     console.log('password:', password);
+    console.log('email:', email);
+
 
     try {
         // Fetch the user from the database to get the hashed password
