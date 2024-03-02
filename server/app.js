@@ -17,7 +17,6 @@ import getUser from './routes/getUser.js';
 import userLogin from './routes/userLogin.js';
 import handleRefreshToken from './routes/handleRefreshToken.js';
 import userLogout from './routes/userLogout.js';
-// import userLogout from './routes/userLogout.js';
 
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
@@ -35,6 +34,7 @@ import updatePrompt from './routes/updatePrompt.js';
 import checkPromptLoading from './routes/checkPromptLoading.js';
 import getStoryPrompts from './routes/getStoryPrompts.js';
 import getStorylinePrompts from './routes/getStorylinePrompts.js';
+import assignContributors from './routes/assignContributors.js'; 
 
 // Moment (story segments) routes
 import getAllMoments from './routes/getMoments.js';
@@ -118,6 +118,7 @@ app.use('/v1/getAllPrompts', getAllPrompts);
 app.use('/v1/prompts', deletePrompt);
 app.use('/v1/prompts', updatePrompt);
 app.use('/v1/getStorylinePrompts', getStorylinePrompts);
+app.use('/v1/assignContributors', assignContributors); // protected
 
 // Prompts internal
 app.use('/v1/checkPromptLoading', checkPromptLoading);

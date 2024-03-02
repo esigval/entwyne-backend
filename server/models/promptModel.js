@@ -13,7 +13,7 @@ class Prompts {
         collected,
         primers,
         userId,
-        assigneeId,
+        contributors = [],
     }) {
         this._id = _id;
         this.created = new Date();
@@ -26,7 +26,7 @@ class Prompts {
         this.collected = collected ?? false;
         this.primers = primers ?? [];
         this.userId = userId;
-        this.assigneeId = assigneeId ? new ObjectId(assigneeId) : "unassigned";
+        this.contributors = contributors.map(id => new ObjectId(id));
     }
 
     static get collectionName() {
@@ -338,6 +338,38 @@ class Prompts {
             return result;
         } catch (error) {
             console.error("Error in Prompts.updateByPromptId:", error);
+            throw error;
+        }
+    }
+
+    static async assignContributorsByPromptId(promptId, userId, contributors) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+    
+            // Find the prompt first to check the owner
+            const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
+            console.log('prompt:', prompt);
+            if (!prompt) {
+                throw new Error('Prompt not found');
+            }
+    
+            // Check if the userId of the prompt matches the authenticated user's id
+            if (prompt.userId.toString() !== userId.toString()) {
+                console.log('prompt.userId:', prompt.userId);
+                throw new Error('User is not authorized to update this prompt');
+            }
+    
+            // If the user is authorized, update the prompt
+            const result = await collection.updateOne(
+                { _id: new ObjectId(promptId) }, 
+                { 
+                    $addToSet: { contributors: { $each: contributors.map(id => new ObjectId(id)) } } 
+                }
+            );
+            return result;
+        } catch (error) {
+            console.error("Error in Prompts.assignContributorsByPromptId:", error);
             throw error;
         }
     }

@@ -39,6 +39,49 @@ paths:
           description: Logout successful
         '500':
           description: Server error
+
+  /assignContributors:
+    post:
+      tags:
+      - "Prompts"
+      summary: Assign contributors to a prompt
+      description: This endpoint allows you to assign one or more contributors to a prompt.
+      operationId: assignContributors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                promptId:
+                  type: string
+                  description: The ID of the prompt to which contributors are to be assigned.
+                contributors:
+                  type: array
+                  items:
+                    type: string
+                  description: An array of contributor IDs to be assigned to the prompt.
+      responses:
+        '200':
+          description: Contributors assigned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Contributors assigned successfully
+                  result:
+                    type: object
+                    description: The result of the operation.
+        '400':
+          description: Bad request. User ID and contributors are required.
+        '404':
+          description: Prompt not found or contributors not assigned.
+        '500':
+          description: Internal server error.
   /uploadSaveMoment:
     get:
       tags:
