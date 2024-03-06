@@ -18,7 +18,6 @@ class User {
         settings,
         status,
         roles,
-        userId,
         refreshToken
     } = {}) {
         this._id = _id;
@@ -26,6 +25,7 @@ class User {
         if (!validator.isEmail(email)) {
             throw new Error('Invalid email format');
         }
+        this.email = email;
         this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -43,7 +43,6 @@ class User {
         } : {};
         this.status = status;
         this.roles = roles;
-        this.userId = userId;
         this.refreshToken = refreshToken;
     }
 
@@ -134,15 +133,15 @@ class User {
 
     static async findByIdAndUpdate(userId, updateData) {
         const db = await connect();
-        const result = await db.collection('users').findOneAndUpdate(
+        await db.collection('users').findOneAndUpdate(
             { _id: new ObjectId(userId) },
-            { $set: updateData },
-            { returnOriginal: false }
+            { $set: updateData }
         );
-        if (!result.value) {
+        const updatedUser = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+        if (!updatedUser) {
             throw new Error('No user found to update');
         }
-        return new User(result.value);
+        return new User(updatedUser);
     }
 
     static async findByUsernameOrEmail(login) {
@@ -177,7 +176,7 @@ class User {
         if (!result) {
             throw new Error('No user found');
         }
-        return new User(userWithoutPassword);
+        return new User(result);
     }
 
     static async findAll() {

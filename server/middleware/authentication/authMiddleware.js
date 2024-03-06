@@ -32,6 +32,8 @@ export const authMiddleware = async (req, res, next) => {
         res.locals.tokens = { accessToken, refreshToken };
 
         req.user = user;
+        delete req.user.password;
+        delete req.user.refreshToken;
         next();
     } catch (error) {
         res.status(500).json({ message: error.message });

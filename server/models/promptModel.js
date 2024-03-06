@@ -106,6 +106,10 @@ class Prompts {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
             data.created = new Date();
+            // Map the contributors to ObjectId instances
+            if (data.contributors && Array.isArray(data.contributors)) {
+                data.contributors = data.contributors.map(contributor => new ObjectId(contributor));
+            }
             const result = await collection.insertOne(data);
             // Construct the new object with the insertedId
             return new Prompts({ ...data, _id: result.insertedId });

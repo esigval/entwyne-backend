@@ -9,6 +9,42 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /changePassword:
+    post:
+      tags:
+      - Users
+      summary: Change user password
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - currentPassword
+              - newPassword
+              properties:
+                currentPassword:
+                  type: string
+                  description: The current password of the user
+                newPassword:
+                  type: string
+                  description: The new password of the user
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password updated successfully
+        '400':
+          description: Current password is incorrect
+        '404':
+          description: User not found
   /login:
     post:
       tags:
@@ -717,12 +753,6 @@ components:
           type: string
           description: The user's email
           example: "exampleUser@example.com"
-        salt:
-          type: string
-          description: The user's salt
-          example: "s0m3s4lt"
-        hashedPassword:
-          type: string
         createdAt:
           type: string
           format: date-time
@@ -796,8 +826,8 @@ components:
           type: array
           items:
             type: string
-        asssignee:
-          type: string
+        conntributors:
+          type: array
           items:
             type: string
     AIResponse:

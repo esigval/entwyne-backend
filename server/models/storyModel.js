@@ -4,8 +4,8 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ threadId, created, storyName, storyline, userId }) {
-        this._id = new ObjectId();
+    constructor({ _id, threadId, created, storyName, storyline, userId }) {
+        this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
         this.created = created || new Date(); // Default to current date if not provided
         this.storyName = storyName;

@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.post('/', authMiddleware, (req, res) => {
     const tokens = res.locals.tokens;
-    res.status(200).json({ message: 'LOGGED IN!', ...tokens });
+    const user = req.user;
+    res.status(200).json({ message: 'LOGGED IN!', ...tokens, ...user });
 });
 
 export default router;
