@@ -5,8 +5,8 @@ docker tag server-secure-development:latest 126425568953.dkr.ecr.us-east-1.amazo
 docker push 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-development:latest
 
 ### Docker Pull and Run Server Development
-
-docker rm -f 
+docker ps {find server name that is secure-server-development}
+docker rm -f {image name}
 docker pull 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-development:latest 
 docker run -e NODE_ENV=development -p 3001:3001 126425568953.dkr.ecr.us-east-1.amazonaws.com/server-secure-development:latest 
 
