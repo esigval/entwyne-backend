@@ -19,6 +19,7 @@ import handleRefreshToken from './routes/handleRefreshToken.js';
 import userLogout from './routes/userLogout.js';
 import changePassword from './routes/changePassword.js'; 
 import addCoCreator from './routes/addCoCreator.js';
+import getSharedStories from './routes/getSharedStories.js';
 
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
@@ -105,6 +106,7 @@ app.use('/v1/logout', userLogout); // protected
 app.use('/v1/changePassword', changePassword); // protected
 app.use('/v1/addCoCreator', addCoCreator); // protected
 
+
 // TBD - when do we need to get a userId?
 app.use('/v1/users', getUser);
 
@@ -114,6 +116,7 @@ app.use('/v1/createStory', createStory);
 app.use('/v1', deleteStory);
 app.use('/v1/stories', getStory);
 app.use('/v1/getStorylines', getStorylines);
+app.use('/v1/sharedStories', getSharedStories); // protected
 
 // Prompts (protected)
 app.use('/v1/prompts', createPrompt);

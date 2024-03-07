@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ _id, threadId, created, storyName, storyline, twyneId, userId, progress, coCreators = [] }) {
+    constructor({ _id, threadId, created, storyName, storyline, twyneId, userId, progress, coCreators = [], thumbnail }) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
         this.created = created || new Date(); // Default to current date if not provided
@@ -14,6 +14,7 @@ class Story {
         this.twyneId = Array.isArray(twyneId) ? twyneId.map(id => ObjectId(id)) : [];
         this.progress = progress || .75; // Default to .75 if not provided.
         this.coCreators = coCreators.map(id => new ObjectId(id)); // Ensure coCreators are ObjectIds || [];
+        this.storyThumbnail = thumbnail || null; // Default to null if not provided
     }
 
     static get collectionName() {
@@ -67,6 +68,28 @@ class Story {
             return result.map(doc => new Story(doc)); // return an array of Story instances
         } catch (error) {
             console.error("Error in Story.findByUserId:", error);
+            throw error;
+        }
+    }
+
+    static async findByCoCreatorId(userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+    
+            // Ensure userId is an ObjectId
+            if (typeof userId === 'string') {
+                if (!ObjectId.isValid(userId)) {
+                    console.error("Invalid userId:", userId);
+                    throw new Error("Invalid userId");
+                }
+                userId = new ObjectId(userId);
+            }
+    
+            const result = await collection.find({ coCreators: userId }).toArray();
+            return result.map(doc => new Story(doc)); // return an array of Story instances
+        } catch (error) {
+            console.error("Error in Story.findByCoCreatorId:", error);
             throw error;
         }
     }

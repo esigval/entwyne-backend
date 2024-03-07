@@ -9,6 +9,25 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /sharedStories:
+    get:
+      tags:
+      - Stories
+      summary: Get shared stories where the authenticated user is a co-creator
+      operationId: getSharedStories
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sharedStories:
+                    type: array
+                    items:
+        '500':
+          description: Error getting shared stories
   /addCoCreator:
     post:
       tags:
@@ -492,7 +511,7 @@ paths:
       summary: Get a list of stores by users
       operationId: getStories
       tags:
-      - Story
+      - Stories
       security:
       - BearerAuth: []
       responses:
