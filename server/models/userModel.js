@@ -133,14 +133,30 @@ class User {
 
     static async findByIdAndUpdate(userId, updateData) {
         const db = await connect();
+    
+        // Check if username or email already exists in the database
+        const existingUser = await db.collection('users').findOne({
+            $or: [
+                { username: updateData.username },
+                { email: updateData.email }
+            ]
+        });
+    
+        if (existingUser && existingUser._id.toString() !== userId) {
+            throw new Error('Username or email already exists');
+        }
+    
         await db.collection('users').findOneAndUpdate(
             { _id: new ObjectId(userId) },
             { $set: updateData }
         );
+    
         const updatedUser = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    
         if (!updatedUser) {
             throw new Error('No user found to update');
         }
+    
         return new User(updatedUser);
     }
 
