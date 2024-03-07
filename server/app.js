@@ -20,6 +20,10 @@ import userLogout from './routes/userLogout.js';
 import changePassword from './routes/changePassword.js'; 
 import addCoCreator from './routes/addCoCreator.js';
 import getSharedStories from './routes/getSharedStories.js';
+import userChangeEmail from './routes/userChangeEmail.js';
+import UserConfirmEmail from './routes/userConfirmEmail.js';
+import userResetPassword from './routes/userResetPassword.js';
+
 
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
@@ -105,6 +109,10 @@ app.use('/v1/refreshToken', handleRefreshToken);
 app.use('/v1/logout', userLogout); // protected
 app.use('/v1/changePassword', changePassword); // protected
 app.use('/v1/addCoCreator', addCoCreator); // protected
+app.use('/v1/changeEmail', userChangeEmail); // protected
+app.use('/v1/confirmEmail', UserConfirmEmail); // Not protected
+app.use('/v1/resetPassword', userResetPassword); // Not protected
+
 
 
 // TBD - when do we need to get a userId?

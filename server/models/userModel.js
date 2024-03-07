@@ -18,7 +18,8 @@ class User {
         settings,
         status,
         roles,
-        refreshToken
+        refreshToken,
+        emailVerifiedToken
     } = {}) {
         this._id = _id;
         this.username = username;
@@ -44,6 +45,7 @@ class User {
         this.status = status;
         this.roles = roles;
         this.refreshToken = refreshToken;
+        this.emailVerifiedToken = emailVerifiedToken;
     }
 
     static async create(userData) {
@@ -75,6 +77,20 @@ class User {
         const result = await db.collection('users').updateOne(
             { _id: new ObjectId(userId) },
             { $unset: { refreshToken: "" } }
+        );
+    
+        if (result.modifiedCount === 0) {
+            throw new Error('No user found with this id');
+        }
+    }
+
+    static async storeEmailChangeToken(userId, token) {
+        const db = await connect();
+    
+        // Store the email change token
+        const result = await db.collection('users').updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { emailVerifiedToken: token } }
         );
     
         if (result.modifiedCount === 0) {

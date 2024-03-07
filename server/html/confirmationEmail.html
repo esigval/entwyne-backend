@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Confirmation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .confirmation-message {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-message">
+        <h1>Your email has been confirmed!</h1>
+        <p>Your email address has been successfully changed.</p>
+    </div>
+
+    <script>
+        window.onload = function() {
+            fetch('/v1/confirmEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: 'your-token-here' }) // Replace 'your-token-here' with the actual token
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

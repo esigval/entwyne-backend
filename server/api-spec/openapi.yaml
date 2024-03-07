@@ -9,6 +9,28 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /changeEmail:
+    post:
+      tags:
+      - Users
+      summary: Initiates an email change process for a user
+      description: This route is used to initiate an email change process for a user. The user will receive an email with a link to confirm the change.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newEmail:
+                  type: string
+                  format: email
+      responses:
+        '202':
+          description: Verification email sent. Please check your new email to confirm the change.
+        '400':
+          description: Error message
+
   /sharedStories:
     get:
       tags:
