@@ -9,6 +9,44 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /addCoCreator:
+    post:
+      tags:
+      - Users
+      summary: Add a co-creator to a story
+      operationId: addCoCreator
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - storyId
+              - coCreators
+              properties:
+                storyId:
+                  type: string
+                  description: The ID of the story
+                coCreators:
+                  type: string
+                  description: The ID of the user to add as a co-creator
+      responses:
+        '200':
+          description: Co-creator added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Co-creator added successfully
+        '400':
+          description: Both storyId and userId are required
+        '404':
+          description: No story found with the provided storyId
+        '500':
+          description: Error adding a co-creator
   /changePassword:
     post:
       tags:

@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 class Twyne {
     constructor({
         _id = new ObjectId(),
+        storyId,
         prompts = [],
         owner,
         coCreators = [],
@@ -11,8 +12,10 @@ class Twyne {
         storyline,
         edit,
         storylineTemplate, // Added this line
+
     }) {
         this._id = _id;
+        this.storyId = new ObjectId(storyId);
         this.prompts = prompts.map(prompt => new ObjectId(prompt));
         this.owner = new ObjectId(owner);
         this.coCreators = coCreators.map(coCreator => new ObjectId(coCreator));
@@ -21,6 +24,12 @@ class Twyne {
         this.edit = new ObjectId(edit);
         this.storylineTemplate = new ObjectId(storylineTemplate); // Added this line
     }
+
+    hasEdit() {
+        return this.edit !== null;
+      }
+
+    
 
 
     static get collectionName() {
@@ -145,6 +154,30 @@ class Twyne {
         } catch (error) {
             console.error("Error in Twyne.listCoCreators:", error);
             throw error;
+        }
+    }
+
+    static async calculateStoryProgressFunction(storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const storyObjectId = new ObjectId(storyId);
+            const twynesCursor = collection.find({ storyId: storyObjectId });
+            const twynes = await twynesCursor.toArray();
+
+            const totalTwynes = twynes.length;
+            let editsCount = 0;
+
+            twynes.forEach(twyne => {
+                if (twyne.edit) editsCount++;
+            });
+
+            const ratio = totalTwynes > 0 ? editsCount / totalTwynes : 0;
+            console.log(`Ratio of Twynes with edits to total Twynes is: ${ratio.toFixed(2)}`);
+            return ratio;
+        } catch (error) {
+            console.error('Error calculating story function:', error);
+            throw error; // Rethrow or handle as needed
         }
     }
 }

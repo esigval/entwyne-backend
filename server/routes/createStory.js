@@ -20,6 +20,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => { // Add the middl
             storyName,
             threadId,
             userId: userId, // Add the userId to the story
+            progress: 0.0,
             // Include other fields as necessary
         });
         console.log('createStory:', createStory);

@@ -4,13 +4,16 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ _id, threadId, created, storyName, storyline, userId }) {
+    constructor({ _id, threadId, created, storyName, storyline, twyneId, userId, progress, coCreators = [] }) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
         this.created = created || new Date(); // Default to current date if not provided
         this.storyName = storyName;
         this.storyline = storyline || []; // Default to empty array if not provided
         this.userId = userId;
+        this.twyneId = Array.isArray(twyneId) ? twyneId.map(id => ObjectId(id)) : [];
+        this.progress = progress || .75; // Default to .75 if not provided.
+        this.coCreators = coCreators.map(id => new ObjectId(id)); // Ensure coCreators are ObjectIds || [];
     }
 
     static get collectionName() {
@@ -25,11 +28,11 @@ class Story {
             if (!ObjectId.isValid(userId)) {
                 throw new Error(`Invalid ObjectId string: ${userId}`);
             }
-    
+
             // Convert to ObjectId if necessary
             storyId = storyId instanceof ObjectId ? storyId : new ObjectId(storyId);
             userId = userId instanceof ObjectId ? userId : new ObjectId(userId);
-    
+
             console.log("storyId", storyId);
             console.log("userId", userId);
             const db = await connect();
@@ -50,7 +53,17 @@ class Story {
         try {
             const db = await connect();
             const collection = db.collection(Story.collectionName);
-            const result = await collection.find({ userId: new ObjectId(userId) }).toArray();
+
+            // Ensure userId is an ObjectId
+            if (typeof userId === 'string') {
+                if (!ObjectId.isValid(userId)) {
+                    console.error("Invalid userId:", userId);
+                    throw new Error("Invalid userId");
+                }
+                userId = new ObjectId(userId);
+            }
+
+            const result = await collection.find({ userId }).toArray();
             return result.map(doc => new Story(doc)); // return an array of Story instances
         } catch (error) {
             console.error("Error in Story.findByUserId:", error);
@@ -69,19 +82,29 @@ class Story {
             throw error;
         }
     }
-    
+
     static async update(id, updateData) {
         try {
             const db = await connect();
             const collection = db.collection(Story.collectionName);
-            const result = await collection.updateOne({ _id: id }, { $set: updateData });
+
+            // Ensure id is an ObjectId
+            if (typeof id === 'string') {
+                if (!ObjectId.isValid(id)) {
+                    console.error("Invalid id:", id);
+                    throw new Error("Invalid id");
+                }
+                id = new ObjectId(id);
+            }
+
+            const result = await collection.updateOne({ _id: id }, updateData);
             return result;
         } catch (error) {
             console.error("Error in Storyline.update:", error);
             throw error;
         }
     }
-    
+
     static async deleteOne(id) {
         try {
             const db = await connect();
@@ -93,7 +116,7 @@ class Story {
             throw error;
         }
     }
-    
+
     static async findById(id) {
         try {
             if (!ObjectId.isValid(id)) {
@@ -133,9 +156,9 @@ class Story {
             console.error('Error finding story:', error);
             throw error;
         }
-    }   
+    }
 
-    
+
 
     // Additional methods for delete, find, etc., can be added here
 }
