@@ -4,10 +4,10 @@ import { validateTokenMiddleware } from '../middleware/authentication/validateTo
 
 const router = express.Router();
 
-router.patch('/:userId', validateTokenMiddleware, async (req, res) => {
-    console.log('Route hit. User ID:', req.params.userId);
+router.patch('/', validateTokenMiddleware, async (req, res) => {
+
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(req.userId, req.body, { new: true });
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
