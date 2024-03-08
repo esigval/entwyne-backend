@@ -663,6 +663,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+    patch:
+      tags:
+      - Users
+      summary: Update a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
 
   /users/{userId}:
     parameters:
@@ -691,24 +709,7 @@ paths:
       responses:
         '204':
           description: User deleted successfully
-    patch:
-      tags:
-      - Users
-      summary: Update a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
 
-        '200':
-          description: User updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
 components:
   securitySchemes:
     BearerAuth: # arbitrary name for the security scheme
