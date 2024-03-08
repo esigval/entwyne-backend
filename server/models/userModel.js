@@ -70,6 +70,33 @@ class User {
         return new User({ _id: result.insertedId, ...userData });
     }
 
+    static async deletePasswordAndReplaceWithHash(userId, password) {
+        console.log(`Starting password update for user: ${userId}`);
+        const db = await connect();
+        console.log('userId:', userId);
+        console.log('password', password);
+
+        // Hash the password
+        console.log('About to hash password');
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('Finished hashing password');
+
+        // Update the user's passwordy
+        const result = await db.collection('users').updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { password: hashedPassword } }
+        );
+
+        console.log(`Update operation result: ${JSON.stringify(result.result)}`);
+
+        if (result.modifiedCount === 0) {
+            console.error('No user found with this id');
+            throw new Error('No user found with this id');
+        }
+
+        console.log('Password update successful');
+    }
+
     static async deleteRefreshToken(userId) {
         const db = await connect();
     

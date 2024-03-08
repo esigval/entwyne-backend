@@ -3,6 +3,12 @@ dotenv.config();
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'js-yaml';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import express from 'express';
 import cors from 'cors';
@@ -23,6 +29,7 @@ import getSharedStories from './routes/getSharedStories.js';
 import userChangeEmail from './routes/userChangeEmail.js';
 import UserConfirmEmail from './routes/userConfirmEmail.js';
 import userResetPassword from './routes/userResetPassword.js';
+import userConfirmPassword from './routes/userConfirmPassword.js';
 
 
 // Story-related routes
@@ -88,8 +95,17 @@ startDatabase();
 
 const app = express();
 
+
 const swaggerDocument = YAML.load(fs.readFileSync('./api-spec/openapi.yaml', 'utf8')); // replace with the path to your swagger file
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'password-reset.html'));
+});
+
+app.get('/new-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'new-password.html'));
+});
 const port = 3001;
 
 app.use(cors());
@@ -112,6 +128,7 @@ app.use('/v1/addCoCreator', addCoCreator); // protected
 app.use('/v1/changeEmail', userChangeEmail); // protected
 app.use('/v1/confirmEmail', UserConfirmEmail); // Not protected
 app.use('/v1/resetPassword', userResetPassword); // Not protected
+app.use('/v1/confirmPassword', userConfirmPassword); // Not protected
 
 
 

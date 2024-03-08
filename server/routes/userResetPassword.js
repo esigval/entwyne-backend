@@ -1,21 +1,20 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js'; // Adjust path as necessary
-import sendEmail from '../utils/sendEmail.js'; // Implement this based on your email service
-import { config } from './config.js';
+import sendMessage from '../utils/sendSESMEssage.js';
+import { config } from '../config.js';
 
 const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];
 const router = express.Router();
 
 router.post('/', async (req, res) => {
+    console.log('Route hit. Request body:', req.body); 
     const { emailOrUsername } = req.body;
 
     try {
         // Find user by email or username
-        const user = await User.findById({
-            $or: [{ email: emailOrUsername }, { username: emailOrUsername }]
-        });
+        const user = await User.findByUsernameOrEmail(emailOrUsername);
 
         if (!user) {
             // Response without revealing user existence
@@ -35,12 +34,12 @@ router.post('/', async (req, res) => {
     <p><a href="${resetLink}" style="color: #1155cc;">Reset Password</a></p>
     <p>If you did not request a password reset, please ignore this email or contact support if you have concerns.</p>
     <p>Thank you,</p>
-    <p>Your Name</p>
+    <p>Entwyne Customer Support</p>
   </div>
 `;
 
         // Send the email
-        await sendEmail(currentConfig.FROM_NAME, user.email, 'Password Reset Request', htmlBody);
+        await sendMessage(currentConfig.FROM_NAME, user.email, 'Password Reset Request', htmlBody);
 
         res.send('If a user with that email or username exists, a password reset link has been sent.');
     } catch (error) {
