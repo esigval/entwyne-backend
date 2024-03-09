@@ -99,11 +99,11 @@ const app = express();
 const swaggerDocument = YAML.load(fs.readFileSync('./api-spec/openapi.yaml', 'utf8')); // replace with the path to your swagger file
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/reset-password', (req, res) => {
+app.get('/v1/reset-password', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'password-reset.html'));
 });
 
-app.get('/new-password', (req, res) => {
+app.get('/v1/new-password', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'new-password.html'));
 });
 const port = 3001;
