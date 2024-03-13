@@ -1,0 +1,38 @@
+{
+    "templateName": "Entwyne Documentary",
+    "templateGoal": "To create a documentary-style template that explores the origins of the startup Entwyne, delving into multiple perspectives including the founder's, his wife's, the co-founder's, and key moments throughout the film.",
+    "templateStructure": "Custom - Investigate the goals of the project.",
+    "leadingQuestion": "Would you do it again?",
+    "templateLengthInTotal": "180",
+    "averageCutLength": "35",
+    "maxInterviews": "4",
+    "fillerFramesPerInterview": "1-2",
+    "rulesHeader": "Sample Rules",
+    "storylineParts": [
+      {
+        "Order": "1",
+        "SuggestedLength": "45",
+        "MediaType": "video",
+        "Storypart": "Introduction - Founder's perspective"
+      },
+      {
+        "Order": "2",
+        "SuggestedLength": "45",
+        "MediaType": "video",
+        "Storypart": "Wife's Perspective"
+      },
+      {
+        "Order": "3",
+        "SuggestedLength": "45",
+        "MediaType": "video",
+        "Storypart": "Co-founder's Perspective"
+      },
+      {
+        "Order": "4",
+        "SuggestedLength": "45",
+        "MediaType": "video",
+        "Storypart": "Key Moments and Conclusion"
+      }
+    ],
+    "bRoll": []
+}

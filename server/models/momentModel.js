@@ -34,10 +34,10 @@ class Moment {
         this.beatTag = beatTag;
         this.createdAt = createdAt;
         this.filename = filename;
-        this.s3ProcessedUri= [{
+        this.s3ProcessedUri = [{
             s3ProcessedUri: s3ProcessedUri,
             videoSettings: videoSettingsObjectID
-          }];
+        }];
         this.s3FilePath = s3FilePath;
         this.s3Uri = s3Uri;
         this.s3UriThumbnail = s3UriThumbnail;
@@ -52,39 +52,44 @@ class Moment {
         this.mediaType = mediaType;
         this.storylineId = new ObjectId(storylineId);
         this.userId = userId;
+        this.contributorId = contributorId;
     }
 
     static get collectionName() {
-        return 'moment'; // Name of the collection in the database
+        return 'moments'; // Name of the collection in the database
     }
+
 
     static async listAllByUserId(userId) {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-    
+
+            // Convert userId to ObjectId
+            const userIdAsObjectId = new ObjectId(userId);
+
             // Get all Moments for a specific user
-            const userMoments = await collection.find({ userId: new ObjectId(userId) }).toArray();
-    
+            const userMoments = await collection.find({ userId: userIdAsObjectId }).toArray();
+
             return userMoments;
         } catch (error) {
             console.error('Failed to get all moments for user:', error);
         }
     }
 
-    
-    
+
+
     static async getpictureUribyStorylineId(storylineId, numPictures) {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-    
+
             // Get all Moments that match the storylineId
             const matchingMoments = await collection.find({ storylineId: new ObjectId(storylineId) }).toArray();
-    
+
             // Get the s3UriThumbnail or s3FilePath of the first numPictures matching Moments
             const s3UriThumbnails = matchingMomentfs.slice(0, numPictures).map(moment => moment.thumbnailUrl || moment.s3FilePath);
-    
+
             return s3UriThumbnails;
         } catch (error) {
             console.error('Failed to get s3UriThumbnail or s3FilePath by storyline ID:', error);
@@ -147,12 +152,12 @@ class Moment {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-    
+
             // Check if the S3 bucket name is set
             if (!process.env.S3_POST_BUCKET_NAME) {
                 throw new Error('S3_POST_BUCKET_NAME environment variable is not set');
             }
-    
+
             // Create a new instance of Moment
             const newMoment = {
                 _id: new ObjectId(),
@@ -165,10 +170,10 @@ class Moment {
                 storylineId: storylineId,
                 beatType: 'b-roll'
             };
-    
+
             // Insert the new instance into the database
             await collection.insertOne(newMoment);
-    
+
             // Return the newMoment object
             return newMoment;
         } catch (error) {
@@ -176,13 +181,13 @@ class Moment {
             throw error; // Rethrow the error for the caller to handle
         }
     }
-    
+
 
     static async getMomentUrls(momentId) {
         const db = await connect();
         const collection = db.collection(Moment.collectionName);
         const moment = await collection.findOne({ _id: new ObjectId(momentId) });
-    
+
         // Return the s3FilePath and s3Uri properties
         return { s3FilePath: moment.s3FilePath, s3Uri: moment.s3Uri };
     }

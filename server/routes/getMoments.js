@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', validateTokenMiddleware, async (req, res) => {
     const userId = req.userId;
     try {
-        const docs = await Moment.listAll(userId);
+        const docs = await Moment.listAllByUserId(userId);
         res.json(docs);
     } catch (err) {
         console.error('Failed to get moments:', err);

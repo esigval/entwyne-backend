@@ -94,17 +94,19 @@ async function startDatabase() {
 startDatabase();
 
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'public'));
 
 
 const swaggerDocument = YAML.load(fs.readFileSync('./api-spec/openapi.yaml', 'utf8')); // replace with the path to your swagger file
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/v1/reset-password', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'password-reset.html'));
+  res.render('password-reset', { apiUrl: currentConfig.EMAIL_RESET_BASE_URL_NO_ROUTE });
 });
 
 app.get('/v1/new-password', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'new-password.html'));
+  res.render('new-password', { apiUrl: currentConfig.EMAIL_RESET_BASE_URL_NO_ROUTE });
 });
 const port = 3001;
 
