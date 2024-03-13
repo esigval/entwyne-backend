@@ -4,9 +4,10 @@ import { ObjectId } from 'mongodb';
 class Twyne {
     constructor({
         _id = new ObjectId(),
+        name,
         storyId,
         prompts = [],
-        owner,
+        userId,
         coCreators = [],
         contributors = [],
         storyline,
@@ -14,23 +15,21 @@ class Twyne {
         storylineTemplate, // Added this line
 
     }) {
-        this._id = _id;
-        this.storyId = new ObjectId(storyId);
-        this.prompts = prompts.map(prompt => new ObjectId(prompt));
-        this.owner = new ObjectId(owner);
-        this.coCreators = coCreators.map(coCreator => new ObjectId(coCreator));
-        this.contributors = contributors.map(contributor => new ObjectId(contributor));
-        this.storyline = new ObjectId(storyline);
-        this.edit = new ObjectId(edit);
-        this.storylineTemplate = new ObjectId(storylineTemplate); // Added this line
+        this._id = new ObjectId(_id);
+        this.name = name;
+        this.storyId = storyId ? new ObjectId(storyId) : null;
+        this.prompts = prompts.length ? prompts.map(prompt => new ObjectId(prompt)) : [];
+        this.userId = userId ? new ObjectId(userId) : null;
+        this.coCreators = coCreators.length ? coCreators.map(coCreator => new ObjectId(coCreator)) : [];
+        this.contributors = contributors.length ? contributors.map(contributor => new ObjectId(contributor)) : [];
+        this.storyline = storyline ? new ObjectId(storyline) : null;
+        this.edit = edit ? new ObjectId(edit) : null;
+        this.storylineTemplate = storylineTemplate ? new ObjectId(storylineTemplate) : null;
     }
 
     hasEdit() {
         return this.edit !== null;
       }
-
-    
-
 
     static get collectionName() {
         return 'twynes'; // Name of the collection in the database
@@ -38,11 +37,12 @@ class Twyne {
 
     static async create(data) {
         try {
+            const twyne = new Twyne(data);
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.insertOne(data);
+            const result = await collection.insertOne(twyne);
             // Use the insertedId to construct the new object
-            return new Twyne({ ...data, _id: result.insertedId });
+            return result;
         } catch (error) {
             console.error("Error in Twyne.create:", error);
             throw error;
@@ -89,7 +89,7 @@ class Twyne {
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.findOne({ _id: new ObjectId(storyId), owner: new ObjectId(userId) });
+            const result = await collection.findOne({ _id: new ObjectId(storyId), userId: new ObjectId(userId) });
             if (result) {
                 return new Twyne(result);
             } else {
@@ -129,6 +129,19 @@ class Twyne {
             }
         } catch (error) {
             console.error("Error in Twyne.findByIdAndContributorId:", error);
+            throw error;
+        }
+    }
+
+    static async listByStoryId(storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const cursor = collection.find({ storyId: new ObjectId(storyId) });
+            const documents = await cursor.toArray();
+            return documents.map(document => new Twyne(document));
+        } catch (error) {
+            console.error("Error in Twyne.listByStoryId:", error);
             throw error;
         }
     }

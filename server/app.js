@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'js-yaml';
-import fs from 'fs';
+import fs, { appendFile } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -66,6 +66,10 @@ import finalRender from './routes/getFinalRender.js';
 import confirmVideoRender from './routes/confirmVideoRender.js';
 import getRenderStatus from './routes/getRenderStatus.js';
 import getPrimers from './routes/getPrimers.js';
+
+// Twyne routes
+import twyneRoutes from './routes/modifyTwynes.js';
+import twyneByStory from './routes/getTwynesByStory.js';
 
 // Routes for handling assistant interactions
 import createThread from './routes/createThread.js';
@@ -165,6 +169,10 @@ app.use('/v1/confirmMoment', confirmMoment); // protected
 app.use('/v1/uploadSaveMoment', saveMomentRouter); // protected
 app.use('/v1/checkMomentProcess', checkMomentProcess); // protected
 app.use(`/v1/collectPictures`, collectPictures); // protected
+
+// Twynes (protected)
+app.use('/v1/twyne', twyneRoutes); // protected
+app.use('/v1/twyne', twyneByStory);
 
 // Utility (protected)
 app.use('/v1/saveVideoUri', saveVideoUri); // protected

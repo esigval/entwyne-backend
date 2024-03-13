@@ -9,6 +9,142 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /twyne/story/{storyId}:
+    get:
+      tags:
+      - Twyne
+      summary: List Twynes by Story ID
+      description: This endpoint returns all Twynes associated with a given Story ID
+      operationId: listByStoryId
+      parameters:
+      - name: storyId
+        in: path
+        description: ID of the Story to find Twynes for
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Twynes found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Twyne'
+        '400':
+          description: Bad request
+        '404':
+          description: Twynes not found
+        '500':
+          description: Server error
+  /twyne:
+    post:
+      tags:
+      - Twynes
+      summary: Create a new Twyne
+      description: This endpoint allows for the creation of a new Twyne
+      operationId: createTwyne
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Twyne'
+      responses:
+        '200':
+          description: Twyne created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Twyne'
+        '400':
+          description: Bad request
+        '500':
+          description: Server error
+
+  /twyne/{id}:
+    delete:
+      tags:
+      - Twynes
+      summary: Delete a Twyne
+      description: This endpoint allows for the deletion of a Twyne
+      operationId: deleteTwyne
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Twyne to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Twyne deleted successfully
+        '400':
+          description: Bad request
+        '404':
+          description: Twyne not found
+        '500':
+          description: Server error
+    get:
+      tags:
+      - Twynes
+      summary: Find a Twyne by ID
+      description: This endpoint returns a Twyne based on its ID
+      operationId: findById
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Twyne to find
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Twyne found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Twyne'
+        '400':
+          description: Bad request
+        '404':
+          description: Twyne not found
+        '500':
+          description: Server error
+    patch:
+      tags:
+      - Twynes
+      summary: Update a Twyne
+      description: This endpoint allows for the updating of a Twyne
+      operationId: updateTwyne
+      parameters:
+      - name: id
+        in: path
+        description: ID of the Twyne to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Twyne'
+      responses:
+        '200':
+          description: Twyne updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Twyne'
+        '400':
+          description: Bad request
+        '404':
+          description: Twyne not found
+        '500':
+          description: Server error
+
   /changeEmail:
     post:
       tags:
@@ -718,6 +854,51 @@ components:
       bearerFormat: JWT # optional, arbitrary value for
   schemas:
     schemas:
+    Twyne:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: ObjectId
+          description: The unique identifier for the Twyne
+        storyId:
+          type: string
+          format: ObjectId
+          description: The identifier for the story
+        prompts:
+          type: array
+          items:
+            type: string
+            format: ObjectId
+          description: The identifiers for the prompts
+        owner:
+          type: string
+          format: ObjectId
+          description: The identifier for the owner
+        coCreators:
+          type: array
+          items:
+            type: string
+            format: ObjectId
+          description: The identifiers for the co-creators
+        contributors:
+          type: array
+          items:
+            type: string
+            format: ObjectId
+          description: The identifiers for the contributors
+        storyline:
+          type: string
+          format: ObjectId
+          description: The identifier for the storyline
+        edit:
+          type: string
+          format: ObjectId
+          description: The identifier for the edit
+        storylineTemplate:
+          type: string
+          format: ObjectId
+          description: The identifier for the storyline template
     Moment:
       type: object
       properties:
