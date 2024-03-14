@@ -221,23 +221,22 @@ class User {
         return new User(result);
     }
     
-
-    static async findById(userId) {
-        const db = await connect();
-        if (!(userId instanceof ObjectId)) {
-            try {
-                userId = new ObjectId(userId);
-            } catch (error) {
-                throw error;
-            }
+static async findById(userId) {
+    const db = await connect();
+    if (!(userId instanceof ObjectId)) {
+        try {
+            userId = new ObjectId(userId);
+        } catch (error) {
+            console.error('Invalid user ID:', error);
+            return null; // return null if userId is not a valid ObjectId
         }
-        const result = await db.collection('users').findOne({ _id: userId });
-        if (!result) {
-            throw new Error('No user found');
-        }
-        return new User(result);
     }
-
+    const result = await db.collection('users').findOne({ _id: userId });
+    if (!result) {
+        return null; // return null if no user is found
+    }
+    return new User(result);
+}
     static async findAll() {
         const db = await connect();
         const result = await db.collection('users').find().toArray();

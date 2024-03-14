@@ -1,22 +1,23 @@
 import express from 'express';
 import Prompts from '../models/promptModel.js';
 import Story from '../models/storyModel.js';
-import User from '../models/userModel.js'; // Make sure to import the User class
+import User from '../models/userModel.js';
 import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 
 const router = express.Router();
 
-// Function to get the first initial of the user's name or username
-async function ParseFirstInitial(userId) {
-    const user = await User.findById(userId);
+// Function to get the firstName, lastName and avatarUrl of the user
+async function GetContributorInfo(userId) {
+    const user = await User.findById(userId, 'firstName lastName profile.avatarUrl');
     if (!user) {
         return null;
     }
 
-    let initial = user.name ? user.name[0] : user.username[0];
     return {
-        initial,
-        avatarUrl: user.profile.avatarUrl
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatarUrl: user.profile.avatarUrl,
+        username: user.username
     };
 }
 
@@ -36,8 +37,8 @@ router.get('/', validateTokenMiddleware, async (req, res) => {
             // Check if prompt.contributors is defined and is an array
             let contributorsInfo = [];
             if (Array.isArray(prompt.contributors)) {
-                // Get the first initial and avatar URL for each contributor
-                contributorsInfo = await Promise.all(prompt.contributors.map(ParseFirstInitial));
+                // Get the firstName, lastName and avatar URL for each contributor
+                contributorsInfo = await Promise.all(prompt.contributors.map(GetContributorInfo));
             }
         
             return {
