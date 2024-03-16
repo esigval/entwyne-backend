@@ -32,7 +32,10 @@ router.get('/', validateTokenMiddleware, async (req, res) => {
         }
 
         const updatedPrompts = await Promise.all(prompts.map(async (prompt) => {
+            console.log(`Fetching story with ID: ${prompt.storyId}`);
             const story = await Story.findById(prompt.storyId);
+            console.log(`Fetched story: ${JSON.stringify(story)}`);
+            console.log(`Fetching storyName: ${story.storyName}`)
         
             // Check if prompt.contributors is defined and is an array
             let contributorsInfo = [];
