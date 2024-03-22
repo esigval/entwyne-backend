@@ -30,6 +30,7 @@ import userChangeEmail from './routes/userChangeEmail.js';
 import UserConfirmEmail from './routes/userConfirmEmail.js';
 import userResetPassword from './routes/userResetPassword.js';
 import userConfirmPassword from './routes/userConfirmPassword.js';
+import userAddToTwyne from './routes/userAddToTwyne.js';
 
 
 // Story-related routes
@@ -57,6 +58,7 @@ import confirmMoment from './routes/confirmMoment.js';
 import saveMomentRouter from './routes/saveMoment.js';
 import checkMomentProcess from './routes/checkMomentProcess.js';
 import collectPictures from './routes/collectPictures.js';
+import uploadMoment from './routes/uploadMoment.js';
 
 // Utility routes for media processing and additional functionalities
 import saveVideoUri from './routes/saveVideoUri.js';
@@ -138,6 +140,7 @@ app.use('/v1/confirmPassword', userConfirmPassword); // Not protected
 
 
 
+
 // TBD - when do we need to get a userId?
 app.use('/v1/users', getUser);
 
@@ -169,10 +172,12 @@ app.use('/v1/confirmMoment', confirmMoment); // protected
 app.use('/v1/uploadSaveMoment', saveMomentRouter); // protected
 app.use('/v1/checkMomentProcess', checkMomentProcess); // protected
 app.use(`/v1/collectPictures`, collectPictures); // protected
+app.use('/v1/moments/preSigned', uploadMoment); // protected
 
 // Twynes (protected)
 app.use('/v1/twyne', twyneRoutes); // protected
-app.use('/v1/twyne', twyneByStory);
+app.use('/v1/twyne/story', twyneByStory);
+app.use('/v1/twyne/addUser', userAddToTwyne); // protected
 
 // Utility (protected)
 app.use('/v1/saveVideoUri', saveVideoUri); // protected

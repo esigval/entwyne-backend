@@ -13,6 +13,8 @@ class Twyne {
         storyline,
         edit,
         storylineTemplate, // Added this line
+        progress,
+        twyneThumbnail,
 
     }) {
         this._id = new ObjectId(_id);
@@ -25,6 +27,8 @@ class Twyne {
         this.storyline = storyline ? new ObjectId(storyline) : null;
         this.edit = edit ? new ObjectId(edit) : null;
         this.storylineTemplate = storylineTemplate ? new ObjectId(storylineTemplate) : null;
+        this.progress = progress;
+        this.twyneThumbnail = twyneThumbnail;
     }
 
     hasEdit() {
@@ -73,6 +77,18 @@ class Twyne {
         }
     }
 
+    static async findByStoryId(storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const documents = await collection.find({ storyId: new ObjectId(storyId) }).toArray();
+            return documents.map(document => new Twyne(document));
+        } catch (error) {
+            console.error("Error in Twyne.findByStoryId:", error);
+            throw error;
+        }
+    }
+
     static async update(id, updateData) {
         try {
             const db = await connect();
@@ -82,7 +98,31 @@ class Twyne {
         } catch (error) {
             console.error("Error in Twyne.update:", error);
             throw error;
-        }fr
+        }
+    }
+
+    static async addNewCoCreator(twyneId, userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { coCreators: new ObjectId(userId) } });
+            return result;
+        } catch (error) {
+            console.error("Error in Twyne.addNewCoCreator:", error);
+            throw error;
+        }
+    }   
+
+    static async addNewContributor(twyneId, userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { contributors: new ObjectId(userId) } });
+            return result;
+        } catch (error) {
+            console.error("Error in Twyne.addNewContributor:", error);
+            throw error;
+        }
     }
 
     static async findByIdAndUserId(storyId, userId) {
@@ -190,6 +230,29 @@ class Twyne {
             return ratio;
         } catch (error) {
             console.error('Error calculating story function:', error);
+            throw error; // Rethrow or handle as needed
+        }
+    }
+
+    static async calculateTwyneProgressFunction(twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const twyneObjectId = new ObjectId(twyneId);
+            const twyne = await collection.findOne({ _id: twyneObjectId });
+
+            const totalPrompts = twyne.prompts.length;
+            let filledPromptsCount = 0;
+
+            twyne.prompts.forEach(prompt => {
+                if (prompt.filled) filledPromptsCount++;
+            });
+
+            const ratio = totalPrompts > 0 ? filledPromptsCount / totalPrompts : 0;
+            console.log(`Ratio of filled prompts to total prompts is: ${ratio.toFixed(2)}`);
+            return ratio;
+        } catch (error) {
+            console.error('Error calculating prompt function:', error);
             throw error; // Rethrow or handle as needed
         }
     }

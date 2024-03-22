@@ -36,6 +36,7 @@ router.get('/', validateTokenMiddleware, async (req, res) => {
             const story = await Story.findById(prompt.storyId);
             console.log(`Fetched story: ${JSON.stringify(story)}`);
             console.log(`Fetching storyName: ${story.storyName}`)
+            const userInfo = await GetContributorInfo(userId);
         
             // Check if prompt.contributors is defined and is an array
             let contributorsInfo = [];
@@ -47,7 +48,8 @@ router.get('/', validateTokenMiddleware, async (req, res) => {
             return {
                 ...prompt,
                 storyName: story ? story.storyName : 'unassigned',
-                contributorsInfo
+                contributorsInfo,
+                userInfo
             };
         }));
 

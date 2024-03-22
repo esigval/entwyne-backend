@@ -11,6 +11,9 @@ lambda/renderVideoLambda/node_modules
 lambda/sendRenderDemo/node_modules
 lambda/processMedia/node_modules
 lambda/extractionBucket/node_modules
+environments/
+lambda_layers/
+
 
 # testing
 /coverage
@@ -37,3 +40,11 @@ nessh.pem
 production-server-entwyne.ppk
 entwyne-production.pem
 production-server.ppk
+.pem
+.ppk
+.pub
+muhammadali.pub
+keys/muhammadali.pem
+keys/muhammadali.ppk
+muhammadali
+~

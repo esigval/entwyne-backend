@@ -19,24 +19,24 @@ class Moment {
         thumbnail,
         thumbnailUrl,
         transcription,
-        transcriptionUrl,
         videoUri,
-        videoSettingsObjectID,
+        videoSettings,
         webmFilePath,
         pictureUri,
         mediaType,
         storylineId,
-        userId
+        userId,
+        contributorId
     } = {}) {
-        this._id = new ObjectId(_id);
-        this.associatedPromptId = new ObjectId(associatedPromptId);
+        this._id = _id ? new ObjectId(_id) : new ObjectId();
+        this.associatedPromptId = associatedPromptId ? new ObjectId(associatedPromptId) : undefined;
         this.audioUri = audioUri;
         this.beatTag = beatTag;
         this.createdAt = createdAt;
         this.filename = filename;
         this.s3ProcessedUri = [{
             s3ProcessedUri: s3ProcessedUri,
-            videoSettings: videoSettingsObjectID
+            videoSettings: videoSettings ? new ObjectId(videoSettings) : undefined
         }];
         this.s3FilePath = s3FilePath;
         this.s3Uri = s3Uri;
@@ -45,14 +45,14 @@ class Moment {
         this.thumbnail = thumbnail;
         this.thumbnailUrl = thumbnailUrl;
         this.transcription = transcription;
-        this.transcriptionUrl = transcriptionUrl;
         this.videoUri = videoUri;
+        this.videoSettings = videoSettings ? new ObjectId(videoSettings) : undefined;
         this.webmFilePath = webmFilePath;
         this.pictureUri = pictureUri
         this.mediaType = mediaType;
-        this.storylineId = new ObjectId(storylineId);
-        this.userId = userId;
-        this.contributorId = contributorId;
+        this.storylineId = storylineId ? new ObjectId(storylineId) : undefined;
+        this.userId = userId ? new ObjectId(userId) : undefined;
+        this.contributorId = contributorId ? new ObjectId(contributorId) : undefined;
     }
 
     static get collectionName() {
@@ -74,6 +74,40 @@ class Moment {
             return userMoments;
         } catch (error) {
             console.error('Failed to get all moments for user:', error);
+        }
+    }
+
+    static async updateMoment({ momentId, update }) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+            // find moment by id and update it
+            const result = await collection.updateOne({ _id: new ObjectId(momentId) }, { $set: update });
+            return result;
+        } catch (error) {
+            console.error('Failed to update moment:', error);
+        }
+    }
+
+    static async createMoment({ associatedPromptId, userId }) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+
+            // convert userId to ObjectId if it's not already
+            const userIdAsObjectId = userId instanceof ObjectId ? userId : new ObjectId(userId);
+            const associatedPromptIdAsObjectId = associatedPromptId instanceof ObjectId ? associatedPromptId : new ObjectId(associatedPromptId);
+
+            // Create a new instance of Moment
+            const newMoment = new Moment({ associatedPromptId: associatedPromptIdAsObjectId, userId: userIdAsObjectId });
+
+            // Insert the new instance into the database
+            await collection.insertOne(newMoment);
+
+            // Return the newMoment object
+            return newMoment;
+        } catch (error) {
+            console.error('Failed to create empty moment:', error);
         }
     }
 

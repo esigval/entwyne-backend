@@ -9,6 +9,96 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /moments/preSigned/{promptId}:
+    get:
+      tags:
+      - Moments
+      summary: Generate pre-signed URLs for audio and video files and update the moment with S3 URIs
+      parameters:
+      - name: promptId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Pre-signed URLs for audio and video files
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audioUrl:
+                    type: string
+                  videoUrl:
+                    type: string
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /twyne/addUser:
+    post:
+      tags:
+      - Twyne
+      summary: Add a user to a Twyne
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                twyneId:
+                  type: string
+                  description: The ID of the Twyne
+                userId:
+                  type: string
+                  description: The ID of the user to add
+                userType:
+                  type: string
+                  description: The type of the user (either 'coCreator' or 'contributor')
+              required:
+              - twyneId
+              - userId
+              - userType
+      responses:
+        '200':
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User added successfully
+        '400':
+          description: Bad request (missing parameters or invalid userType)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Twyne not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /twyne/story/{storyId}:
     get:
       tags:

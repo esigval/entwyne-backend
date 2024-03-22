@@ -20,6 +20,7 @@ export const config = {
     MUSICAUDIO_BUCKET: process.env.PROD_MUSICAUDIO_BUCKET,
     THUMBNAIL_BUCKET: process.env.PROD_THUMBNAIL_BUCKET,
     AUDIO_BUCKET: process.env.PROD_AUDIO_BUCKET,
+    MEZZANINE_BUCKET: process.env.PROD_MEZZANINE_BUCKET,
     
     // Database
     MONGODB_URI: process.env.PROD_MONGODB_URI,
@@ -49,6 +50,7 @@ export const config = {
     MUSICAUDIO_BUCKET: process.env.DEV_MUSICAUDIO_BUCKET,
     THUMBNAIL_BUCKET: process.env.DEV_THUMBNAIL_BUCKET,
     AUDIO_BUCKET: process.env.DEV_AUDIO_BUCKET,
+    MEZZANINE_BUCKET: process.env.DEV_MEZZANINE_BUCKET,
 
     // Database
     MONGODB_URI: process.env.DEV_MONGODB_URI,
@@ -71,6 +73,15 @@ export const config = {
   },
 
   local: {
+    // BUCKETS
+    EXTRACTION_BUCKET: process.env.DEV_EXTRACTION_BUCKET,
+    NORMALIZATION_BUCKET: process.env.DEV_NORMALIZATION_BUCKET,
+    CONCATENATION_BUCKET: process.env.DEV_CONCATENATION_BUCKET,
+    TRANSITIONFX_BUCKET: process.env.DEV_TRANSITIONFX_BUCKET,
+    MUSICAUDIO_BUCKET: process.env.DEV_MUSICAUDIO_BUCKET,
+    THUMBNAIL_BUCKET: process.env.DEV_THUMBNAIL_BUCKET,
+    AUDIO_BUCKET: process.env.DEV_AUDIO_BUCKET,
+    MEZZANINE_BUCKET: process.env.DEV_MEZZANINE_BUCKET,
 
     // Database
     MONGODB_URI: process.env.LOCAL_MONGODB_URI,
