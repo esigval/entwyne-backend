@@ -21,6 +21,7 @@ export const config = {
     THUMBNAIL_BUCKET: process.env.PROD_THUMBNAIL_BUCKET,
     AUDIO_BUCKET: process.env.PROD_AUDIO_BUCKET,
     MEZZANINE_BUCKET: process.env.PROD_MEZZANINE_BUCKET,
+    USER_BUCKET: process.env.PROD_USER_BUCKET,
     
     // Database
     MONGODB_URI: process.env.PROD_MONGODB_URI,
@@ -51,6 +52,7 @@ export const config = {
     THUMBNAIL_BUCKET: process.env.DEV_THUMBNAIL_BUCKET,
     AUDIO_BUCKET: process.env.DEV_AUDIO_BUCKET,
     MEZZANINE_BUCKET: process.env.DEV_MEZZANINE_BUCKET,
+    USER_BUCKET: process.env.DEV_USER_BUCKET,
 
     // Database
     MONGODB_URI: process.env.DEV_MONGODB_URI,
@@ -82,6 +84,7 @@ export const config = {
     THUMBNAIL_BUCKET: process.env.DEV_THUMBNAIL_BUCKET,
     AUDIO_BUCKET: process.env.DEV_AUDIO_BUCKET,
     MEZZANINE_BUCKET: process.env.DEV_MEZZANINE_BUCKET,
+    USER_BUCKET: process.env.DEV_USER_BUCKET,
 
     // Database
     MONGODB_URI: process.env.LOCAL_MONGODB_URI,

@@ -9,6 +9,35 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /moments/{momentId}:
+    get:
+      tags:
+      - Moments
+      summary: Get a moment by its ID
+      parameters:
+      - in: path
+        name: momentId
+        required: true
+        schema:
+          type: string
+        description: The ID of the moment
+      responses:
+        '200':
+          description: A moment object and a pre-signed URL for its thumbnail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  thumbnailUri:
+                    type: string
+                  presignedThumbnailUrl:
+                    type: string
+        '500':
+          description: Error in getMoment or Failed to get presigned URL
+
   /moments/preSigned/{promptId}:
     get:
       tags:
@@ -908,13 +937,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
 
-  /users/{userId}:
-    parameters:
-    - in: path
-      name: userId
-      required: true
-      schema:
-        type: string
+  /users/:
     get:
       tags:
       - Users

@@ -10,24 +10,27 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 // Updated Middleware to generate pre-signed URL that accepts a key dynamically
-const universalPreSignedUrl = (bucketName) => (key, contentType, req, res, next) => {
-    const params = {
-        Bucket: bucketName,
-        Key: key, // Key is now passed as a parameter
-        Expires: 60, // This URL will be valid for 1 minute
-        ContentType: contentType
+const universalPreSignedUrl = (bucketName) => (operation, key, contentType) => {
+    return new Promise((resolve, reject) => {
+        let params = {
+            Bucket: bucketName,
+            Key: key,
+            Expires: 60
+        };
 
-    };
-
-    s3.getSignedUrl('putObject', params, (err, url) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ error: 'Error generating pre-signed URL' });
+        // Only add ContentType for putObject operations
+        if (operation === 'putObject') {
+            params.ContentType = contentType;
         }
-        // You may need to adjust this part depending on how you want to store the URL
-        req.preSignedUrl = url;
-        next();
+
+        s3.getSignedUrl(operation, params, (err, url) => {
+            if (err) {
+                console.log(err);
+                reject('Error generating pre-signed URL');
+            } else {
+                resolve(url);
+            }
+        });
     });
 };
-
 export default universalPreSignedUrl;

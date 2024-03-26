@@ -16,25 +16,51 @@ const router = express.Router();
 // Adjusted router code to pass the keys correctly
 
 router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys, 
-    (req, res, next) => {
+    async (req, res, next) => {
         const key = req.s3Keys.audioKey;
-        universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)(key, 'audio/wav',req, res, () => {
-            req.audioPreSignedUrl = req.preSignedUrl; // Store the audio URL
+        try {
+            req.audioPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'audio/wav');
             next();
-        });
+        } catch (err) {
+            res.status(500).json({ error: 'Error generating audio pre-signed URL' });
+        }
     },
-    (req, res, next) => {
+    async (req, res, next) => {
         const key = req.s3Keys.videoKey;
-        universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)(key, 'video/mp4', req, res, () => {
-            req.videoPreSignedUrl = req.preSignedUrl; // Store the video URL
+        try {
+            req.videoPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'video/mp4');
             next();
-        });
+        } catch (err) {
+            res.status(500).json({ error: 'Error generating video pre-signed URL' });
+        }
+    },
+    async (req, res, next) => {
+        const key = req.s3Keys.thumbnailKey;
+        try {
+            req.thumbnailPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'image/png');
+            next();
+        } catch (err) {
+            res.status(500).json({ error: 'Error generating thumbnail pre-signed URL' });
+        }
+    },
+    async (req, res, next) => {
+        const key = req.s3Keys.proxyKey; // Assuming the key for the proxy is stored in req.s3Keys.proxyKey
+        try {
+            req.proxyPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'video/mp4');
+            next();
+        } catch (err) {
+            res.status(500).json({ error: 'Error generating proxy pre-signed URL' });
+        }
     },
     updateMomentWithS3Uris,
     (req, res) => {
-        res.send({ audioUrl: req.audioPreSignedUrl, videoUrl: req.videoPreSignedUrl });
+        res.send({ 
+            audioUrl: req.audioPreSignedUrl, 
+            videoUrl: req.videoPreSignedUrl, 
+            thumbnailUrl: req.thumbnailPreSignedUrl,
+            proxyUrl: req.proxyPreSignedUrl // Send the proxy URL in the response
+        });
     }
 );
-
 
 export default router;

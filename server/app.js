@@ -59,6 +59,8 @@ import saveMomentRouter from './routes/saveMoment.js';
 import checkMomentProcess from './routes/checkMomentProcess.js';
 import collectPictures from './routes/collectPictures.js';
 import uploadMoment from './routes/uploadMoment.js';
+import updateTranscriptionMoment from './routes/updateTranscriptionMoment.js'; 
+import getMoment from './routes/getMoment.js';
 
 // Utility routes for media processing and additional functionalities
 import saveVideoUri from './routes/saveVideoUri.js';
@@ -173,6 +175,8 @@ app.use('/v1/uploadSaveMoment', saveMomentRouter); // protected
 app.use('/v1/checkMomentProcess', checkMomentProcess); // protected
 app.use(`/v1/collectPictures`, collectPictures); // protected
 app.use('/v1/moments/preSigned', uploadMoment); // protected
+app.use('/v1/moments/transcription', updateTranscriptionMoment); // unprotected - > Lambda
+app.use('/v1/moments', getMoment); // protected
 
 // Twynes (protected)
 app.use('/v1/twyne', twyneRoutes); // protected

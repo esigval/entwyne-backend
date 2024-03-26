@@ -14,8 +14,10 @@ const updateMomentWithS3Uris = async (req, res, next) => {
     // construct the S3 URIs
     const audioUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.audioKey}.pcm`;
     const videoUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.videoKey}.mp4`;
+    const thumbnailUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.thumbnailKey}.png`;
+    const proxyUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.proxyKey}.mp4`;
     // update the moment
-    await Moment.updateMoment({ momentId, update: { audioUri, videoUri } });
+    await Moment.updateMoment({ momentId, update: { audioUri, videoUri, thumbnailUri, proxyUri } });
 
     next();
 };

@@ -10,49 +10,34 @@ class Moment {
         audioUri,
         beatTag,
         createdAt,
-        filename,
-        s3ProcessedUri,
-        s3FilePath,
-        s3Uri,
-        s3UriThumbnail,
         sentiment,
-        thumbnail,
-        thumbnailUrl,
         transcription,
-        videoUri,
         videoSettings,
-        webmFilePath,
-        pictureUri,
+        videoUri,
         mediaType,
         storylineId,
         userId,
-        contributorId
+        contributorId,
+        thumbnailUri,
+        stampedTranscription,
+        lastUpdated
     } = {}) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.associatedPromptId = associatedPromptId ? new ObjectId(associatedPromptId) : undefined;
         this.audioUri = audioUri;
         this.beatTag = beatTag;
-        this.createdAt = createdAt;
-        this.filename = filename;
-        this.s3ProcessedUri = [{
-            s3ProcessedUri: s3ProcessedUri,
-            videoSettings: videoSettings ? new ObjectId(videoSettings) : undefined
-        }];
-        this.s3FilePath = s3FilePath;
-        this.s3Uri = s3Uri;
-        this.s3UriThumbnail = s3UriThumbnail;
+        this.createdAt = createdAt || new Date();
         this.sentiment = sentiment;
-        this.thumbnail = thumbnail;
-        this.thumbnailUrl = thumbnailUrl;
         this.transcription = transcription;
-        this.videoUri = videoUri;
         this.videoSettings = videoSettings ? new ObjectId(videoSettings) : undefined;
-        this.webmFilePath = webmFilePath;
-        this.pictureUri = pictureUri
+        this.videoUri = videoUri;
         this.mediaType = mediaType;
         this.storylineId = storylineId ? new ObjectId(storylineId) : undefined;
         this.userId = userId ? new ObjectId(userId) : undefined;
         this.contributorId = contributorId ? new ObjectId(contributorId) : undefined;
+        this.thumbnailUri = thumbnailUri;
+        this.stampedTranscription = stampedTranscription;
+        this.lastUpdated = lastUpdated || new Date();
     }
 
     static get collectionName() {
@@ -82,7 +67,15 @@ class Moment {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
             // find moment by id and update it
-            const result = await collection.updateOne({ _id: new ObjectId(momentId) }, { $set: update });
+            const result = await collection.updateOne(
+                { _id: new ObjectId(momentId) }, 
+                { 
+                    $set: { 
+                        ...update, 
+                        lastUpdated: new Date() // Add this line
+                    } 
+                }
+            );
             return result;
         } catch (error) {
             console.error('Failed to update moment:', error);
@@ -252,6 +245,18 @@ class Moment {
         } catch (error) {
             console.error("Error in DELETE /moment/:id:", error);
             return { status: 500, message: 'Internal server error.' };
+        }
+    }
+
+    static async findById(momentId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+            const moment = await collection.findOne({ _id: new ObjectId(momentId) });
+            return moment;
+        } catch (error) {
+            console.error("Error in Moment.findById:", error);
+            throw error;
         }
     }
 
