@@ -656,8 +656,34 @@ paths:
                 items:
                   $ref: '#/components/schemas/Prompt'
 
+  /setPromptCollected/{promptId}/{status}:
+    post:
+      tags:
+      - Prompts
+      summary: Set collected status of a prompt
+      operationId: setPromptCollected
+      parameters:
+      - name: promptId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Prompt collected status set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /prompts:
-
     get:
       tags:
       - Prompts

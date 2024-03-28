@@ -70,6 +70,7 @@ import finalRender from './routes/getFinalRender.js';
 import confirmVideoRender from './routes/confirmVideoRender.js';
 import getRenderStatus from './routes/getRenderStatus.js';
 import getPrimers from './routes/getPrimers.js';
+import setPromptCollected from './routes/setPromptCollected.js';
 
 // Twyne routes
 import twyneRoutes from './routes/modifyTwynes.js';
@@ -192,6 +193,7 @@ app.use(`/v1/confirmVideoRender`, confirmVideoRender); // protected
 app.use(`/v1/getRenderStatus`, getRenderStatus); // protected
 app.use(`/v1/getPrimers`, getPrimers); // protected
 app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/v1/setPromptCollected', setPromptCollected); // protected
 
 // Assistant Interaction (protected)
 app.use('/v1/assistants/createThread', createThread); // protected

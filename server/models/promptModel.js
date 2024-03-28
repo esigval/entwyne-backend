@@ -26,7 +26,7 @@ class Prompts {
         this.momentId = momentId.map(id => ObjectId.isValid(id) ? id : new ObjectId(id));
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
-        this.collected = collected ?? false;
+        this.collected = collected;
         this.primers = primers ?? [];
         this.userId = userId;
         this.contributors = contributors.map(id => new ObjectId(id));
@@ -194,17 +194,19 @@ class Prompts {
             throw error;
         }
     }
-    static async setCollectedtoTrue(promptId) {
+    static async setCollectedStatus(promptId, status) {
         try {
+            console.log('promptId:', promptId);
+            console.log('status:', status);
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
             const result = await collection.updateOne(
                 { _id: new ObjectId(promptId) },
-                { $set: { collected: true, lastUpdated: new Date() } }
+                { $set: { collected: status, lastUpdated: new Date() } }
             );
             return result;
         } catch (error) {
-            console.error("Error in Prompts.setCollectedtoTrue:", error);
+            console.error("Error in Prompts.setCollectedStatus:", error);
             throw error;
         }
     }
