@@ -56,7 +56,7 @@ router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys,
     },
     updateMomentWithS3Uris,
     (req, res, next) => {
-        req.body.status = true; // always true if successful
+        req.params.status = true; // always true if successful
         next();
     },
     setPromptCollected,
