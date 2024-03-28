@@ -4,6 +4,8 @@ import { validateTokenMiddleware } from '../middleware/authentication/validateTo
 import { config } from '../config.js';
 import createMomentAndGenerateS3Keys from '../middleware/moments/createMomentAndGenerateS3Keys.js';
 import updateMomentWithS3Uris from '../middleware/moments/updateMoment.js';
+import setPromptCollected from '../middleware/prompts/setPromptCollected.js';
+import setMomentIdPrompt from '../middleware/prompts/setMomentIdPrompt.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -53,6 +55,9 @@ router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys,
         }
     },
     updateMomentWithS3Uris,
+    setPromptCollected,
+    setMomentIdPrompt,
+
     (req, res) => {
         res.send({ 
             audioUrl: req.audioPreSignedUrl, 

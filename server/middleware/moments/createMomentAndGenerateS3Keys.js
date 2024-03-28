@@ -1,20 +1,25 @@
 import Moment from '../../models/momentModel.js';
+import Prompt from '../../models/promptModel.js';
 
 const createMomentAndGenerateS3Keys = async (req, res, next) => {
   const userId = req.userId;
   const { promptId } = req.params; 
   
-  // create moment
-  const moment = await Moment.createMoment({ associatedPromptId: promptId, userId });
+  // create moment with associated prompt id and user id
+  const promptUserId = await Prompt.findUserIdByPromptId(promptId);
+  const moment = await Moment.createMoment({ associatedPromptId: promptId, contributorId: userId, userId: promptUserId });
+
+
+  console.log('moment made:', moment)
   
   // get the id of the moment
   const momentId = moment._id.toString();
   
   // construct the S3 keys
-  const audioKey = `${userId}/audiopcm/${momentId}`;
-  const videoKey = `${userId}/video/${momentId}`;
-  const thumbnailKey = `${userId}/thumbnail/${momentId}`; // added thumbnailKey
-  const proxyKey = `${userId}/proxy/${momentId}`; // added proxyKey
+  const audioKey = `${promptUserId}/audiopcm/${momentId}`;
+  const videoKey = `${promptUserId}/video/${momentId}`;
+  const thumbnailKey = `${promptUserId}/thumbnail/${momentId}`; // added thumbnailKey
+  const proxyKey = `${promptUserId}/proxy/${momentId}`; // added proxyKey
   
   console.log(audioKey, videoKey, thumbnailKey, proxyKey); // added thumbnailKey to console.log
   

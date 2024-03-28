@@ -4,10 +4,10 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ _id, threadId, created, storyName, storyline, twyneId, userId, progress, coCreators = [], thumbnail }) {
+    constructor({ _id, threadId, createdAt = new Date(), storyName, storyline, twyneId, userId, progress, coCreators = [], thumbnail, lastUpdated = new Date() }) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
-        this.created = created || new Date(); // Default to current date if not provided
+        this.createdAt = createdAt || new Date(); // Default to current date if not provided
         this.storyName = storyName;
         this.storyline = storyline || []; // Default to empty array if not provided
         this.userId = userId;
@@ -15,6 +15,8 @@ class Story {
         this.progress = progress || .75; // Default to .75 if not provided.
         this.coCreators = coCreators.map(id => new ObjectId(id)); // Ensure coCreators are ObjectIds || [];
         this.storyThumbnail = thumbnail || null; // Default to null if not provided
+        this.lastUpdated = lastUpdated || new Date(); // Default to current date if not provided
+
     }
 
     static get collectionName() {
@@ -119,6 +121,9 @@ class Story {
                 }
                 id = new ObjectId(id);
             }
+
+            // Add lastUpdated field to updateData
+            updateData.lastUpdated = new Date();
 
             const result = await collection.updateOne({ _id: id }, updateData);
             return result;

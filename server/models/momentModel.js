@@ -82,21 +82,22 @@ class Moment {
         }
     }
 
-    static async createMoment({ associatedPromptId, userId }) {
+    static async createMoment({ associatedPromptId, contributorId, userId }) {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-
-            // convert userId to ObjectId if it's not already
+    
+            // convert userId and contributorId to ObjectId if they're not already
             const userIdAsObjectId = userId instanceof ObjectId ? userId : new ObjectId(userId);
+            const contributorIdAsObjectId = contributorId instanceof ObjectId ? contributorId : new ObjectId(contributorId);
             const associatedPromptIdAsObjectId = associatedPromptId instanceof ObjectId ? associatedPromptId : new ObjectId(associatedPromptId);
-
+    
             // Create a new instance of Moment
-            const newMoment = new Moment({ associatedPromptId: associatedPromptIdAsObjectId, userId: userIdAsObjectId });
-
+            const newMoment = new Moment({ associatedPromptId: associatedPromptIdAsObjectId, userId: userIdAsObjectId, contributorId: contributorIdAsObjectId });
+    
             // Insert the new instance into the database
             await collection.insertOne(newMoment);
-
+    
             // Return the newMoment object
             return newMoment;
         } catch (error) {

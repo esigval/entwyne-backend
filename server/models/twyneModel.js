@@ -15,6 +15,8 @@ class Twyne {
         storylineTemplate, // Added this line
         progress,
         twyneThumbnail,
+        createdAt = new Date(),
+        lastUpdated = new Date()
 
     }) {
         this._id = new ObjectId(_id);
@@ -29,6 +31,8 @@ class Twyne {
         this.storylineTemplate = storylineTemplate ? new ObjectId(storylineTemplate) : null;
         this.progress = progress;
         this.twyneThumbnail = twyneThumbnail;
+        this.createdAt = createdAt ? new Date(createdAt) : new Date();
+        this.lastUpdated = lastUpdated ? new Date(lastUpdated) : new Date();
     }
 
     hasEdit() {
@@ -93,7 +97,8 @@ class Twyne {
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateData });
+            const updateDataWithLastUpdated = { ...updateData, lastUpdated: new Date() };
+            const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateDataWithLastUpdated });
             return result;
         } catch (error) {
             console.error("Error in Twyne.update:", error);
@@ -105,7 +110,7 @@ class Twyne {
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { coCreators: new ObjectId(userId) } });
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { coCreators: new ObjectId(userId) }, $set: { lastUpdated: new Date() } });
             return result;
         } catch (error) {
             console.error("Error in Twyne.addNewCoCreator:", error);
@@ -117,7 +122,7 @@ class Twyne {
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { contributors: new ObjectId(userId) } });
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { contributors: new ObjectId(userId) }, $set: { lastUpdated: new Date() } });
             return result;
         } catch (error) {
             console.error("Error in Twyne.addNewContributor:", error);

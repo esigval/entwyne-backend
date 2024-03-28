@@ -3,24 +3,27 @@ import { ObjectId } from 'mongodb';
 
 class Prompts {
     constructor({
-        _id = new ObjectId(),
+        _id = ObjectId.isValid(_id) ? _id : new ObjectId(),
         order,
         storyId,
         prompt,
-        momentId,
+        momentId = [],
         mediaType,
         promptTitle,
         collected,
         primers,
         userId,
         contributors = [],
+        createdAt = new Date(), // Default to current time if not provided
+        lastUpdated = new Date(), // Default to current time if not provided
     }) {
         this._id = _id;
-        this.created = new Date();
+        this.createdAt = createdAt; // Set using passed value or default
+        this.lastUpdated = lastUpdated; // Set using passed value or default
         this.order = order;
         this.storyId = new ObjectId(storyId);
         this.prompt = prompt;
-        this.momentId = momentId ?? null;
+        this.momentId = momentId.map(id => ObjectId.isValid(id) ? id : new ObjectId(id));
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
         this.collected = collected ?? false;
@@ -37,10 +40,10 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-            
+
             // Default fields to return
             let projection = { _id: 1, storylineId: 1, storylineName: 1 };
-            
+
             // Add optional fields if specified
             if (typeof fields === 'string') {
                 fields.split(',').forEach(field => {
@@ -49,15 +52,15 @@ class Prompts {
             } else if (typeof fields === 'object') {
                 projection = { ...projection, ...fields };
             }
-    
+
             // Check if id is a valid ObjectId before converting
             if (!ObjectId.isValid(id)) {
                 throw new Error('Invalid ObjectId format');
             }
-    
+
             // Find the document with the given ID and specified fields
             const prompt = await collection.findOne({ _id: new ObjectId(id) }, { projection });
-    
+
             return prompt;
         } catch (error) {
             console.error('Error in Prompts.findById:', error);
@@ -69,10 +72,10 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-            
+
             // Default fields to return
             let projection = { _id: 1, storylineId: 1, storylineName: 1 };
-            
+
             // Add optional fields if specified
             if (typeof fields === 'string') {
                 fields.split(',').forEach(field => {
@@ -81,7 +84,7 @@ class Prompts {
             } else if (typeof fields === 'object') {
                 projection = { ...projection, ...fields };
             }
-    
+
             // Construct query object based on expected type of storylineId
             let query = {};
             if (ObjectId.isValid(storylineId)) {
@@ -89,18 +92,18 @@ class Prompts {
             } else {
                 query.storylineId = storylineId; // Assuming storylineId is a string
             }
-    
+
             // Find documents with the given storylineId and specified fields
             const prompts = await collection.find(query, { projection }).toArray();
-    
+
             return prompts;
         } catch (error) {
             console.error('Error in Prompts.findByStorylineIdFlex:', error);
             throw error;
         }
     }
-    
-    
+
+
     static async create(data) {
         try {
             const db = await connect();
@@ -166,7 +169,7 @@ class Prompts {
             throw error;
         }
     }
-    
+
 
     static async findByStorylineIdWithTranscription(storylineId) {
         try {
@@ -191,12 +194,14 @@ class Prompts {
             throw error;
         }
     }
-
     static async setCollectedtoTrue(promptId) {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(promptId) }, { $set: { collected: true } });
+            const result = await collection.updateOne(
+                { _id: new ObjectId(promptId) },
+                { $set: { collected: true, lastUpdated: new Date() } }
+            );
             return result;
         } catch (error) {
             console.error("Error in Prompts.setCollectedtoTrue:", error);
@@ -209,13 +214,13 @@ class Prompts {
             // we'll want to check if all prompts for the given storylineId that match mediaType "video" have been collected
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-            const query = { 
-                storylineId, 
-                mediaType: "video", 
+            const query = {
+                storylineId,
+                mediaType: "video",
                 $or: [
                     { collected: false },
                     { collected: { $exists: false } }
-                ] 
+                ]
             };
             const uncollectedPrompt = await collection.findOne(query);
             return uncollectedPrompt === null;
@@ -241,13 +246,17 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-    
-            // Update the momentId in the document with the given promptId
+
+            // Convert momentId and promptId to an ObjectId
+            momentId = new ObjectId(momentId);
+            promptId = new ObjectId(promptId);
+
+            // Update the momentId and lastUpdated in the document with the given promptId
             const updateResult = await collection.updateOne(
-                { _id: new ObjectId(promptId) },
-                { $set: { momentId: momentId } }
+                { _id: promptId },
+                { $set: { momentId: momentId, lastUpdated: new Date() } }
             );
-    
+
             return updateResult;
         } catch (error) {
             console.error('Error in saveMomentToPrompt:', error);
@@ -296,20 +305,20 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-    
+
             // Find the prompt first to check the owner
             const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
             console.log('prompt:', prompt);
             if (!prompt) {
                 throw new Error('Prompt not found');
             }
-    
+
             // Check if the userId of the prompt matches the authenticated user's id
             if (prompt.userId.toString() !== userId.toString()) {
                 console.log('prompt.userId:', prompt.userId);
                 throw new Error('User is not authorized to delete this prompt');
             }
-    
+
             // If the user is authorized, delete the prompt
             const result = await collection.deleteOne({ _id: new ObjectId(promptId) });
             return result;
@@ -323,22 +332,23 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-    
+
             // Find the prompt first to check the owner
             const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
             console.log('prompt:', prompt);
             if (!prompt) {
                 throw new Error('Prompt not found');
             }
-    
+
             // Check if the userId of the prompt matches the authenticated user's id
             if (prompt.userId.toString() !== userId.toString()) {
                 console.log('prompt.userId:', prompt.userId);
                 throw new Error('User is not authorized to update this prompt');
             }
-    
+
             // If the user is authorized, update the prompt
-            const result = await collection.updateOne({ _id: new ObjectId(promptId) }, { $set: data });
+            const updatedData = { ...data, lastUpdated: new Date() };
+            const result = await collection.updateOne({ _id: new ObjectId(promptId) }, { $set: updatedData });
             return result;
         } catch (error) {
             console.error("Error in Prompts.updateByPromptId:", error);
@@ -350,25 +360,26 @@ class Prompts {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-    
+
             // Find the prompt first to check the owner
             const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
             console.log('prompt:', prompt);
             if (!prompt) {
                 throw new Error('Prompt not found');
             }
-    
+
             // Check if the userId of the prompt matches the authenticated user's id
             if (prompt.userId.toString() !== userId.toString()) {
                 console.log('prompt.userId:', prompt.userId);
                 throw new Error('User is not authorized to update this prompt');
             }
-    
+
             // If the user is authorized, update the prompt
             const result = await collection.updateOne(
-                { _id: new ObjectId(promptId) }, 
-                { 
-                    $addToSet: { contributors: { $each: contributors.map(id => new ObjectId(id)) } } 
+                { _id: new ObjectId(promptId) },
+                {
+                    $addToSet: { contributors: { $each: contributors.map(id => new ObjectId(id)) } },
+                    $set: { lastUpdated: new Date() }
                 }
             );
             return result;
@@ -378,8 +389,24 @@ class Prompts {
         }
     }
 
+    static async findUserIdByPromptId(promptId) {
+        console.log('promptId:', promptId);
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
+            if (!prompt) {
+                throw new Error('No prompt found with the provided ID');
+            }
+            return prompt.userId;
+        } catch (error) {
+            console.error('Error in findUserIdByPromptId:', error);
+            throw error;
+        }
+    }
 
-    
+
+
 
 }
 
