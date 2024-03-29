@@ -26,7 +26,7 @@ class Prompts {
         this.momentId = momentId.map(id => ObjectId.isValid(id) ? id : new ObjectId(id));
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
-        this.collected = collected;
+        this.collected = String(collected);
         this.primers = primers ?? [];
         this.userId = userId;
         this.contributors = contributors.map(id => new ObjectId(id));
