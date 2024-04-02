@@ -68,6 +68,18 @@ class Prompts {
         }
     }
 
+    static async findMomentIdByPromptId(promptId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
+            return prompt.momentId;
+        } catch (error) {
+            console.error('Error in findMomentIdByPromptId:', error);
+            throw error;
+        }
+    }
+
     static async findByStorylineIdFlex(storylineId, fields) {
         try {
             const db = await connect();

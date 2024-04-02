@@ -31,6 +31,7 @@ import UserConfirmEmail from './routes/userConfirmEmail.js';
 import userResetPassword from './routes/userResetPassword.js';
 import userConfirmPassword from './routes/userConfirmPassword.js';
 import userAddToTwyne from './routes/userAddToTwyne.js';
+import getUserConnections from './routes/getUserConnections.js';
 
 
 // Story-related routes
@@ -87,6 +88,10 @@ import buildStoryline from './routes/buildStoryline.js';
 // Documentation
 import instructions from './routes/instructions.js';
 
+// Streaming
+import getPresignedStreamingUrlPrompt from './routes/getPresignedStreamingPrompt.js';
+import getPresignedStreamingUrlMoment from './routes/getPresignedStreamingMoment.js';
+
 const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];
 
@@ -140,6 +145,7 @@ app.use('/v1/changeEmail', userChangeEmail); // protected
 app.use('/v1/confirmEmail', UserConfirmEmail); // Not protected
 app.use('/v1/resetPassword', userResetPassword); // Not protected
 app.use('/v1/confirmPassword', userConfirmPassword); // Not protected
+app.use('/v1/getUserConnections', getUserConnections); // protected
 
 
 
@@ -206,6 +212,9 @@ app.use('/v1/buildStoryline', buildStoryline); // protected
 // Documentation
 app.use('/v1/instructions', instructions);
 
+// Streaming
+app.use('/v1/streamingPrompt', getPresignedStreamingUrlPrompt); // protected
+app.use('/v1/streamingMoment', getPresignedStreamingUrlMoment); // protected
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Example app listening on port ${port}`);

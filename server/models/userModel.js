@@ -19,7 +19,8 @@ class User {
         status,
         roles,
         refreshToken,
-        emailVerifiedToken
+        emailVerifiedToken,
+        connections = [],
     } = {}) {
         this._id = _id;
         this.username = username;
@@ -46,8 +47,56 @@ class User {
         this.roles = roles;
         this.refreshToken = refreshToken;
         this.emailVerifiedToken = emailVerifiedToken;
+        this.connections = connections.map(connection => new ObjectId(connection));
     }
 
+    static async addConnection(userId, connectionId) {
+        try {
+            const db = await connect();
+            let updateOperation;
+    
+            if (Array.isArray(connectionId)) {
+                updateOperation = { $addToSet: { connections: { $each: connectionId.map(id => new ObjectId(id)) } } };
+            } else {
+                updateOperation = { $addToSet: { connections: new ObjectId(connectionId) } };
+            }
+    
+            const result = await db.collection('users').updateOne(
+                { _id: new ObjectId(userId) },
+                updateOperation
+            );
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static async findConnections(userId) {
+        const db = await connect();
+        const result = await db.collection('users').findOne(
+            { _id: new ObjectId(userId) },
+            { connections: 1 }
+        );
+
+        if (!result || !result.connections) {
+            return []; // return an empty array if no connections found
+        }
+
+        const connectionIds = result.connections.map(connection => new ObjectId(connection));
+        const connections = await db.collection('users').find(
+            { _id: { $in: connectionIds } },
+            { profile: 1, username: 1, email: 1 }
+        ).toArray();
+
+        return connections.map(connection => ({
+            firstName: connection.profile?.firstName,
+            lastName: connection.profile?.lastName,
+            username: connection.username,
+            email: connection.email
+        }));
+    }
+
+    
     static async create(userData) {
         const db = await connect();
     

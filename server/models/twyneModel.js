@@ -95,9 +95,27 @@ class Twyne {
 
     static async update(id, updateData) {
         try {
+            // Convert specific fields in updateData to ObjectId instances
+            const fieldsToConvert = ['storyId', 'userId', 'storyline', 'edit', 'storylineTemplate'];
+            const convertedUpdateData = { ...updateData };
+            fieldsToConvert.forEach(field => {
+                if (convertedUpdateData[field]) {
+                    convertedUpdateData[field] = new ObjectId(convertedUpdateData[field]);
+                }
+            });
+    
+            // Convert arrays of IDs for prompts, coCreators, contributors to ObjectId instances
+            ['prompts', 'coCreators', 'contributors'].forEach(arrayField => {
+                if (convertedUpdateData[arrayField] && Array.isArray(convertedUpdateData[arrayField])) {
+                    convertedUpdateData[arrayField] = convertedUpdateData[arrayField].map(id => new ObjectId(id));
+                }
+            });
+    
+            // Include lastUpdated timestamp in the update
+            const updateDataWithLastUpdated = { ...convertedUpdateData, lastUpdated: new Date() };
+    
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const updateDataWithLastUpdated = { ...updateData, lastUpdated: new Date() };
             const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateDataWithLastUpdated });
             return result;
         } catch (error) {

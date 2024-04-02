@@ -261,6 +261,18 @@ class Moment {
         }
     }
 
+    static async findProxyUriById(momentId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+            const moment = await collection.findOne({ _id: new ObjectId(momentId) });
+            return moment.proxyUri;
+        } catch (error) {
+            console.error("Error in Moment.findProxyUriById:", error);
+            throw error;
+        }
+    }
+
 }
 
 

@@ -108,11 +108,11 @@ class Story {
         }
     }
 
-    static async update(id, updateData) {
+    static async update(id, updateOperation) {
         try {
             const db = await connect();
             const collection = db.collection(Story.collectionName);
-
+    
             // Ensure id is an ObjectId
             if (typeof id === 'string') {
                 if (!ObjectId.isValid(id)) {
@@ -121,11 +121,14 @@ class Story {
                 }
                 id = new ObjectId(id);
             }
-
-            // Add lastUpdated field to updateData
-            updateData.lastUpdated = new Date();
-
-            const result = await collection.updateOne({ _id: id }, updateData);
+    
+            // Add lastUpdated field to updateOperation
+            if (!updateOperation.$set) {
+                updateOperation.$set = {};
+            }
+            updateOperation.$set.lastUpdated = new Date();
+    
+            const result = await collection.updateOne({ _id: id }, updateOperation);
             return result;
         } catch (error) {
             console.error("Error in Storyline.update:", error);

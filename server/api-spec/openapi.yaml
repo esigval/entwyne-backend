@@ -9,6 +9,83 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /getUserConnections:
+    get:
+      tags:
+      - Users
+      summary: Get user connections
+      description: This endpoint returns the connections of the authenticated user.
+      responses:
+        '200':
+          description: A list of user connections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+  /streamingMoment/{momentId}:
+    get:
+      tags:
+      - Streaming
+      summary: Get a pre-signed URL for a moment by its prompt ID
+      parameters:
+      - in: path
+        name: promptId
+        required: true
+        schema:
+          type: string
+        description: The ID of the prompt
+      responses:
+        '200':
+          description: A pre-signed URL for the moment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presignedUrl:
+                    type: string
+        '404':
+          description: Prompt or moment not found
+        '500':
+          description: Error in getMoment or Failed to get presigned URL
+  /streamingPrompt/{promptId}:
+    get:
+      tags:
+      - Streaming
+      summary: Get a pre-signed URL for a moment by its prompt ID
+      parameters:
+      - in: path
+        name: promptId
+        required: true
+        schema:
+          type: string
+        description: The ID of the prompt
+      responses:
+        '200':
+          description: A pre-signed URL for the moment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presignedUrl:
+                    type: string
+        '404':
+          description: Prompt or moment not found
+        '500':
+          description: Error in getMoment or Failed to get presigned URL
   /moments/{momentId}:
     get:
       tags:

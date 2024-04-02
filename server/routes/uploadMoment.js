@@ -1,12 +1,13 @@
 import express from 'express';
 import universalPreSignedUrl from '../middleware/presignedUrls/universalPreSignedUrl.js';
-import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
-import { config } from '../config.js';
+
+
 import createMomentAndGenerateS3Keys from '../middleware/moments/createMomentAndGenerateS3Keys.js';
 import updateMomentWithS3Uris from '../middleware/moments/updateMoment.js';
 import setPromptCollected from '../middleware/prompts/setPromptCollected.js';
 import setMomentIdPrompt from '../middleware/prompts/setMomentIdPrompt.js';
-
+import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
+import { config } from '../config.js';
 import dotenv from 'dotenv';
 dotenv.config();
 

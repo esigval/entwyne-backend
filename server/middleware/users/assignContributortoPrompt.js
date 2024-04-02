@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import Prompt from '../../models/promptModel.js';
+import User from '../../models/userModel.js';
 
 export const assignContributorsMiddleware = async (req, res, next) => {
     const { promptId, contributors } = req.body;
@@ -19,6 +20,7 @@ export const assignContributorsMiddleware = async (req, res, next) => {
         if (!result) {
             return res.status(404).json({ message: 'Prompt not found or contributors not assigned' });
         }
+        await User.addConnection(userId, contributorIds);
 
         // Add the result to the response
         res.locals.result = result;
