@@ -371,6 +371,9 @@ class Prompts {
     }
 
     static async assignContributorsByPromptId(promptId, userId, contributors) {
+        console.log('promptId:', promptId);
+        console.log('userId:', userId);
+        console.log('contributors:', contributors);
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);

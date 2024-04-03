@@ -17,7 +17,8 @@ async function GetContributorInfo(userId) {
         firstName: user.firstName,
         lastName: user.lastName,
         avatarUrl: user.profile.avatarUrl,
-        username: user.username
+        username: user.username,
+        email: user.email,
     };
 }
 
