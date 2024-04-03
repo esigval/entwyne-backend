@@ -99,14 +99,22 @@ class User {
     
     static async create(userData) {
         const db = await connect();
+        console.log('userData:', userData);
     
         // Check if a user with the given username or email already exists
-        const existingUser = await db.collection('users').findOne({
-            $or: [
-                { username: userData.username },
-                { email: userData.email }
-            ]
-        });
+        
+        const query = {
+            $or: []
+        };
+        
+        if (userData.username) {
+            query.$or.push({ username: userData.username });
+        }
+        if (userData.email) {
+            query.$or.push({ email: userData.email });
+        }
+        
+        const existingUser = await db.collection('users').findOne(query);
     
         if (existingUser) {
             throw new Error('User creation failed: Username or email already exists');
@@ -144,6 +152,18 @@ class User {
         }
 
         console.log('Password update successful');
+    }
+
+    static async findByEmail(email) {
+        const db = await connect();
+        if (!validator.isEmail(email)) {
+            throw new Error('Invalid email format');
+        }
+        const result = await db.collection('users').findOne({ email: email });
+        if (!result) {
+            return null; // return null if no user is found
+        }
+        return new User(result);
     }
 
     static async deleteRefreshToken(userId) {
