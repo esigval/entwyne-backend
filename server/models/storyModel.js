@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ _id, threadId, createdAt = new Date(), storyName, storyline, twyneId, userId, progress, coCreators = [], thumbnail, lastUpdated = new Date() }) {
+    constructor({ _id, threadId, createdAt = new Date(), storyName, storyline, twyneId, userId, coCreators = [], thumbnail, lastUpdated = new Date(), defaultVideoSettings = { orientation: 'landscape', quality: 'high' }, defaultNarrative }) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
         this.createdAt = createdAt || new Date(); // Default to current date if not provided
@@ -12,12 +12,13 @@ class Story {
         this.storyline = storyline || []; // Default to empty array if not provided
         this.userId = userId;
         this.twyneId = Array.isArray(twyneId) ? twyneId.map(id => ObjectId(id)) : [];
-        this.progress = progress || .75; // Default to .75 if not provided.
         this.coCreators = coCreators.map(id => new ObjectId(id)); // Ensure coCreators are ObjectIds || [];
         this.storyThumbnail = thumbnail || null; // Default to null if not provided
         this.lastUpdated = lastUpdated || new Date(); // Default to current date if not provided
-
+        this.defaultVideoSettings = defaultVideoSettings || { orientation: 'vertical', quality: 'high' };
+        this.defaultNarrative = defaultNarrative || null; // Default to null if not provided
     }
+
 
     static get collectionName() {
         return 'stories'; // Name of the collection in the database

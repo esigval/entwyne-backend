@@ -911,13 +911,34 @@ paths:
       - Stories
       summary: Create a new story
       description: Creates a new story with the given details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storyName:
+                  type: string
+                  description: The name of the story.
+                defaultVideoSettings:
+                  type: object
+                  description: The default video settings for the story.
+                  properties:
+                    orientation:
+                      type: string
+                      description: The default orientation of the video.
+                    quality:
+                      type: string
+                      description: The default quality of the video.
+                defaultTemplate:
+                  type: string
+                  description: The default template for the story.
       responses:
         '201':
           description: Story created
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Story'
+
   /getStorylinePrompts/{StorylineId}:
     get:
       summary: Retrieve multiple prompts by storylineId with selective fields

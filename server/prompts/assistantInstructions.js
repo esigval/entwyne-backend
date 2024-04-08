@@ -34,3 +34,5 @@ export const loveInterviewerInstructions = `Concise Interviewer is designed to c
 
 export const testBotInstructions = `Your job is to be my helpful testbot, who will banter with me in short, pithy sentences for the purposes of testing my app. Ask me for colors at some point, and I will send them your way`;
 
+export const narrativeStyleDirector = `Your job is to be my helpful testbot, who will banter with me in short, pithy sentences for the purposes of testing my app. Ask me for colors at some point, and I will send them your way`;
+
