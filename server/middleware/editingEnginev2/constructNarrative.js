@@ -1,14 +1,11 @@
-import { getNarrativeBlockTemplates } from './narrativeBlocksTemplates.js';
-
+import fetchNarrativeBlockTemplates from './fetchNarrativeBlockTemplates.js';
 
 const constructNarrative = async (rawNarrative) => {
+    const templates = await fetchNarrativeBlockTemplates(rawNarrative); // Dynamic fetch of templates
 
-    const bpm = rawNarrative.bpm;
-    const templates = getNarrativeBlockTemplates(bpm);
-
-    // Step 1: Calculate total min and max duration ranges for all blocks
+    // Calculate total min and max duration ranges for all blocks
     const totalDurationRange = rawNarrative.rawNarrative.reduce((acc, blockName) => {
-        const template = templates[blockName]; // Use the generated templates here
+        const template = templates[blockName];
         if (!template) {
             throw new Error(`Template not found for narrative block: ${blockName}`);
         }
@@ -17,11 +14,7 @@ const constructNarrative = async (rawNarrative) => {
         return acc;
     }, { min: 0, max: 0 });
 
-
-    // Step 2: Calculate the ideal average duration per block, respecting the total target duration
-
-
-    // Step 3: Adjust each block's duration
+    // Calculate the ideal average duration per block, respecting the total target duration
     let narrativeStructure = rawNarrative.rawNarrative.map((blockName, index) => {
         const template = templates[blockName];
         if (!template) {
@@ -39,7 +32,7 @@ const constructNarrative = async (rawNarrative) => {
             suggestedDuration,
             blockInstructions: template.description,
             clipPace: {
-                ...template.clipPace, // Spread existing clipPace properties
+                ...template.clipPace,
             }
         };
     });

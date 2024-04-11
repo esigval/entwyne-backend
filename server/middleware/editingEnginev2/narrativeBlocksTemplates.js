@@ -1,41 +1,62 @@
-export const getNarrativeBlockTemplates = (bpm) => ({
-    "Montage": {
-        type: "Montage",
-        durationRange: { min: 5000, max: 15000 }, // Example duration in milliseconds
-        description: "used to fill in background information or compress time",
-        clipPace: {
-            type: "timed",
-            bpm: bpm,
-            interval: 4
+import NarrativeBlock from "../../models/narrativeBlockModel.js";
 
-          }
-    },
-    "Interview": {
-        type: "Interview",
-        durationRange: { min: 5000, max: 20000 },
-        description: "used to provide insights or personal perspectives directly by film",
-        clipPace: {
-            type: "fixed",
-            bpm: null
-          }
-    },
-    "Outro Card": {
-        type: "Card",
-        durationRange: { min: 2000, max: 5000 },
-        description: "used to display credits or closing information",
-        clipPace: {
-            type: "fixed",
-            bpm: null
-          }
-    },
-    "Title Sequence": {
-        type: "Title",
-        durationRange: { min: 2000, max: 5000 },
-        description: "used to introduce the film or segment",
-        clipPace: {
-            type: "timed",
-            bpm: bpm,
-            interval: 2
-          }
+const Montage = {
+    name: "Montage",
+    type: "Montage",
+    durationRange: { min: 5000, max: 15000 },
+    description: "used to fill in background information or compress time",
+    clipPace: {
+        type: "timed",
+        bpm: 120,
+        interval: 4
     }
-});
+};
+
+const Interview = {
+    name: "Interview",
+    type: "Interview",
+    durationRange: { min: 5000, max: 20000 },
+    description: "used to provide insights or personal perspectives directly by film",
+    clipPace: {
+        type: "fixed",
+        bpm: null
+    }
+};
+
+const OutroCard = {
+    name: "Outro Card",
+    type: "Outro Card",
+    durationRange: { min: 2000, max: 5000 },
+    description: "used to display credits or closing information",
+    clipPace: {
+        type: "fixed",
+        bpm: null
+    }
+};
+
+const TitleSequence = {
+    name: "Title Sequence",
+    type: "Title Sequence",
+    durationRange: { min: 2000, max: 5000 },
+    description: "used to introduce the film or segment",
+    clipPace: {
+        type: "timed",
+        bpm: 120,
+        interval: 2
+    }
+};
+
+const importTemplates = async (NarrativeBlock) => {
+    try {
+        await NarrativeBlock.insertOne(Montage);
+        await NarrativeBlock.insertOne(Interview);
+        await NarrativeBlock.insertOne(OutroCard);
+        await NarrativeBlock.insertOne(TitleSequence);
+        console.log('Narrative block templates imported successfully.');
+    } catch (error) {
+        console.error('Error importing narrative block templates:', error);
+        throw error;
+    }
+}
+
+importTemplates(NarrativeBlock);

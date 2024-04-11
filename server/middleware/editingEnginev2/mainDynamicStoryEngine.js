@@ -69,4 +69,4 @@ async function processNarrative(twyneId, rawNarrative, userId) {
 export default processNarrative;
 
 // Testing Script
-// processNarrative('65f13b5b3c54a131c18aed0a', rawNarrative, '660d81337b0c94b81b3f1744');
+processNarrative('65f13b5b3c54a131c18aed0a', rawNarrative, '660d81337b0c94b81b3f1744');
