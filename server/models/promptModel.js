@@ -13,11 +13,14 @@ class Prompts {
         collected,
         primers,
         userId,
+        twyneId,
+        storylineId,
         contributors = [],
         createdAt = new Date(), // Default to current time if not provided
         lastUpdated = new Date(), // Default to current time if not provided
     }) {
-        this._id = _id;
+        const objectId = _id ? (ObjectId.isValid(_id) ? new ObjectId(_id) : new ObjectId()) : new ObjectId();
+        this._id = objectId
         this.createdAt = createdAt; // Set using passed value or default
         this.lastUpdated = lastUpdated; // Set using passed value or default
         this.order = order;
@@ -28,7 +31,9 @@ class Prompts {
         this.promptTitle = promptTitle;
         this.collected = String(collected);
         this.primers = primers ?? [];
-        this.userId = userId;
+        this.userId = ObjectId.isValid(userId) ? new ObjectId(userId) : userId;
+        this.twyneId = ObjectId.isValid(twyneId) ? new ObjectId(twyneId) : twyneId;
+        this.storylineId = ObjectId.isValid(storylineId) ? new ObjectId(storylineId) : storylineId;
         this.contributors = contributors.map(id => new ObjectId(id));
     }
 
@@ -67,6 +72,24 @@ class Prompts {
             throw error;
         }
     }
+
+static async insertMany(prompts) {
+    try {
+        const db = await connect(); // Make sure this properly connects to your MongoDB
+        const collection = db.collection(Prompts.collectionName);
+
+        // Assuming Prompts' properties are directly compatible with your MongoDB schema:
+        const result = await collection.insertMany(prompts);
+        console.log("Inserted prompts count:", result.insertedCount);
+
+        // Return an array of the inserted IDs
+        const insertedIds = Object.values(result.insertedIds);
+        return insertedIds;
+    } catch (error) {
+        console.error('Error in Prompts.insertMany:', error);
+        throw error;
+    }
+}
 
     static async findMomentIdByPromptId(promptId) {
         try {

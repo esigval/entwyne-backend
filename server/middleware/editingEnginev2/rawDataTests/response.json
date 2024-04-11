@@ -1,0 +1,156 @@
+{
+    "_id": {
+      "$oid": "661705b6a4ff9e8ddf2445b4"
+    },
+    "name": "Adventure Narrative",
+    "theme": "Fun, High Energy, and Exciting",
+    "totalTargetDuration": 60000,
+    "structure": [
+      {
+        "part": "Title Sequence",
+        "type": "Title",
+        "order": 0,
+        "durationRange": {
+          "min": 2000,
+          "max": 5000
+        },
+        "suggestedDuration": 5000,
+        "blockInstructions": "used to introduce the film or segment",
+        "sceneInstructions": "Open with aerial shots of Southern California, transitioning to a father and son packing their bags, excitement visible on their faces. Overlay with upbeat music to set the tone.",
+        "clipPace": {
+          "type": "timed",
+          "bpm": null,
+          "interval": 2
+        }
+      },
+      {
+        "part": "Interview",
+        "type": "Interview",
+        "order": 1,
+        "durationRange": {
+          "min": 5000,
+          "max": 20000
+        },
+        "suggestedDuration": 8333.333333333334,
+        "blockInstructions": "used to provide insights or personal perspectives directly by film",
+        "sceneInstructions": "Cut to father and son sitting on the plane, sharing their expectations for the trip. Include close-ups of their animated conversation, interspersed with shots of the plane taking off.",
+        "clipPace": {
+          "type": "fixed",
+          "bpm": null,
+          "interval": null
+        }
+      },
+      {
+        "part": "Montage",
+        "type": "Montage",
+        "order": 2,
+        "durationRange": {
+          "min": 5000,
+          "max": 15000
+        },
+        "suggestedDuration": 8333.333333333334,
+        "blockInstructions": "used to fill in background information or compress time",
+        "sceneInstructions": "Show a rapid sequence of college campuses, highlighting their unique features with quick cuts. Intersperse with shots of father and son interacting with college representatives and students.",
+        "clipPace": {
+          "type": "timed",
+          "bpm": null,
+          "interval": 4
+        }
+      },
+      {
+        "part": "Interview",
+        "type": "Interview",
+        "order": 3,
+        "durationRange": {
+          "min": 5000,
+          "max": 20000
+        },
+        "suggestedDuration": 8333.333333333334,
+        "blockInstructions": "used to provide insights or personal perspectives directly by film",
+        "sceneInstructions": "Focus on the father sharing stories of his college days, comparing them with what they are experiencing. Include emotional close-ups and reactions from the son.",
+        "clipPace": {
+          "type": "fixed",
+          "bpm": null,
+          "interval": null
+        }
+      },
+      {
+        "part": "Montage",
+        "type": "Montage",
+        "order": 4,
+        "durationRange": {
+          "min": 5000,
+          "max": 15000
+        },
+        "suggestedDuration": 8333.333333333334,
+        "blockInstructions": "used to fill in background information or compress time",
+        "sceneInstructions": "Compile a vibrant montage of city exploration, from bustling streets to serene beaches, capturing the essence of Southern California. Include snippets of their laughter and playful moments.",
+        "clipPace": {
+          "type": "timed",
+          "bpm": null,
+          "interval": 4
+        }
+      },
+      {
+        "part": "Interview",
+        "type": "Interview",
+        "order": 5,
+        "durationRange": {
+          "min": 5000,
+          "max": 20000
+        },
+        "suggestedDuration": 8333.333333333334,
+        "blockInstructions": "used to provide insights or personal perspectives directly by film",
+        "sceneInstructions": "Have the son reflect on the trip so far, discussing his thoughts on the colleges and the bonding experience with his father. Use a relaxed setting, possibly during a meal, for a more intimate feel.",
+        "clipPace": {
+          "type": "fixed",
+          "bpm": null,
+          "interval": null
+        }
+      },
+      {
+        "part": "Montage",
+        "type": "Montage",
+        "order": 6,
+        "durationRange": {
+          "min": 5000,
+          "max": 15000
+        },
+        "suggestedDuration": 8333.333333333334,
+        "blockInstructions": "used to fill in background information or compress time",
+        "sceneInstructions": "Create a dynamic montage of the hiking adventure, emphasizing the challenge and the beauty of the landscape. Conclude with the moment of connection atop the hill, using slow-motion for emphasis.",
+        "clipPace": {
+          "type": "timed",
+          "bpm": null,
+          "interval": 4
+        }
+      },
+      {
+        "part": "Outro Card",
+        "type": "Card",
+        "order": 7,
+        "durationRange": {
+          "min": 2000,
+          "max": 5000
+        },
+        "suggestedDuration": 5000,
+        "blockInstructions": "used to display credits or closing information",
+        "sceneInstructions": "End with a series of stills from the trip, overlaying each with text detailing their significance. Close with a final shot of the plane flying home, accompanied by uplifting music.",
+        "clipPace": {
+          "type": "fixed",
+          "bpm": null,
+          "interval": null
+        }
+      }
+    ],
+    "soundRules": null,
+    "createdAt": {
+      "$date": "2024-04-10T21:33:42.193Z"
+    },
+    "lastUpdated": {
+      "$date": "2024-04-10T21:33:42.193Z"
+    },
+    "twyneId": {
+      "$oid": "65f13b5b3c54a131c18aed0a"
+    }
+  }

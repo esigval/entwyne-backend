@@ -1,0 +1,271 @@
+{
+  "_id": {
+    "$oid": "661811065b3889e95c411a9d"
+  },
+  "name": "Adventure Narrative",
+  "theme": "Fun, High Energy, and Exciting",
+  "totalTargetDuration": 60000,
+  "structure": [
+    {
+      "part": "Title Sequence",
+      "type": "Title",
+      "order": 0,
+      "durationRange": {
+        "min": 2000,
+        "max": 5000
+      },
+      "suggestedDuration": 5000,
+      "blockInstructions": "used to introduce the film or segment",
+      "sceneInstructions": "Open with sweeping aerial shots of Southern California, transitioning to a close-up of the father and son boarding their flight. Overlay with upbeat, energetic music to set the tone of the adventure.",
+      "clipPace": {
+        "type": "timed",
+        "bpm": 120,
+        "interval": 2
+      },
+      "clips": [
+        {
+          "prompt": "Showcase sweeping aerial shots of Southern California to establish the setting.",
+          "length": "2 seconds",
+          "type": "Video",
+          "id": "6618110b5b3889e95c411a9e"
+        },
+        {
+          "prompt": "Transition to a close-up of the father and son boarding their flight, emphasizing the start of their adventure.",
+          "length": "3 seconds",
+          "type": "Video",
+          "id": "6618110b5b3889e95c411a9f"
+        }
+      ]
+    },
+    {
+      "part": "Interview",
+      "type": "Interview",
+      "order": 1,
+      "durationRange": {
+        "min": 5000,
+        "max": 20000
+      },
+      "suggestedDuration": 8333.333333333334,
+      "blockInstructions": "used to provide insights or personal perspectives directly by film",
+      "sceneInstructions": "Feature a sit-down interview with the father and son discussing their expectations for the trip, intercut with clips of them preparing for the journey. Use close-ups to capture their expressions and excitement.",
+      "clipPace": {
+        "type": "fixed",
+        "bpm": null,
+        "interval": null
+      },
+      "clips": [
+        {
+          "prompt": "Close-up of the father and son discussing their expectations for the trip, showcasing their excitement.",
+          "length": "10 seconds",
+          "type": "Video",
+          "id": "6618110e5b3889e95c411aa0"
+        },
+        {
+          "prompt": "Close-up of the father and son preparing for the journey, packing bags and checking equipment.",
+          "length": "8 seconds",
+          "type": "Video",
+          "id": "6618110e5b3889e95c411aa1"
+        }
+      ]
+    },
+    {
+      "part": "Montage",
+      "type": "Montage",
+      "order": 2,
+      "durationRange": {
+        "min": 5000,
+        "max": 15000
+      },
+      "suggestedDuration": 8333.333333333334,
+      "blockInstructions": "used to fill in background information or compress time",
+      "sceneInstructions": "Create a fast-paced montage of the various college campuses visited, highlighting features like bustling student life, majestic buildings, and vibrant class sessions. Sync clips to a lively beat to maintain high energy.",
+      "clipPace": {
+        "type": "timed",
+        "bpm": 120,
+        "interval": 4
+      },
+      "clips": [
+        {
+          "prompt": "Showcase bustling student life on various college campuses.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "661811125b3889e95c411aa2"
+        },
+        {
+          "prompt": "Highlight majestic buildings and architecture of the campuses.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "661811125b3889e95c411aa3"
+        },
+        {
+          "prompt": "Capture vibrant class sessions and academic activities.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "661811125b3889e95c411aa4"
+        }
+      ]
+    },
+    {
+      "part": "Interview",
+      "type": "Interview",
+      "order": 3,
+      "durationRange": {
+        "min": 5000,
+        "max": 20000
+      },
+      "suggestedDuration": 8333.333333333334,
+      "blockInstructions": "used to provide insights or personal perspectives directly by film",
+      "sceneInstructions": "Conduct another interview focusing on their impressions of the colleges and the impact of the tours on their decision-making process. Include reflective moments and insights shared between father and son.",
+      "clipPace": {
+        "type": "fixed",
+        "bpm": null,
+        "interval": null
+      },
+      "clips": [
+        {
+          "prompt": "Capture the father and son discussing their impressions of the colleges visited during the tours.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "661811175b3889e95c411aa5"
+        },
+        {
+          "prompt": "Showcase a reflective moment where the son shares a key insight that impacted his decision-making process.",
+          "length": "3.33 seconds",
+          "type": "Video",
+          "id": "661811175b3889e95c411aa6"
+        }
+      ]
+    },
+    {
+      "part": "Montage",
+      "type": "Montage",
+      "order": 4,
+      "durationRange": {
+        "min": 5000,
+        "max": 15000
+      },
+      "suggestedDuration": 8333.333333333334,
+      "blockInstructions": "used to fill in background information or compress time",
+      "sceneInstructions": "Show a montage of their city explorations, including visits to landmarks, beaches, and the street market. Use dynamic transitions and a variety of camera angles to capture the essence of each location.",
+      "clipPace": {
+        "type": "timed",
+        "bpm": 120,
+        "interval": 4
+      },
+      "clips": [
+        {
+          "prompt": "Showcase the vibrant street market with bustling crowds and colorful stalls.",
+          "length": "3 seconds",
+          "type": "Video",
+          "id": "6618111b5b3889e95c411aa7"
+        },
+        {
+          "prompt": "Highlight the iconic landmarks of the city, such as the skyline or famous buildings.",
+          "length": "3 seconds",
+          "type": "Video",
+          "id": "6618111b5b3889e95c411aa8"
+        },
+        {
+          "prompt": "Capture the lively atmosphere of the beach, with people enjoying the sun and water activities.",
+          "length": "2.33 seconds",
+          "type": "Video",
+          "id": "6618111b5b3889e95c411aa9"
+        }
+      ]
+    },
+    {
+      "part": "Interview",
+      "type": "Interview",
+      "order": 5,
+      "durationRange": {
+        "min": 5000,
+        "max": 20000
+      },
+      "suggestedDuration": 8333.333333333334,
+      "blockInstructions": "used to provide insights or personal perspectives directly by film",
+      "sceneInstructions": "Include a deeper, more emotional interview where they discuss the personal growth and bonding experienced during the trip. Highlight key moments of connection and realization from their adventure.",
+      "clipPace": {
+        "type": "fixed",
+        "bpm": null,
+        "interval": null
+      },
+      "clips": [
+        {
+          "prompt": "Capture the interviewee's emotional recount of a key moment of realization during the trip.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "6618111d5b3889e95c411aaa"
+        },
+        {
+          "prompt": "Showcase the interviewee's reflection on the bonding experience and personal growth achieved during the adventure.",
+          "length": "3.33 seconds",
+          "type": "Video",
+          "id": "6618111d5b3889e95c411aab"
+        }
+      ]
+    },
+    {
+      "part": "Montage",
+      "type": "Montage",
+      "order": 6,
+      "durationRange": {
+        "min": 5000,
+        "max": 15000
+      },
+      "suggestedDuration": 8333.333333333334,
+      "blockInstructions": "used to fill in background information or compress time",
+      "sceneInstructions": "End with a montage of the hiking trip and their reflective moment on the hill, using slow-motion and panoramic shots to emphasize the scenic beauty and the depth of their shared experience.",
+      "clipPace": {
+        "type": "timed",
+        "bpm": 120,
+        "interval": 4
+      },
+      "clips": [
+        {
+          "prompt": "Showcase the fun and high energy of the hiking trip through dynamic shots of the group trekking through scenic landscapes.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "661811215b3889e95c411aac"
+        },
+        {
+          "prompt": "Convey the reflective moment on the hill with slow-motion and panoramic shots emphasizing the scenic beauty and shared experience.",
+          "length": "3.333 seconds",
+          "type": "Video",
+          "id": "661811215b3889e95c411aad"
+        }
+      ]
+    },
+    {
+      "part": "Outro Card",
+      "type": "Card",
+      "order": 7,
+      "durationRange": {
+        "min": 2000,
+        "max": 5000
+      },
+      "suggestedDuration": 5000,
+      "blockInstructions": "used to display credits or closing information",
+      "sceneInstructions": "Close with a simple outro card displaying credits and a final, memorable quote from the trip, overlaid on a serene shot of the sunset they watched together.",
+      "clipPace": {
+        "type": "fixed",
+        "bpm": null,
+        "interval": null
+      },
+      "clips": [
+        {
+          "prompt": "Display the outro card with credits and a memorable quote overlaid on a serene shot of the sunset.",
+          "length": "5 seconds",
+          "type": "Video",
+          "id": "661811235b3889e95c411aae"
+        }
+      ]
+    }
+  ],
+  "soundRules": null,
+  "createdAt": {
+    "$date": "2024-04-11T16:34:14.787Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-04-11T16:34:14.787Z"
+  }
+}

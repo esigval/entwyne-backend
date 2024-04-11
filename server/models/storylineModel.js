@@ -4,31 +4,41 @@ import { ObjectId } from 'mongodb';
 class Storyline {
     constructor({
         _id = new ObjectId(),
-        twyneId,
         name,
         theme,
+        totalTargetDuration,
         structure = [],
         soundRules,
         createdAt = new Date(),
         lastUpdated = new Date(),
     }) {
-        this._id = _id instanceof ObjectId ? _id : new ObjectId(_id);
-        this.twyneId = twyneId instanceof ObjectId ? twyneId : new ObjectId(twyneId);
+        this._id = ObjectId.isValid(_id) ? new ObjectId(_id) : new ObjectId();
         this.name = name;
         this.theme = theme;
-        this.structure = structure.map(({ part, type, order, duration, instructions, shotPace }) => ({
+        this.totalTargetDuration = totalTargetDuration;
+        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, sceneInstructions, blockInstructions, clipPace, clips = [] }) => ({
             part,
             type,
             order: Number(order),
-            duration: {
-                min: Number(duration.min),
-                max: Number(duration.max),
+            durationRange: {
+                min: Number(durationRange.min),
+                max: Number(durationRange.max),
             },
-            instructions,
-            shotPace: {
-                type: shotPace.type,
-                bpm: shotPace.bpm ? Number(shotPace.bpm) : null,
+            suggestedDuration: Number(suggestedDuration),
+            blockInstructions,
+            sceneInstructions,
+            clipPace: {
+                type: clipPace.type,
+                bpm: clipPace.bpm ? Number(clipPace.bpm) : null,
+                interval: clipPace.interval ? Number(clipPace.interval) : null,
             },
+            clips: clips.map(({ prompt, length, type, promptId, id }) => ({
+                id: id ? id : new ObjectId().toString(), // Generate a new ObjectId or use the existing one
+                prompt,
+                length,
+                type,
+                promptId
+            })),
         }));
         this.soundRules = soundRules;
         this.createdAt = createdAt ? new Date(createdAt) : new Date();

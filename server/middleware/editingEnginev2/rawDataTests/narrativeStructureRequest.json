@@ -1,0 +1,16 @@
+{
+    "name": "Adventure Narrative",
+    "theme": "Fun, High Energy, and Exciting",
+    "totalTargetDuration": 60000,
+    "rawNarrative": [
+        "Title Sequence",
+        "Interview",
+        "Montage",
+        "Interview",
+        "Montage",
+        "Interview",
+        "Montage",
+        "Outro Card"
+    ],
+    "bpm": 120
+}

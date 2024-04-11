@@ -6,6 +6,7 @@ class NarrativeStyle {
         _id = new ObjectId(),
         name,
         theme,
+        totalTargetDuration,
         structure = [],
         soundRules,
         createdAt = new Date(),
@@ -14,19 +15,28 @@ class NarrativeStyle {
         this._id = ObjectId.isValid(_id) ? new ObjectId(_id) : new ObjectId();
         this.name = name;
         this.theme = theme;
-        this.structure = structure.map(({ part, type, order, duration, instructions, shotPace }) => ({
+        this.totalTargetDuration = totalTargetDuration;
+        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, sceneInstructions, blockInstructions, clipPace, clips = [] }) => ({
             part,
             type,
             order: Number(order),
-            duration: {
-                min: Number(duration.min),
-                max: Number(duration.max),
+            durationRange: {
+                min: Number(durationRange.min),
+                max: Number(durationRange.max),
             },
-            instructions,
-            shotPace: {
-                type: shotPace.type,
-                bpm: shotPace.bpm ? Number(shotPace.bpm) : null,
+            suggestedDuration: Number(suggestedDuration),
+            blockInstructions,
+            sceneInstructions,
+            clipPace: {
+                type: clipPace.type,
+                bpm: clipPace.bpm ? Number(clipPace.bpm) : null,
+                interval: clipPace.interval ? Number(clipPace.interval) : null,
             },
+            clips: clips.map(({ prompt, length, type }) => ({
+                prompt,
+                length,
+                type
+            })),
         }));
         this.soundRules = soundRules;
         this.createdAt = createdAt ? new Date(createdAt) : new Date();
@@ -85,7 +95,7 @@ class NarrativeStyle {
             console.error("Error in NarrativeStyle.createStorylineInstance:", error);
             throw error;
         }
-    }   
+    }
 }
 
 
