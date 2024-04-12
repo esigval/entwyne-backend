@@ -46,6 +46,17 @@ class NarrativeBlock {
             throw error;
         }
     }
+
+    static async list() {
+        try {
+            const db = await connect();
+            const collection = db.collection(NarrativeBlock.collectionName);
+            return await collection.find().toArray();
+        } catch (error) {
+            console.error('Error in list:', error);
+            throw error;
+        }
+    }
 }
 
 export default NarrativeBlock;

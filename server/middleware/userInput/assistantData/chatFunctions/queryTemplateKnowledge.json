@@ -1,0 +1,17 @@
+{
+    "type": "function",
+    "function": {
+      "name": "queryTemplateKnowledge",
+      "description": "Query knowledge base or template data based on a provided request.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "requestKnowledge": {
+            "type": "string",
+            "description": "Parameters defining the knowledge or data request."
+          }
+        },
+        "required": ["requestKnowledge"]
+      }
+    }
+  }

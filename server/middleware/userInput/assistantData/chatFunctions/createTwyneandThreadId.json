@@ -1,0 +1,17 @@
+{
+    "type": "function",
+    "function": {
+      "name": "createTwyneAndThreadId",
+      "description": "Create a new Twyne and a thread ID for it.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "twyneName": {
+            "type": "string",
+            "description": "The name for the new Twyne."
+          }
+        },
+        "required": ["twyneName"]
+      }
+    }
+  }

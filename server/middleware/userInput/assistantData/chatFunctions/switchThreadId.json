@@ -1,0 +1,17 @@
+{
+    "type": "function",
+    "function": {
+      "name": "switchThreadId",
+      "description": "Switch the active thread context to the specified thread ID.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "description": "The thread ID to switch to."
+          }
+        },
+        "required": ["threadId"]
+      }
+    }
+  }

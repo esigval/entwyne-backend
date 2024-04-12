@@ -1,0 +1,17 @@
+{
+    "type": "function",
+    "function": {
+      "name": "lookForTwyne",
+      "description": "Search for a Twyne by name.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "twyneName": {
+            "type": "string",
+            "description": "The name of the Twyne to search for."
+          }
+        },
+        "required": ["twyneName"]
+      }
+    }
+  }
