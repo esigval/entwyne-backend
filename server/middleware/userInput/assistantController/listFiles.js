@@ -12,7 +12,6 @@ export async function listFiles() {
   const files = [];
 
   for await (const file of list) {
-    console.log(file);
     files.push(file);
   }
 

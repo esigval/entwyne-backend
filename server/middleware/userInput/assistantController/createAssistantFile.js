@@ -12,5 +12,5 @@ export async function createAssistantFile(assistantId, fileId) {
       file_id: fileId
     }
   );
-  console.log(myAssistantFile);
+  return myAssistantFile;
 }

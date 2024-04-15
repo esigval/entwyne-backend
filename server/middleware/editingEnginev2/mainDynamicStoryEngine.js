@@ -6,7 +6,7 @@ import updateNarrativeStylesWithInstructions from './updateNarrativeStylesWithIn
 import linkStorylineToTwyne from './linkFields.js';
 import constructNarrative from './constructNarrative.js';
 import sceneDirectorLlm from './llms/sceneDirectorLlm.js';
-import rawNarrative from './rawDataTests/narrativeStructureRequest.json' assert { type: 'json' };
+import rawNarrative from './rawDataTests/testPayload.json' assert { type: 'json' };
 import generateAndStorePrompts from './editing/generatePromptsandStorev2.js';
 import ProgressBar from 'progress';
 
@@ -27,6 +27,7 @@ import ProgressBar from 'progress';
 
 async function processNarrative(twyneId, rawNarrative, userId) {
     const bar = new ProgressBar(':bar', { total: 8 });
+    console.log("raw narrative outside the block", rawNarrative);
 
     console.time('Processing Time');
     // Fetch documents from the database
@@ -35,23 +36,24 @@ async function processNarrative(twyneId, rawNarrative, userId) {
 
     console.log('Generating instructions...');
     const constructedNarrative = await constructNarrative(rawNarrative);
-    const instructions = await generateInstructions(twyne.storySummary, constructedNarrative);
+    // const instructions = await generateInstructions(twyne.storySummary, constructedNarrative);
     bar.tick();
 
     console.log('Parsing block instructions...');
-    const parsedInstructions = await parseBlockInstructions(instructions);
+    // const parsedInstructions = await parseBlockInstructions(instructions);
     bar.tick();
 
     console.log('Updating narrative styles with instructions...');
-    const storylineInstance = await updateNarrativeStylesWithInstructions(constructedNarrative, parsedInstructions);
+    // const storylineInstance = await updateNarrativeStylesWithInstructions(constructedNarrative, parsedInstructions);
     bar.tick();
 
     console.log('Running scene director...');
-    const sceneDirectorOutput = await sceneDirectorLlm(twyne.storySummary, storylineInstance);
+    const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative);
     bar.tick();
 
     console.log('Generating and storing prompts...');
-    const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.storySummary.storyId, twyne.storySummary.storyline, userId, sceneDirectorOutput);
+    const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.twyneSummary.storyId, twyne.storySummary.storyline, userId, sceneDirectorOutput);
+    
     bar.tick();
 
     console.log('Creating storyline instance...');
@@ -62,11 +64,15 @@ async function processNarrative(twyneId, rawNarrative, userId) {
     await linkStorylineToTwyne(twyneId, userId, insertedId);
     bar.tick();
 
+    const totalClips = await Storyline.getTotalClips(insertedId);
+
     console.log('Process completed.');
     console.timeEnd('Processing Time');
+
+    return totalClips;
 }
 
 export default processNarrative;
 
 // Testing Script
-processNarrative('65f13b5b3c54a131c18aed0a', rawNarrative, '660d81337b0c94b81b3f1744');
+// processNarrative('65f13b5b3c54a131c18aed0a', rawNarrative, '660d81337b0c94b81b3f1744');

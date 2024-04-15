@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ _id, threadId, createdAt = new Date(), storyName, storyline, twyneId, userId, coCreators = [], thumbnail, lastUpdated = new Date(), defaultVideoSettings = { orientation: 'landscape', quality: 'high' }, defaultNarrative }) {
+    constructor({ _id, createdAt = new Date(), storyName, storyline, twyneId, threadId, storySummary, userId, coCreators = [], thumbnail, lastUpdated = new Date(), defaultVideoSettings = { orientation: 'landscape', quality: 'high' }, defaultNarrative }) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
         this.createdAt = createdAt || new Date(); // Default to current date if not provided
@@ -12,6 +12,8 @@ class Story {
         this.storyline = storyline || []; // Default to empty array if not provided
         this.userId = userId;
         this.twyneId = Array.isArray(twyneId) ? twyneId.map(id => ObjectId(id)) : [];
+        this.threadId = threadId;
+        this.storySummary = storySummary || null; // Default to null if not provided
         this.coCreators = coCreators.map(id => new ObjectId(id)); // Ensure coCreators are ObjectIds || [];
         this.storyThumbnail = thumbnail || null; // Default to null if not provided
         this.lastUpdated = lastUpdated || new Date(); // Default to current date if not provided
@@ -109,33 +111,36 @@ class Story {
         }
     }
 
-    static async update(id, updateOperation) {
-        try {
-            const db = await connect();
-            const collection = db.collection(Story.collectionName);
-    
-            // Ensure id is an ObjectId
-            if (typeof id === 'string') {
-                if (!ObjectId.isValid(id)) {
-                    console.error("Invalid id:", id);
-                    throw new Error("Invalid id");
-                }
-                id = new ObjectId(id);
+static async update(id, updateData) {
+    try {
+        // Convert specific fields in updateData to ObjectId instances
+        const fieldsToConvert = ['storyId', 'userId', 'storyline', 'edit', 'storylineTemplate'];
+        const convertedUpdateData = { ...updateData };
+        fieldsToConvert.forEach(field => {
+            if (convertedUpdateData[field]) {
+                convertedUpdateData[field] = new ObjectId(convertedUpdateData[field]);
             }
-    
-            // Add lastUpdated field to updateOperation
-            if (!updateOperation.$set) {
-                updateOperation.$set = {};
+        });
+
+        // Convert arrays of IDs for prompts, coCreators, contributors to ObjectId instances
+        ['prompts', 'coCreators', 'contributors'].forEach(arrayField => {
+            if (convertedUpdateData[arrayField] && Array.isArray(convertedUpdateData[arrayField])) {
+                convertedUpdateData[arrayField] = convertedUpdateData[arrayField].map(id => new ObjectId(id));
             }
-            updateOperation.$set.lastUpdated = new Date();
-    
-            const result = await collection.updateOne({ _id: id }, updateOperation);
-            return result;
-        } catch (error) {
-            console.error("Error in Storyline.update:", error);
-            throw error;
-        }
+        });
+
+        // Include lastUpdated timestamp in the update
+        const updateDataWithLastUpdated = { ...convertedUpdateData, lastUpdated: new Date() };
+
+        const db = await connect();
+        const collection = db.collection(Story.collectionName);
+        const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateDataWithLastUpdated });
+        return result;
+    } catch (error) {
+        console.error("Error in Story.update:", error);
+        throw error;
     }
+}
 
     static async deleteOne(id) {
         try {

@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import NarrativeBlock from '../../../../models/narrativeBlockModel.js';
 
-const fetchNarrativeBlockTemplatesAsJson = async () => {
+export const fetchNarrativeBlockTemplatesAsJson = async () => {
     let templates = [];
 
     try {
@@ -12,6 +12,11 @@ const fetchNarrativeBlockTemplatesAsJson = async () => {
     } catch (error) {
         console.error(`Error fetching narrative blocks:`, error);
     }
+
+    templates.forEach(template => {
+        console.log(template.type);
+    });
+
 
     const jsonTemplates = JSON.stringify(templates);
     const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -27,5 +32,3 @@ const fetchNarrativeBlockTemplatesAsJson = async () => {
 
     return jsonTemplates;
 };
-
-fetchNarrativeBlockTemplatesAsJson();

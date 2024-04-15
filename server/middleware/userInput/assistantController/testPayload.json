@@ -1,0 +1,49 @@
+{
+    "name": "Cascade Lakes Relay: Anticipation & Community",
+    "theme": "Excitement and Belonging",
+    "totalTargetDuration": 120000,
+    "rawNarrative": [
+        {
+            "type": "Title Sequence",
+            "name": "Opening Title",
+            "description": "A brief introduction to the Cascade Lakes Relay, setting the tone for excitement and community.",
+            "duration": 10
+        },
+        {
+            "type": "Montage",
+            "name": "Race Location Scenic Shots",
+            "description": "Scenic shots of the race location to visually engage and set the scene for the interviews.",
+            "duration": 20
+        },
+        {
+            "type": "Interview",
+            "name": "Racer 1 Interview",
+            "description": "Discussing preparation and looking forward to the race, conveying personal excitement and investment.",
+            "duration": 25
+        },
+        {
+            "type": "Interview",
+            "name": "Racer 2 Interview",
+            "description": "Exploring feelings about race and belonging to the racing community.",
+            "duration": 25
+        },
+        {
+            "type": "Interview",
+            "name": "Racer 3 Interview",
+            "description": "Sharing anticipation and personal thoughts before the race, highlighting community ties.",
+            "duration": 25
+        },
+        {
+            "type": "Montage",
+            "name": "Closing Scenes",
+            "description": "Concluding shots of all racers together, emphasizing the theme of community and excitement.",
+            "duration": 15
+        },
+        {
+            "type": "Title Sequence",
+            "name": "Credits/Closing Title",
+            "description": "Quick wrap-up with credits or acknowledgements, reinforcing the theme of the video.",
+            "duration": 5
+        }
+    ]
+}

@@ -9,8 +9,6 @@ const openai = new OpenAI({
 
 async function deleteFile(fileId) {
     const file = await openai.files.del(fileId);
-
-    console.log(file);
 }
 
 export { deleteFile }; // Exporting the deleteFile function

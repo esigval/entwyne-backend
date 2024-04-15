@@ -29,3 +29,5 @@ export async function updateAssistant(assistantId, instructions, name, tools, mo
 
   console.log(myUpdatedAssistant);
 }
+
+updateAssistant('asst_HW7vJdo7CPOjz5ffrebd2Hw9', 'This is a test assistant.', 'Test Assistant', [{ type: 'davinci' }],);

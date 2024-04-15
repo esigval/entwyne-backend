@@ -12,12 +12,14 @@ class Twyne {
         contributors = [],
         storyline,
         edit,
+        threadId,
         storylineTemplate, // Added this line
         progress,
         twyneThumbnail,
         createdAt = new Date(),
         lastUpdated = new Date(),
-        storySummary,
+        twyneSummary,
+        theme,
 
     }) {
         this._id = new ObjectId(_id);
@@ -29,12 +31,14 @@ class Twyne {
         this.contributors = contributors.length ? contributors.map(contributor => new ObjectId(contributor)) : [];
         this.storyline = storyline ? new ObjectId(storyline) : null;
         this.edit = edit ? new ObjectId(edit) : null;
+        this.threadId = threadId;
         this.storylineTemplate = storylineTemplate ? new ObjectId(storylineTemplate) : null;
         this.progress = progress;
         this.twyneThumbnail = twyneThumbnail;
         this.createdAt = createdAt ? new Date(createdAt) : new Date();
         this.lastUpdated = lastUpdated ? new Date(lastUpdated) : new Date();
-        this.storySummary = storySummary;
+        this.twyneSummary = twyneSummary;
+        this.theme = theme;
     }
 
     hasEdit() {

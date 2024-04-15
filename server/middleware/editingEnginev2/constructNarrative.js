@@ -1,102 +1,82 @@
+import rawNarrative from '../editingEnginev2/rawDataTests/testPayload.json' assert { type: "json" };
 import fetchNarrativeBlockTemplates from './fetchNarrativeBlockTemplates.js';
+import Storyline from '../../models/storylineModel.js';
 
 const constructNarrative = async (rawNarrative) => {
+    if (typeof rawNarrative === 'string') {
+        rawNarrative = JSON.parse(rawNarrative);
+    }
     const templates = await fetchNarrativeBlockTemplates(rawNarrative); // Dynamic fetch of templates
 
-    // Calculate total min and max duration ranges for all blocks
-    const totalDurationRange = rawNarrative.rawNarrative.reduce((acc, blockName) => {
-        const template = templates[blockName];
+    // Adjusting logic to use the expanded narrative block structure
+    let narrativeStructure = rawNarrative.rawNarrative.map((block, index) => {
+        const template = templates[block.type]; // Fetch template by block name
         if (!template) {
-            throw new Error(`Template not found for narrative block: ${blockName}`);
-        }
-        acc.min += template.durationRange.min;
-        acc.max += template.durationRange.max;
-        return acc;
-    }, { min: 0, max: 0 });
-
-    // Calculate the ideal average duration per block, respecting the total target duration
-    let narrativeStructure = rawNarrative.rawNarrative.map((blockName, index) => {
-        const template = templates[blockName];
-        if (!template) {
-            throw new Error(`No template found for block name: ${blockName}`);
+            throw new Error(`Template not found for narrative block: ${block.type}`);
         }
 
-        const averageDuration = rawNarrative.totalTargetDuration / rawNarrative.rawNarrative.length;
-        const suggestedDuration = Math.min(Math.max(averageDuration, template.durationRange.min), template.durationRange.max);
+        const bpm = 60;
+
+        let quantity = null; // Initialize quantity as null
+        let clipTime = null; // Initialize clipTime as null
+
+        if (template.clipPace.type === 'timed') {
+            // Calculate clipTime and quantity
+            clipTime = (60 / bpm) * template.clipPace.interval;
+            quantity = Math.round(block.duration /clipTime ); // Update quantity if type is 'timed'
+        } else if (template.clipPace.type === 'fixed') {
+            // If type is 'fixed', inherit quantity from the template
+            clipTime = block.duration;
+            quantity = template.clipPace.quantity;
+        }
+
+        // Save quantity to clipPace.quantity field
+        block.quantity = quantity;
 
         return {
-            part: blockName,
-            type: template.type,
+            part: block.name,
+            sceneInstructions: block.description,
+            type: block.type, // Assuming type data is useful, pulled from the raw narrative
             order: index,
             durationRange: template.durationRange,
-            suggestedDuration,
+            suggestedDuration: block.duration, // Use the duration specified in the input directly
+            targetedDuration: block.duration * 1000, // Assuming this exists in your template
             blockInstructions: template.description,
             clipPace: {
-                ...template.clipPace,
+                ...template.clipPace, // Spread the existing clipPace object
+                quantity: quantity, // Add the quantity property
+                clipLength: clipTime // Add the clipPace property
             }
         };
     });
 
+    // Calculate total suggested duration directly from the rawNarrative input
     let totalSuggestedDuration = narrativeStructure.reduce((acc, block) => acc + block.suggestedDuration, 0);
     let remainder = rawNarrative.totalTargetDuration - totalSuggestedDuration;
 
-    // Function to distribute the remainder
+    // Simplify the distributeRemainder function since direct durations are used
     const distributeRemainder = () => {
-        const eligibleBlocks = narrativeStructure.filter(block =>
-            block.suggestedDuration > block.durationRange.min && block.suggestedDuration < block.durationRange.max);
-
-        if (eligibleBlocks.length === 0 || remainder === 0) {
-            return; // No further adjustments can be made
-        }
-
-        const adjustmentPerBlock = remainder / eligibleBlocks.length;
-
-        narrativeStructure = narrativeStructure.map(block => {
-            if (block.suggestedDuration > block.durationRange.min && block.suggestedDuration < block.durationRange.max) {
-                let newDuration = block.suggestedDuration + adjustmentPerBlock;
-                // Ensure new duration is within the block's min/max range
-                newDuration = Math.max(block.durationRange.min, Math.min(newDuration, block.durationRange.max));
-                remainder -= (newDuration - block.suggestedDuration); // Update remainder
-                block.suggestedDuration = newDuration;
-            }
-            if (block.clipPace.type === "fixed") {
-                // If the clip pace is fixed, no calculation is needed.
-                block.clipPace = block.clipPace; // Assuming clipPace should be replaced by clipPace
-            } else if (block.clipPace.type === "timed" && block.clipPace.bpm) {
-                // Calculate the clip pace for timed type
-                const secondsPerShot = (block.clipPace.bpm / 60) * block.clipPace.interval; // Assuming there's an 'interval' value
-                const millisecondsPerShot = secondsPerShot * 1000;
-                const numberOfClips = block.suggestedDuration / millisecondsPerShot;
-
-                // Update the block with calculated clipPace
-                block.clipPace = {
-                    type: "timed",
-                    bpm: block.clipPace.bpm,
-                    interval: block.clipPace.interval, // Assuming the need to retain the interval
-                    clips: Math.floor(numberOfClips) // Assuming we want whole number of clips
-                };
-            }
-            return block;
+        narrativeStructure.forEach(block => {
+            // Adjust durations proportionally if remainder is positive or negative
+            let proportion = block.suggestedDuration / totalSuggestedDuration;
+            block.suggestedDuration += Math.ceil(remainder * proportion); // Distributing the remainder proportionally
+            block.suggestedDuration = Math.max(block.durationRange.min, Math.min(block.suggestedDuration, block.durationRange.max)); // Ensuring within range
         });
+        remainder = 0; // Set remainder to 0 after distribution
     };
 
-    // Initially distribute the remainder
-    distributeRemainder();
-
-    // If there's still a remainder due to rounding or max/min constraints, attempt further distribution
-    while (remainder !== 0) {
-        const previousRemainder = remainder;
+    // Distribute the remainder if any
+    if (remainder !== 0) {
         distributeRemainder();
-        // If remainder hasn't changed, further distribution is not possible
-        if (previousRemainder === remainder) break;
     }
 
-    const constructedNarrative = {
+    const constructedNarrative = new Storyline({
+        _id: undefined, // Omit _id
         name: rawNarrative.name,
         theme: rawNarrative.theme,
         totalTargetDuration: rawNarrative.totalTargetDuration,
         structure: narrativeStructure
-    };
+    });
 
     return constructedNarrative;
 };

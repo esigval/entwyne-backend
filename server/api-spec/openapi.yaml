@@ -9,6 +9,59 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /directorChat:
+    post:
+      summary: Starts a new chat bot session
+      operationId: startChatBotSession
+      tags:
+      - AI Director
+      requestBody:
+        description: User ID, message, and either storyId or twyneId
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                message:
+                  type: string
+                storyId:
+                  type: string
+                twyneId:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  threadId:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+        '500':
+          description: Error occurred during the run
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  error:
+                    type: string
   /getUserConnections:
     get:
       tags:

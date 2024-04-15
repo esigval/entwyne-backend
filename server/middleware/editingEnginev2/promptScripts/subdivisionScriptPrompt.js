@@ -9,15 +9,10 @@
 function generateSubDivisionPrompt(structurePart, summary, theme) {
   let prompt = `Analyze the scene details and theme to determine the optimal number of clips needed for a video segment, considering the overall narrative flow. You may decide that a single clip is sufficient if it effectively captures the scene's essence, or suggest multiple clips if they better convey the story's dynamics. For each proposed clip, include a brief objective, a suggested clip length in seconds, and the type of media (video, audio, image).\n\n`;
   prompt += `Scene Type: ${structurePart.type}\n`;
-  prompt += `Total Target Duration for Clips: Between ${structurePart.durationRange.min / 1000} to ${structurePart.durationRange.max / 1000} seconds. Suggested total duration is ${structurePart.suggestedDuration / 1000} seconds.\n`;
+  prompt += `Clip Length: ${structurePart.clipPace.clipLength} seconds.\n`; 
   prompt += `Scene Instructions: ${structurePart.sceneInstructions}\n`;
-  prompt += `Clip Pace: ${structurePart.clipPace.type}\n`;
+  prompt += `Number of Clips: ${structurePart.clipPace.quantity}\n`;
   
-  if (structurePart.clipPace.bpm) {
-    prompt += `BPM: ${structurePart.clipPace.bpm}\n`;
-  } else if (structurePart.clipPace.interval) {
-    prompt += `Interval: ${structurePart.clipPace.interval} seconds per clip suggested, if applicable.\n`;
-  }
   
   prompt += `Story Summary: ${summary}\n`;
   prompt += `Theme: ${theme}.\n\n`;
@@ -27,6 +22,7 @@ function generateSubDivisionPrompt(structurePart, summary, theme) {
   prompt += `- Type: [Suggested media type: video, audio, image]\n\n`;
   prompt += `Ensure the decision on the number of clips and their characteristics effectively uses the suggested duration, aligning with the story's theme and the scene's instructions.`;
 
+  console.log(prompt);
   return prompt;
 }
 

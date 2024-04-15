@@ -3,10 +3,11 @@ import NarrativeBlock from "../../models/narrativeBlockModel.js";
 const Montage = {
     name: "Montage",
     type: "Montage",
-    durationRange: { min: 5000, max: 15000 },
+    durationRange: { min: 5000, max: 25000 },
     description: "used to fill in background information or compress time",
     clipPace: {
         type: "timed",
+        quantity: null,
         bpm: 120,
         interval: 4
     }
@@ -15,10 +16,11 @@ const Montage = {
 const Interview = {
     name: "Interview",
     type: "Interview",
-    durationRange: { min: 5000, max: 20000 },
+    durationRange: { min: 5000, max: 30000 },
     description: "used to provide insights or personal perspectives directly by film",
     clipPace: {
         type: "fixed",
+        quantity: 1,
         bpm: null
     }
 };
@@ -30,6 +32,7 @@ const OutroCard = {
     description: "used to display credits or closing information",
     clipPace: {
         type: "fixed",
+        quantity: 1,
         bpm: null
     }
 };
@@ -41,8 +44,9 @@ const TitleSequence = {
     description: "used to introduce the film or segment",
     clipPace: {
         type: "timed",
+        quantity: 1,
         bpm: 120,
-        interval: 2
+        interval: 4
     }
 };
 

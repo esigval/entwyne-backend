@@ -16,7 +16,7 @@ class Storyline {
         this.name = name;
         this.theme = theme;
         this.totalTargetDuration = totalTargetDuration;
-        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, sceneInstructions, blockInstructions, clipPace, clips = [] }) => ({
+        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, targetedDuration, sceneInstructions, blockInstructions, clipPace, clips = [] }) => ({
             part,
             type,
             order: Number(order),
@@ -25,12 +25,15 @@ class Storyline {
                 max: Number(durationRange.max),
             },
             suggestedDuration: Number(suggestedDuration),
+            targetedDuration,
             blockInstructions,
             sceneInstructions,
             clipPace: {
                 type: clipPace.type,
                 bpm: clipPace.bpm ? Number(clipPace.bpm) : null,
+                quantity: clipPace.quantity ? Number(clipPace.quantity) : null,
                 interval: clipPace.interval ? Number(clipPace.interval) : null,
+                clipLength: clipPace.clipLength ? Number(clipPace.clipLength) : null,
             },
             clips: clips.map(({ prompt, length, type, promptId, id }) => ({
                 id: id ? id : new ObjectId().toString(), // Generate a new ObjectId or use the existing one
@@ -75,6 +78,24 @@ class Storyline {
             throw error;
         }
     }
+
+    static async getTotalClips(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            const storyline = await collection.findOne({ _id: new ObjectId(storylineId) });
+            let totalClips = 0;
+            storyline.structure.forEach(part => {
+                totalClips += part.clips.length;
+            });
+            return totalClips;
+        } catch (error) {
+            console.error("Error in Storyline.getTotalClips:", error);
+            throw error;
+        }
+    }
+
+
 
 };
 

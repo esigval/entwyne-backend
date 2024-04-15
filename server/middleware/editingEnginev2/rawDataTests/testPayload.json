@@ -1,0 +1,61 @@
+{
+    "name": "Race Preparation",
+    "theme": "Inspirational, Motivating, and Energetic",
+    "totalTargetDuration": 60000,
+    "rawNarrative": [
+        {
+            "type": "Title Sequence",
+            "name": "Opening Title",
+            "description": "Introductory title displaying the event's name and the theme of the video",
+            "duration": 5
+        },
+        {
+            "type": "Interview",
+            "name": "Racer Interview 1",
+            "description": "First racer shares insights into their training regimen and mental preparations",
+            "duration": 12
+        },
+        {
+            "type": "Montage",
+            "name": "Training Montage 1",
+            "description": "Dynamic clips of early morning training and equipment setup",
+            "duration": 10
+        },
+        {
+            "type": "Interview",
+            "name": "Racer Interview 2",
+            "description": "Second racer discusses strategies for maintaining stamina",
+            "duration": 12
+        },
+        {
+            "type": "Interview",
+            "name": "Racer Interview 3",
+            "description": "Third racer talks about personal goals for the relay",
+            "duration": 12
+        },
+        {
+            "type": "Montage",
+            "name": "Final Preparation Montage",
+            "description": "Montage of racers discussing team strategies and last-minute checks",
+            "duration": 10
+        },
+        {
+            "type": "Interview",
+            "name": "Racer Interview 4",
+            "description": "Fourth racer highlights the importance of team dynamics",
+            "duration": "12"
+        },
+        {
+            "type": "Interview",
+            "name": "Racer Interview 5",
+            "description": "Fifth racer talks about overcoming previous challenges",
+            "duration": 12
+        },
+        {
+            "type": "Outro Card",
+            "name": "Ending Credits",
+            "description": "Credits and thank you note to supporters and organizers",
+            "duration": 4
+        }
+    ]
+}

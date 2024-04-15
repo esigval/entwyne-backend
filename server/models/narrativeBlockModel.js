@@ -17,6 +17,7 @@ class NarrativeBlock {
         this.description = description;
         this.clipPace = {
             type: clipPace.type,
+            quantity: clipPace.quantity,
             bpm: clipPace.bpm,
             interval: clipPace.interval
         };
@@ -54,6 +55,18 @@ class NarrativeBlock {
             return await collection.find().toArray();
         } catch (error) {
             console.error('Error in list:', error);
+            throw error;
+        }
+    }
+
+    static async findOne(query) {
+        try {
+            const db = await connect();
+            const collection = db.collection(NarrativeBlock.collectionName);
+            const narrativeBlock = await collection.findOne(query);
+            return narrativeBlock;
+        } catch (error) {
+            console.error('Error in findOne:', error);
             throw error;
         }
     }

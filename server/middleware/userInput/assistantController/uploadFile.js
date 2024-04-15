@@ -19,6 +19,5 @@ export async function uploadFile(filePath, purpose) {
     purpose: purpose,
   });
 
-  console.log(file);
   return file;
 }

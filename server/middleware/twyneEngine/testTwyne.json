@@ -1,0 +1,34 @@
+{
+    "twynes": [
+        {
+            "name": "Introduction to the Tournament",
+            "theme": "Inspirational, Exciting",
+            "description": "An engaging overview of the frisbee tournament, setting the scene and outlining its significance and scale."
+        },
+        {
+            "name": "Team Background",
+            "theme": "Inspirational, Personal",
+            "description": "A deep dive into the history and formation of your frisbee team, highlighting key members and their contributions."
+        },
+        {
+            "name": "Preliminary Rounds",
+            "theme": "Competitive, Thrilling",
+            "description": "Key highlights from the preliminary matches, focusing on teamwork, strategy adjustments, and initial challenges."
+        },
+        {
+            "name": "Finals and Rivalry",
+            "theme": "Dramatic, Competitive",
+            "description": "An in-depth look at the finals, especially the games against the rival team that beat your team twice, underscoring the rivalry and competitive spirit."
+        },
+        {
+            "name": "Community and Growth",
+            "theme": "Heartwarming, Reflective",
+            "description": "Showcases the community support for the team, and the personal and collective growth experienced during the tournament."
+        },
+        {
+            "name": "Reflection and Future",
+            "theme": "Reflective, Aspirational",
+            "description": "Reflections from team members on their experiences, and their thoughts and aspirations for future tournaments."
+        }
+    ]
+}

@@ -92,6 +92,9 @@ import instructions from './routes/instructions.js';
 import getPresignedStreamingUrlPrompt from './routes/getPresignedStreamingPrompt.js';
 import getPresignedStreamingUrlMoment from './routes/getPresignedStreamingMoment.js';
 
+// Chat Routes
+import directorChat from './routes/chatBot.js';
+
 const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];
 
@@ -215,6 +218,10 @@ app.use('/v1/instructions', instructions);
 // Streaming
 app.use('/v1/streamingPrompt', getPresignedStreamingUrlPrompt); // protected
 app.use('/v1/streamingMoment', getPresignedStreamingUrlMoment); // protected
+
+// Chat
+
+app.use('/v1/directorChat', directorChat);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Example app listening on port ${port}`);
