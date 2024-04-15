@@ -15,7 +15,6 @@
     "express": "^4.18.2",
     "express-openapi": "12.1.3",
     "express-session": "1.18.0",
-    "fluent-ffmpeg": "2.1.2",
     "jsonwebtoken": "9.0.2",
     "marked": "12.0.0",
     "moment": "2.29.4",

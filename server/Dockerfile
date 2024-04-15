@@ -4,10 +4,6 @@ FROM node:lts
 # Set the working directory in the container
 WORKDIR /server
 
-# Install FFmpeg
-RUN apt-get update && \
-    apt-get install -y ffmpeg
-
 # Print the architecture
 RUN uname -m
 

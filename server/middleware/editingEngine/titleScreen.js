@@ -1,3 +1,4 @@
+
 import { createCanvas, registerFont } from 'canvas';
 import fs from 'fs';
 import { exec } from 'child_process';
@@ -9,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const createTitleCard = async (name, date, outputFolder) => {
+    /*
     const width = 1920;
     const height = 1080;
 
@@ -59,7 +61,9 @@ const createTitleCard = async (name, date, outputFolder) => {
         }
         console.log('Title card creation complete');
     });
+    */
 };
+
 
 export default createTitleCard;
 

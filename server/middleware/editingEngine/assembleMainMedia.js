@@ -8,10 +8,14 @@ import createTitleCard from './titleScreen.js';
 import uploadFinalVideoToS3 from './uploadFinalVideotoS3.js';
 import { cleanMedia } from './cleanMedia.js';
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+
+
 const assembleMainMedia = async (storylineId, coupleName, marriageDate, musicName, order) => {
+    /*
     // const ffmpegPath = path.join(__dirname, '../../bin/ffmpeg'); // Change this to your actual ffmpeg path
 
     console.time('assembleMainMedia');
@@ -61,10 +65,9 @@ const assembleMainMedia = async (storylineId, coupleName, marriageDate, musicNam
     
     return key;
 };
-
+*/
+};
 export default assembleMainMedia;
 
 
 
-
-// export default processImagesToVideo;

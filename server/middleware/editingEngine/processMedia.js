@@ -12,6 +12,7 @@ const __dirname = dirname(__filename);
 const execAsync = util.promisify(exec);
 
 const processMedia = async (storylineId, order) => {
+    /*
     const mediaFiles = await downloadAndSaveFiles(storylineId, order);
     const images = mediaFiles.imageFiles;
     const videos = mediaFiles.videoFiles;
@@ -45,8 +46,10 @@ const processMedia = async (storylineId, order) => {
 
     // Wait for all image and video processing to complete
     await Promise.all([...imagePromises, ...videoPromises]);
+    */
 };
 
 //processMedia('65a59778e91d4c46ebf40ed5');
 
 export default processMedia;
+
