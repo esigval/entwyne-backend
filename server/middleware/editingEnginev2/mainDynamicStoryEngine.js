@@ -52,7 +52,7 @@ async function processNarrative(twyneId, rawNarrative, userId) {
     bar.tick();
 
     console.log('Generating and storing prompts...');
-    const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.twyneSummary.storyId, twyne.storySummary.storyline, userId, sceneDirectorOutput);
+    const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.storyId, twyne.storyline, userId, sceneDirectorOutput);
     
     bar.tick();
 

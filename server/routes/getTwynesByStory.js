@@ -32,6 +32,7 @@ async function enrichTwynes(twynes) {
         const contributorsInfo = await Promise.all(twyne.contributors.map(GetContributorInfo));
 
         twyne.avatarInfo = [...coCreatorsInfo, ...contributorsInfo].filter(info => info !== null);
+        await Twyne.calculateTwyneProgressFunction(twyne._id);
     }
 
     return twynes;

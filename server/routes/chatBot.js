@@ -54,6 +54,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
     try {
         let results = await createAndManageRunStream(threadId, assistantId, userId, twyneId, storyId);
         let filteredResults = results.filter(result => result.type === 'textDone');
+        let contentValues = filteredResults.map(result => result.data.content.value);
         // Handle successful completion of the run
 
         // Final response sent back to the client
@@ -61,7 +62,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
             status: 'run_completed',
             message: 'Run completed and all events handled.',
             threadId: threadId,
-            results: filteredResults,
+            results: contentValues,
         });
     } catch (error) {
         console.error('Error during run management:', error);

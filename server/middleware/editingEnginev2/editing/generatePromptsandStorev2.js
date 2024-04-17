@@ -1,5 +1,6 @@
 import Prompts from "../../../models/promptModel.js";
 import { ObjectId } from 'mongodb';
+import Twyne from "../../../models/twyneModel.js";
 
 const generatePromptsAndAssociateWithClips = async (twyneId, storyId, storylineId, userId, storylineInstance) => {
     const promptClipAssociations = [];
@@ -9,12 +10,12 @@ const generatePromptsAndAssociateWithClips = async (twyneId, storyId, storylineI
             const promptData = {
                 order: block.order,
                 twyneId: new ObjectId(twyneId), // Ensure twyneId is valid ObjectId
-                storylineId: new ObjectId(storylineId), // Ensure storylineId is valid ObjectId
+                storylineId: storylineId ? new ObjectId(storylineId) : null, // Ensure storylineId is valid ObjectId
                 storyId: new ObjectId(storyId), // Ensure storyId is valid ObjectId
                 prompt: clip.prompt,
                 mediaType: clip.type,
                 promptTitle: block.part, // Assuming 'part' as the title
-                collected: false,
+                collected: "false", 
                 userId: new ObjectId(userId), // Convert to ObjectId
                 createdAt: new Date(),
                 lastUpdated: new Date(),
@@ -58,8 +59,9 @@ const generateAndStorePrompts = async (twyneId, storyId, storylineId, userId, st
         // Update storylineInstance with promptIds
         updateStorylineWithPromptIds(storylineInstance, promptClipAssociations);
 
-        // At this point, storylineInstance has been updated with promptIds
-        // Proceed to save/update the storylineInstance in your database
+        // Update Twyne with promptIds
+        const promptIds = promptClipAssociations.map(assoc => assoc.promptId);
+        await Twyne.update(twyneId, { prompts: promptIds });
 
         return storylineInstance;
     } catch (error) {

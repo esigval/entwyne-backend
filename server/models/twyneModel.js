@@ -1,5 +1,6 @@
 import { connect } from '../db/db.js';
 import { ObjectId } from 'mongodb';
+import Prompts from './promptModel.js';
 
 class Twyne {
     constructor({
@@ -271,17 +272,27 @@ class Twyne {
             const collection = db.collection(Twyne.collectionName);
             const twyneObjectId = new ObjectId(twyneId);
             const twyne = await collection.findOne({ _id: twyneObjectId });
-
+    
             const totalPrompts = twyne.prompts.length;
-            let filledPromptsCount = 0;
-
-            twyne.prompts.forEach(prompt => {
-                if (prompt.filled) filledPromptsCount++;
-            });
-
-            const ratio = totalPrompts > 0 ? filledPromptsCount / totalPrompts : 0;
-            console.log(`Ratio of filled prompts to total prompts is: ${ratio.toFixed(2)}`);
-            return ratio;
+            if (totalPrompts === 0) {
+                console.log("No prompts exist.");
+                return 0;
+            }
+    
+            let collectedPromptsCount = 0;
+    
+            for (const promptId of twyne.prompts) {
+                const collected = await Prompts.getPromptCollectedStatus(promptId);
+                if (collected === "true") collectedPromptsCount++;
+            }
+    
+            const ratio = collectedPromptsCount / totalPrompts;
+            const progress = Math.round(ratio * 100);
+            console.log(`Progress is: ${progress}`);
+    
+            await collection.updateOne({ _id: twyneObjectId }, { $set: { progress: progress } });
+    
+            return progress;
         } catch (error) {
             console.error('Error calculating prompt function:', error);
             throw error; // Rethrow or handle as needed

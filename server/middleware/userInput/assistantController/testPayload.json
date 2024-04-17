@@ -1,49 +1,37 @@
 {
-    "name": "Cascade Lakes Relay: Anticipation & Community",
-    "theme": "Excitement and Belonging",
-    "totalTargetDuration": 120000,
-    "rawNarrative": [
+    "twynes": [
         {
-            "type": "Title Sequence",
-            "name": "Opening Title",
-            "description": "A brief introduction to the Cascade Lakes Relay, setting the tone for excitement and community.",
-            "duration": 10
+            "name": "Sky High Spirits",
+            "theme": "F                          reedom and Joy",
+            "description": "This Twyne explores the exhilaration and freedom                           as the birds take to the skies, capturing the pure joy of flight and the beauty                           of the open air."
+        },
+        {
+            "name": "Grassland Glee",
+            "theme": "Playfulness and Interaction                          ",
+            "description": "Focused on the playful interactions among the birds in the gras                          s, this Twyne highlights their playful antics, the discovery of food, and the li                          vely energy of terrestrial excitement."
+        },
+        {
+            "name": "Evening Echoes",
+            "theme": "Refle                          ction and Relaxation",
+            "description": "As the day ends, this Twyne captures the bi                          rds as they settle down in their nests, reflecting on the day’s joy or preparing                           for new adventures, infused with a sense of peaceful closure."
+        }
+    ]
+}{
+    "name": "Birds                           in Flight",
+    "theme": "Nature and Beauty",
+    "totalTargetDuration": 60000,
+    "rawNarrativ                          e": [
+        {
+            "type": "Interview",
+            "name": "Bird Talk",
+            "description": "A person discussing th                          e fascinating aspects of birds, with a focus on personal insights and behaviors.                          ",
+            "duration": 30
         },
         {
             "type": "Montage",
-            "name": "Race Location Scenic Shots",
-            "description": "Scenic shots of the race location to visually engage and set the scene for the interviews.",
-            "duration": 20
-        },
-        {
-            "type": "Interview",
-            "name": "Racer 1 Interview",
-            "description": "Discussing preparation and looking forward to the race, conveying personal excitement and investment.",
-            "duration": 25
-        },
-        {
-            "type": "Interview",
-            "name": "Racer 2 Interview",
-            "description": "Exploring feelings about race and belonging to the racing community.",
-            "duration": 25
-        },
-        {
-            "type": "Interview",
-            "name": "Racer 3 Interview",
-            "description": "Sharing anticipation and personal thoughts before the race, highlighting community ties.",
-            "duration": 25
-        },
-        {
-            "type": "Montage",
-            "name": "Closing Scenes",
-            "description": "Concluding shots of all racers together, emphasizing the theme of community and excitement.",
-            "duration": 15
-        },
-        {
-            "type": "Title Sequence",
-            "name": "Credits/Closing Title",
-            "description": "Quick wrap-up with credits or acknowledgements, reinforcing the theme of the video.",
-            "duration": 5
+            "name": "Flight of Beauty",
+            "description": "A se                          ries of visually stunning clips showing birds flying, emphasizing their elegance                           and agility.",
+            "duration": 30
         }
     ]
 }

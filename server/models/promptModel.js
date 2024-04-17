@@ -445,6 +445,19 @@ static async insertMany(prompts) {
         }
     }
 
+    static async getPromptCollectedStatus(promptId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const promptObjectId = new ObjectId(promptId);
+            const prompt = await collection.findOne({ _id: promptObjectId });
+            return prompt.collected;
+        } catch (error) {
+            console.error('Error getting prompt collected status:', error);
+            throw error; // Rethrow or handle as needed
+        }
+    }
+
 
 
 

@@ -3,6 +3,7 @@ import Twyne from '../../models/twyneModel.js'
 import { ObjectId } from 'mongodb';
 
 async function createTwynes(data, userId, storyId) {
+    console.log("Creating Twyne models from data:", data, userId, storyId)
     if (typeof data === 'string') {
         data = JSON.parse(data);
     }

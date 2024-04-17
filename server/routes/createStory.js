@@ -8,19 +8,14 @@ const router = express.Router();
 
 router.post('/', validateTokenMiddleware, async (req, res) => {
     try {
-        const { storyName, defaultVideoSettings, defaultTemplate } = req.body; // Destructure storyName and defaultVideoSettings from request body
-        const openAiThread = await openai.beta.threads.create();
-        const threadId = openAiThread.id;
-        console.log(openAiThread);
+        const { storyName, defaultVideoSettings } = req.body; // Destructure storyName and defaultVideoSettings from request body
         const userId = new ObjectId(req.userId);
 
         // Create a new story in the database using the static create method
         const createStory = await Story.create({
             storyName,
-            threadId,
             userId: userId,
             defaultVideoSettings,
-            defaultTemplate,
 
         });
         console.log('createStory:', createStory);

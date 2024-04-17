@@ -33,7 +33,9 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         });
 
         runStream.on('toolCallDelta', (delta, snapshot) => {
-            handleToolCallDelta(delta, snapshot);
+            console.log('Tool Call Delta:', delta);
+            console.log('threadId:', threadId);
+            handleToolCallDelta(delta, snapshot, threadId);
         });
 
         runStream.on('toolCallDone', (toolCall, snapshot) => {
