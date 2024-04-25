@@ -21,6 +21,7 @@ const createMomentAndGenerateS3Keys = async (req, res, next) => {
   const thumbnailKey = `${promptUserId}/thumbnail/${momentId}`; // added thumbnailKey
   const proxyKey = `${promptUserId}/proxy/${momentId}`; // added proxyKey
   
+  
   console.log(audioKey, videoKey, thumbnailKey, proxyKey); // added thumbnailKey to console.log
   
   // attach the keys to the req object

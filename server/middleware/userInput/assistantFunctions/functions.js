@@ -43,6 +43,20 @@ export const addMessageToThread = async (message, threadId) => {
   return response;
 };
 
+export const addAssistantMessageToThread = async (message, threadId) => {
+  const response = await openai.beta.threads.messages.create(
+    threadId,
+    {
+      role: "assistant",
+      content: message
+    }
+  );
+
+  return response;
+};
+
+
+
 const getLastMessageId = async (threadId) => {
   try {
     const newMessages = await openai.beta.threads.messages.list(

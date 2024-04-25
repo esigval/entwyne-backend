@@ -11,6 +11,7 @@ class Storyline {
         soundRules,
         createdAt = new Date(),
         lastUpdated = new Date(),
+        twyneId = new ObjectId(),
     }) {
         this._id = ObjectId.isValid(_id) ? new ObjectId(_id) : new ObjectId();
         this.name = name;
@@ -46,6 +47,7 @@ class Storyline {
         this.soundRules = soundRules;
         this.createdAt = createdAt ? new Date(createdAt) : new Date();
         this.lastUpdated = lastUpdated ? new Date(lastUpdated) : new Date();
+        this.twyneId = twyneId;
     }
 
 
@@ -75,6 +77,33 @@ class Storyline {
         }
         catch (error) {
             console.error("Error in Storyline.linkStorylineToTwyne:", error);
+            throw error;
+        }
+    }
+
+    static async getStorylineByTwyneId(twyneId) {
+        try { 
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            const document = await collection.findOne({ twyneId: new ObjectId(twyneId) });
+    
+            if (document) {
+                // Iterate over the structure and get the part, type, and sceneInstructions of each item
+                const processedStructure = document.structure.map(({ part, type, sceneInstructions }) => {
+                    return {
+                        part,
+                        type,
+                        sceneInstructions: sceneInstructions.replace(/\s+/g, ' ').trim()  // Remove unnecessary spaces
+                    };
+                });
+    
+                // Replace the structure in the document with the processed structure
+                document.structure = processedStructure;
+            }
+    
+            return document;
+        } catch (error) {
+            console.error("Error in Storyline.getStorylineByTwyneId:", error);
             throw error;
         }
     }

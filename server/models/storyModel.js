@@ -81,7 +81,7 @@ class Story {
         try {
             const db = await connect();
             const collection = db.collection(Story.collectionName);
-    
+
             // Ensure userId is an ObjectId
             if (typeof userId === 'string') {
                 if (!ObjectId.isValid(userId)) {
@@ -90,11 +90,23 @@ class Story {
                 }
                 userId = new ObjectId(userId);
             }
-    
+
             const result = await collection.find({ coCreators: userId }).toArray();
             return result.map(doc => new Story(doc)); // return an array of Story instances
         } catch (error) {
             console.error("Error in Story.findByCoCreatorId:", error);
+            throw error;
+        }
+    }
+
+    static async deleteThreadId(storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            const result = await collection.updateOne({ _id: new ObjectId(storyId) }, { $set: { threadId: null } });
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Story.deleteThreadId:", error);
             throw error;
         }
     }
@@ -111,36 +123,36 @@ class Story {
         }
     }
 
-static async update(id, updateData) {
-    try {
-        // Convert specific fields in updateData to ObjectId instances
-        const fieldsToConvert = ['storyId', 'userId', 'storyline', 'edit', 'storylineTemplate'];
-        const convertedUpdateData = { ...updateData };
-        fieldsToConvert.forEach(field => {
-            if (convertedUpdateData[field]) {
-                convertedUpdateData[field] = new ObjectId(convertedUpdateData[field]);
-            }
-        });
+    static async update(id, updateData) {
+        try {
+            // Convert specific fields in updateData to ObjectId instances
+            const fieldsToConvert = ['storyId', 'userId', 'storyline', 'edit', 'storylineTemplate'];
+            const convertedUpdateData = { ...updateData };
+            fieldsToConvert.forEach(field => {
+                if (convertedUpdateData[field]) {
+                    convertedUpdateData[field] = new ObjectId(convertedUpdateData[field]);
+                }
+            });
 
-        // Convert arrays of IDs for prompts, coCreators, contributors to ObjectId instances
-        ['prompts', 'coCreators', 'contributors'].forEach(arrayField => {
-            if (convertedUpdateData[arrayField] && Array.isArray(convertedUpdateData[arrayField])) {
-                convertedUpdateData[arrayField] = convertedUpdateData[arrayField].map(id => new ObjectId(id));
-            }
-        });
+            // Convert arrays of IDs for prompts, coCreators, contributors to ObjectId instances
+            ['prompts', 'coCreators', 'contributors'].forEach(arrayField => {
+                if (convertedUpdateData[arrayField] && Array.isArray(convertedUpdateData[arrayField])) {
+                    convertedUpdateData[arrayField] = convertedUpdateData[arrayField].map(id => new ObjectId(id));
+                }
+            });
 
-        // Include lastUpdated timestamp in the update
-        const updateDataWithLastUpdated = { ...convertedUpdateData, lastUpdated: new Date() };
+            // Include lastUpdated timestamp in the update
+            const updateDataWithLastUpdated = { ...convertedUpdateData, lastUpdated: new Date() };
 
-        const db = await connect();
-        const collection = db.collection(Story.collectionName);
-        const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateDataWithLastUpdated });
-        return result;
-    } catch (error) {
-        console.error("Error in Story.update:", error);
-        throw error;
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateDataWithLastUpdated });
+            return result;
+        } catch (error) {
+            console.error("Error in Story.update:", error);
+            throw error;
+        }
     }
-}
 
     static async deleteOne(id) {
         try {

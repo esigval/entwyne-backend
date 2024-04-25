@@ -36,7 +36,9 @@ export const authMiddleware = async (req, res, next) => {
         delete req.user.refreshToken;
         next();
     } catch (error) {
-        res.status(500).json({ message: error.message });
-        next(error);
+        console.error("Error in authMiddleware:", error);
+        if (!res.headersSent) {
+            res.status(500).json({ message: error.message });
+        }
     }
 };

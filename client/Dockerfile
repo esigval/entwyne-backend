@@ -14,37 +14,24 @@ COPY package.json yarn.lock ./
 # Install dependencies
 RUN yarn install
 
-# Install expo-cli globally in the container
-RUN yarn global add expo-cli
-
 # Copy the current directory contents into the container at /app
 COPY . .
 
 # Define environment variable
 ENV NODE_ENV=production
 
-# Build the project (assuming you have a script to build your Expo project for production)
-RUN yarn build:web
+# Build the project (assuming you're using create-react-app)
+RUN yarn build
 
 # ---- Serve Stage ----
 # Start from the official Nginx image
 FROM nginx:latest
 
-#Add Folders
-RUN mkdir -p /etc/nginx/ssl/
+# Copy the build output to replace the default nginx contents.
+COPY --from=build-stage /app/build /usr/share/nginx/html
 
-# Copy SSL certificates
-COPY /nginx/cert.pem /etc/nginx/ssl/cert.pem
-COPY /nginx/key.pem /etc/nginx/ssl/key.pem
-
-# Copy the Nginx configuration file
-COPY /nginx/default.conf /etc/nginx/conf.d/default.conf
-
-# Copy the built Expo-React application from the build-stage
-COPY --from=build-stage /app/web-build /usr/share/nginx/html
-
-# Expose port 443 for HTTPS
-EXPOSE 443
+# Expose port 80 for HTTP
+EXPOSE 88
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,52 @@
+{
+    "type": "function",
+    "function": {
+      "name": "changeNarrative",
+      "description": "Used to change a narrative to a new function - will create a new a story below",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The title of the narrative."
+          },
+          "theme": {
+            "type": "string",
+            "description": "Descriptive keywords for the narrative's style, e.g., 'Fun, High Energy, and Exciting'."
+          },
+          "totalTargetDuration": {
+            "type": "integer",
+            "description": "The total duration of the video in milliseconds."
+          },
+          "rawNarrative": {
+            "type": "array",
+            "description": "Detailed list of video segments, each including type, name, and duration.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "The type of segment, e.g., 'Title Sequence', 'Montage'."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name or title of the segment."
+                },
+                "duration": {
+                  "type": "integer",
+                  "description": "Estimated duration of the segment in seconds."
+                }
+              },
+              "required": ["type", "name", "duration"]
+            }
+          },
+          "bpm": {
+            "type": "integer",
+            "description": "Beats per minute, if applicable, for setting the pace of the video."
+          }
+        },
+        "required": ["name", "theme", "totalTargetDuration", "rawNarrative"]
+      }
+    }
+  }
+  

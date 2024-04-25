@@ -40,7 +40,10 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
 
         runStream.on('toolCallDone', (toolCall, snapshot) => {
             const handlerPromise = handleToolCallDone(toolCall, snapshot, userId, twyneId, threadId, processNarrative, currentRunId, storyId);
-            eventPromises.push(handlerPromise); // Collect the promise
+            eventPromises.push(handlerPromise.then(result => {
+                results.push({ type: 'toolCallResult', data: result }); 
+                return result;
+            }));
         });
 
         // Handle Message Events
@@ -79,10 +82,10 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         // Handle Stream Completion
         runStream.on('end', async () => {
             try {
-                // Wait for all asynchronous operations to complete
+                // Wait for all asynchronous operations including tool call handling to complete
                 await Promise.all(eventPromises);
                 console.log('All asynchronous events completed.');
-                resolve(results);  // Resolve with all accumulated results
+                resolve({ results, toolCallOutputs: await Promise.all(eventPromises) });  // Resolve with both the events and the tool call outputs
             } catch (error) {
                 console.error('Error in processing events:', error);
                 reject(error);

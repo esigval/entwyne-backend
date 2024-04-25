@@ -9,6 +9,116 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /stories/{id}:
+    patch:
+      tags:
+      - Stories
+      summary: Update a story
+      description: This endpoint updates a story with the provided ID.
+      parameters:
+      - in: path
+        name: id
+        required: true
+        description: The ID of the story to update.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storyId:
+                  type: string
+                userId:
+                  type: string
+                storyline:
+                  type: string
+                edit:
+                  type: string
+                storylineTemplate:
+                  type: string
+                prompts:
+                  type: array
+                  items:
+                    type: string
+                coCreators:
+                  type: array
+                  items:
+                    type: string
+                contributors:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Story updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  result:
+                    type: object
+        '500':
+          description: Error updating the story
+  /moments/publicPresign/{promptId}/:
+
+    get:
+      tags:
+      - Moments
+      summary: Generate pre-signed URLs for uploading media to a moment
+      parameters:
+      - in: path
+        name: promptId
+        required: true
+        schema:
+          type: string
+        description: The ID of the prompt
+      - in: query
+        name: mimeType
+        required: true
+        schema:
+          type: string
+        description: The MIME type of the media to be uploaded
+      responses:
+        '200':
+          description: Pre-signed URLs for uploading media
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audioUrl:
+                    type: string
+                    format: uri
+                  videoUrl:
+                    type: string
+                    format: uri
+                  imageUrl:
+                    type: string
+                    format: uri
+        '400':
+          description: Invalid MIME type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Error generating pre-signed URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   /directorChat:
     post:
       summary: Starts a new chat bot session

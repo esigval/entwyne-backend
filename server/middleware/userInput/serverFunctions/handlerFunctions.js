@@ -1,6 +1,8 @@
 import { openai } from '../../../services/openAiAssistant.js';
 import createTwynes from '../../twyneEngine/createTwynes.js';
 import processNarrative from "../../editingEnginev2/mainDynamicStoryEngine.js";
+import Prompts from "../../../models/promptModel.js";
+import Twyne from "../../../models/twyneModel.js";
 
 let accumulatedArgs = {};
 
@@ -32,16 +34,29 @@ export function handleToolCallDelta(delta, snapshot, threadId) {
 }
 
 export async function handleToolCallDone(toolCall, snapshot, userId, twyneId, threadId, processNarrative, currentRunId, storyId) {
+    let toolCallName = null; // Variable to store the type of tool call
     try {
         console.log('Tool Call Done:', toolCall);
-        if (accumulatedArgs[threadId]) {
+        if (toolCall.type === 'retrieval') {
+            toolCallName = 'retrieval';
+            const output = 'Retrieving files';
+            return { output, toolCallName };
+        } else if (accumulatedArgs[threadId]) {
             console.log('Processing final arguments for function tool call.');
             if (toolCall.function.name === 'createRawNarrative') {
+                toolCallName = 'createRawNarrative';
                 const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
-                return output;
+                return { output, toolCallName };
             } else if (toolCall.function.name === 'makeTwynes') {
+                toolCallName = 'makeTwynes';
                 const output = await processCreateTwynes(accumulatedArgs[threadId], userId, storyId, toolCall.id, threadId, currentRunId);
-                return output;
+                return { output, toolCallName };
+            } else if (toolCall.function.name === 'changeNarrative') {
+                toolCallName = 'changeNarrative';
+                // Delete the existing storyline and dissociate all prompts from the twyne
+                await deleteStorylineAndDissociatePrompts(twyneId);
+                const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
+                return { output, toolCallName };
             } else {
                 console.error('Unknown function name:', toolCall.function.name);
             }
@@ -89,7 +104,7 @@ async function processNarrativeBasedOnArgs(args, userId, twyneId, threadId, tool
 
 // This function submits the tool call output and can remain unchanged
 async function submitToolCallOutput(threadId, toolCallId, currentRunId, output) {
-    const outputs = `We've completed the task! Here are the results: ${output}`
+    const outputs = output;
 
     try {
         await openai.beta.threads.runs.submitToolOutputs(threadId, currentRunId, {
@@ -103,9 +118,30 @@ async function submitToolCallOutput(threadId, toolCallId, currentRunId, output) 
 
         console.log('Tool call output submitted successfully.');
         return outputs;
-        
+
     } catch (error) {
         console.error('Error submitting tool call output:', error);
     }
-    
+
+}
+
+async function deleteStorylineAndDissociatePrompts(twyneId) {
+
+    const twyne = await Twyne.findById(twyneId);
+    const promptIds = twyne.prompts;
+    const promptObjects = await Promise.all(promptIds.map(id => Prompts.findById(id)));
+
+    let anyCollected = false;
+
+    for (let prompt of promptObjects) {
+        if (prompt.collected === true) {
+            anyCollected = true;
+            break;
+        }
+    }
+
+    if (!anyCollected) {
+        await Promise.all(promptIds.map(id => Prompts.deleteByPromptIdSystem(id)));
+        await Twyne.update(twyneId, { prompts: [], storyline: null });
+    }
 }

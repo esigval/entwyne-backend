@@ -33,13 +33,13 @@ import userConfirmPassword from './routes/userConfirmPassword.js';
 import userAddToTwyne from './routes/userAddToTwyne.js';
 import getUserConnections from './routes/getUserConnections.js';
 
-
 // Story-related routes
 import getStoriesRouter from './routes/getStories.js';
 import getStory from './routes/getStory.js';
 import createStory from './routes/createStory.js';
 import deleteStory from './routes/deleteStory.js';
 import getStorylines from './routes/getStorylines.js';
+import updateStory from './routes/updateStory.js';
 
 // Prompt-related routes
 import createPrompt from './routes/createPrompt.js';
@@ -62,6 +62,7 @@ import collectPictures from './routes/collectPictures.js';
 import uploadMoment from './routes/uploadMoment.js';
 import updateTranscriptionMoment from './routes/updateTranscriptionMoment.js'; 
 import getMoment from './routes/getMoment.js';
+import getPresignedPublicUrl from './routes/uploadInviteMoment.js';
 
 // Utility routes for media processing and additional functionalities
 import saveVideoUri from './routes/saveVideoUri.js';
@@ -150,9 +151,6 @@ app.use('/v1/resetPassword', userResetPassword); // Not protected
 app.use('/v1/confirmPassword', userConfirmPassword); // Not protected
 app.use('/v1/getUserConnections', getUserConnections); // protected
 
-
-
-
 // TBD - when do we need to get a userId?
 app.use('/v1/users', getUser);
 
@@ -163,6 +161,8 @@ app.use('/v1', deleteStory);
 app.use('/v1/stories', getStory);
 app.use('/v1/getStorylines', getStorylines);
 app.use('/v1/sharedStories', getSharedStories); // protected
+app.use('/v1/stories', updateStory); // protected
+
 
 // Prompts (protected)
 app.use('/v1/prompts', createPrompt);
@@ -187,6 +187,7 @@ app.use(`/v1/collectPictures`, collectPictures); // protected
 app.use('/v1/moments/preSigned', uploadMoment); // protected
 app.use('/v1/moments/transcription', updateTranscriptionMoment); // unprotected - > Lambda
 app.use('/v1/moments', getMoment); // protected
+app.use('/v1/moments/publicPresign', getPresignedPublicUrl); // protected
 
 // Twynes (protected)
 app.use('/v1/twyne', twyneRoutes); // protected

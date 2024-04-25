@@ -73,6 +73,19 @@ class Prompts {
         }
     }
 
+    static async findById(id) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompt = await collection.findOne({ _id: new ObjectId(id) });
+            return prompt;
+        } catch (error) {
+            console.error('Error in Prompts.findById:', error);
+            throw error;
+        }
+    }
+
+
 static async insertMany(prompts) {
     try {
         const db = await connect(); // Make sure this properly connects to your MongoDB
@@ -357,6 +370,27 @@ static async insertMany(prompts) {
             }
 
             // If the user is authorized, delete the prompt
+            const result = await collection.deleteOne({ _id: new ObjectId(promptId) });
+            return result;
+        } catch (error) {
+            console.error("Error in Prompts.deleteByPromptId:", error);
+            throw error;
+        }
+    }
+
+    static async deleteByPromptIdSystem(promptId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+    
+            // Find the prompt first to check if it exists
+            const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
+            console.log('prompt:', prompt);
+            if (!prompt) {
+                throw new Error('Prompt not found');
+            }
+    
+            // If the prompt exists, delete it
             const result = await collection.deleteOne({ _id: new ObjectId(promptId) });
             return result;
         } catch (error) {

@@ -77,7 +77,19 @@ class Twyne {
             throw error;
         }
     }
-
+    
+    static async deleteThreadId(twyneId) {
+        try { 
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $set: { threadId: null } });
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Twyne.deleteThreadId:", error);
+            throw error;
+        }
+    }
+    
     static async findById(id) {
         try {
             const db = await connect();
@@ -310,6 +322,8 @@ class Twyne {
             throw error;
         }
     }
+
+    
 }
 
 export default Twyne;

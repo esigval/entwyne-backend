@@ -26,50 +26,56 @@ import ProgressBar from 'progress';
 
 
 async function processNarrative(twyneId, rawNarrative, userId) {
-    const bar = new ProgressBar(':bar', { total: 8 });
-    console.log("raw narrative outside the block", rawNarrative);
+    try {
+        const bar = new ProgressBar(':bar', { total: 8 });
+        console.log("raw narrative outside the block", rawNarrative);
 
-    console.time('Processing Time');
-    // Fetch documents from the database
-    const twyne = await Twyne.findById(twyneId);
-    bar.tick();
+        console.time('Processing Time');
+        // Fetch documents from the database
+        const twyne = await Twyne.findById(twyneId);
+        bar.tick();
 
-    console.log('Generating instructions...');
-    const constructedNarrative = await constructNarrative(rawNarrative);
-    // const instructions = await generateInstructions(twyne.storySummary, constructedNarrative);
-    bar.tick();
+        console.log('Generating instructions...');
+        const constructedNarrative = await constructNarrative(rawNarrative);
+        // const instructions = await generateInstructions(twyne.storySummary, constructedNarrative);
+        bar.tick();
 
-    console.log('Parsing block instructions...');
-    // const parsedInstructions = await parseBlockInstructions(instructions);
-    bar.tick();
+        console.log('Parsing block instructions...');
+        // const parsedInstructions = await parseBlockInstructions(instructions);
+        bar.tick();
 
-    console.log('Updating narrative styles with instructions...');
-    // const storylineInstance = await updateNarrativeStylesWithInstructions(constructedNarrative, parsedInstructions);
-    bar.tick();
+        console.log('Updating narrative styles with instructions...');
+        // const storylineInstance = await updateNarrativeStylesWithInstructions(constructedNarrative, parsedInstructions);
+        bar.tick();
 
-    console.log('Running scene director...');
-    const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative);
-    bar.tick();
+        console.log('Running scene director...');
+        const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative);
+        bar.tick();
 
-    console.log('Generating and storing prompts...');
-    const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.storyId, twyne.storyline, userId, sceneDirectorOutput);
-    
-    bar.tick();
+        console.log('Generating and storing prompts...');
+        const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.storyId, twyne.storyline, userId, sceneDirectorOutput);
 
-    console.log('Creating storyline instance...');
-    const insertedId = await Storyline.createStorylineInstance(promptStorylineInstance);
-    bar.tick();
+        bar.tick();
 
-    console.log('Linking storyline to Twyne...');
-    await linkStorylineToTwyne(twyneId, userId, insertedId);
-    bar.tick();
+        console.log('Creating storyline instance...');
+        const insertedId = await Storyline.createStorylineInstance(promptStorylineInstance);
+        bar.tick();
 
-    const totalClips = await Storyline.getTotalClips(insertedId);
+        console.log('Linking storyline to Twyne...');
+        await linkStorylineToTwyne(twyneId, insertedId);
+        bar.tick();
 
-    console.log('Process completed.');
-    console.timeEnd('Processing Time');
+        const totalClips = await Storyline.getTotalClips(insertedId);
+        const message = `We've created ${totalClips} Tasks based on your request. Check out your Tasks to see what has been made!`;
+        console.log(message);
 
-    return totalClips;
+        console.log('Process completed.');
+        console.timeEnd('Processing Time');
+
+        return message;
+    } catch (error) {
+        console.error('An error occurred during the narrative processing:', error);
+    }
 }
 
 export default processNarrative;
