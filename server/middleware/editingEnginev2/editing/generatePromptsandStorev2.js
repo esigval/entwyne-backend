@@ -51,6 +51,7 @@ const updateStorylineWithPromptIds = (storylineInstance, promptClipAssociations)
     });
 };
 
+
 const generateAndStorePrompts = async (twyneId, storyId, storylineId, userId, storylineInstance) => {
     try {
         // Generate prompts and associate with clips

@@ -62,6 +62,32 @@ class Moment {
         }
     }
 
+    static async getProxyUrisMap() {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+    
+            // Get all Moments
+            const moments = await collection.find({}).toArray();
+    
+            // Map each Moment's _id to its audioUri and videoUri
+            const proxyUrisMap = moments.reduce((map, moment) => {
+                map[moment._id.toString()] = {
+                    audioUri: moment.audioUri,
+                    videoUri: moment.videoUri
+                };
+                return map;
+            }, {});
+    
+            return proxyUrisMap;
+        } catch (error) {
+            console.error('Failed to get proxy URIs map:', error);
+            throw error;
+        }
+    }
+
+
+
     static async updateMoment({ momentId, update }) {
         try {
             const db = await connect();

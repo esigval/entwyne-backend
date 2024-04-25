@@ -85,24 +85,36 @@ class Prompts {
         }
     }
 
+static async linkStorylineIdtoPrompts(storylineId, promptIds) {
+    const db = await connect();
+    const collection = db.collection('prompts'); // Adjust with your actual collection name
 
-static async insertMany(prompts) {
-    try {
-        const db = await connect(); // Make sure this properly connects to your MongoDB
-        const collection = db.collection(Prompts.collectionName);
+    const storylineObjectId = ObjectId.isValid(storylineId) ? new ObjectId(storylineId) : storylineId;
+    const promptObjectIds = Array.isArray(promptIds) ? promptIds.map(id => ObjectId.isValid(id) ? new ObjectId(id) : id) : [promptIds];
 
-        // Assuming Prompts' properties are directly compatible with your MongoDB schema:
-        const result = await collection.insertMany(prompts);
-        console.log("Inserted prompts count:", result.insertedCount);
-
-        // Return an array of the inserted IDs
-        const insertedIds = Object.values(result.insertedIds);
-        return insertedIds;
-    } catch (error) {
-        console.error('Error in Prompts.insertMany:', error);
-        throw error;
-    }
+    await collection.updateMany(
+        { _id: { $in: promptObjectIds } },
+        { $set: { storylineId: storylineObjectId } }
+    );
 }
+
+    static async insertMany(prompts) {
+        try {
+            const db = await connect(); // Make sure this properly connects to your MongoDB
+            const collection = db.collection(Prompts.collectionName);
+
+            // Assuming Prompts' properties are directly compatible with your MongoDB schema:
+            const result = await collection.insertMany(prompts);
+            console.log("Inserted prompts count:", result.insertedCount);
+
+            // Return an array of the inserted IDs
+            const insertedIds = Object.values(result.insertedIds);
+            return insertedIds;
+        } catch (error) {
+            console.error('Error in Prompts.insertMany:', error);
+            throw error;
+        }
+    }
 
     static async findMomentIdByPromptId(promptId) {
         try {
@@ -112,6 +124,17 @@ static async insertMany(prompts) {
             return prompt.momentId;
         } catch (error) {
             console.error('Error in findMomentIdByPromptId:', error);
+            throw error;
+        }
+    }
+    static async findMomentIdsByPromptIds(promptIds) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({ _id: { $in: promptIds.map(id => new ObjectId(id)) } }).toArray();
+            return prompts.map(prompt => prompt.momentId);
+        } catch (error) {
+            console.error('Error in findMomentIdsByPromptIds:', error);
             throw error;
         }
     }
@@ -382,14 +405,14 @@ static async insertMany(prompts) {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-    
+
             // Find the prompt first to check if it exists
             const prompt = await collection.findOne({ _id: new ObjectId(promptId) });
             console.log('prompt:', prompt);
             if (!prompt) {
                 throw new Error('Prompt not found');
             }
-    
+
             // If the prompt exists, delete it
             const result = await collection.deleteOne({ _id: new ObjectId(promptId) });
             return result;
