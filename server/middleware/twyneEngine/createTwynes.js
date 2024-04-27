@@ -20,7 +20,7 @@ async function createTwynes(data, userId, storyId) {
             const result = await Twyne.create(twyneProps);
             results.push(result);
         }
-        return results;
+        return `Successfully created ${results.length} Twyne models.`;
     } catch (error) {
         console.error("Failed to create Twyne models:", error);
         throw error;

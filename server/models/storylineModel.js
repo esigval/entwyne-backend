@@ -124,6 +124,17 @@ class Storyline {
         }
     }
 
+    static async getStorylineById(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            return await collection.findOne({ _id: new ObjectId(storylineId) });
+        } catch (error) {
+            console.error("Error in Storyline.getStorylineById:", error);
+            throw error;
+        }
+    }
+
 
 
 };

@@ -10,8 +10,9 @@ const linkStorylineToTwyne = (twyneId, storylineId) => {
             await Storyline.linkStorylineToTwyne(storylineId, twyneId);
             await Twyne.linkStorylineToTwyne(storylineId, twyneId);
             const twyne = await Twyne.findById(twyneId);
-            const promptIds = twyne.prompts
-            await Prompts.linkStorylineIdtoPrompts(storylineId, twyneId);
+            const promptIds = twyne.prompts;
+            await Prompts.linkStorylineIdtoPrompts(storylineId, promptIds);
+            console.log('Storyline linked to prompts successfully!');
             resolve();
         } catch (error) {
             reject(error);

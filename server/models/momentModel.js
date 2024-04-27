@@ -20,7 +20,8 @@ class Moment {
         contributorId,
         thumbnailUri,
         stampedTranscription,
-        lastUpdated
+        lastUpdated,
+        proxyUri,
     } = {}) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.associatedPromptId = associatedPromptId ? new ObjectId(associatedPromptId) : undefined;
@@ -38,6 +39,7 @@ class Moment {
         this.thumbnailUri = thumbnailUri;
         this.stampedTranscription = stampedTranscription;
         this.lastUpdated = lastUpdated || new Date();
+        this.proxyUri = proxyUri;
     }
 
     static get collectionName() {
@@ -66,19 +68,16 @@ class Moment {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-    
+
             // Get all Moments
             const moments = await collection.find({}).toArray();
-    
-            // Map each Moment's _id to its audioUri and videoUri
+
+            // Map each Moment's _id to its proxyUri
             const proxyUrisMap = moments.reduce((map, moment) => {
-                map[moment._id.toString()] = {
-                    audioUri: moment.audioUri,
-                    videoUri: moment.videoUri
-                };
+                map[moment._id.toString()] = moment.proxyUri;
                 return map;
             }, {});
-    
+
             return proxyUrisMap;
         } catch (error) {
             console.error('Failed to get proxy URIs map:', error);
@@ -94,12 +93,12 @@ class Moment {
             const collection = db.collection(Moment.collectionName);
             // find moment by id and update it
             const result = await collection.updateOne(
-                { _id: new ObjectId(momentId) }, 
-                { 
-                    $set: { 
-                        ...update, 
+                { _id: new ObjectId(momentId) },
+                {
+                    $set: {
+                        ...update,
                         lastUpdated: new Date() // Add this line
-                    } 
+                    }
                 }
             );
             return result;
@@ -112,26 +111,24 @@ class Moment {
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-    
+
             // convert userId and contributorId to ObjectId if they're not already
             const userIdAsObjectId = userId instanceof ObjectId ? userId : new ObjectId(userId);
             const contributorIdAsObjectId = contributorId instanceof ObjectId ? contributorId : new ObjectId(contributorId);
             const associatedPromptIdAsObjectId = associatedPromptId instanceof ObjectId ? associatedPromptId : new ObjectId(associatedPromptId);
-    
+
             // Create a new instance of Moment
             const newMoment = new Moment({ associatedPromptId: associatedPromptIdAsObjectId, userId: userIdAsObjectId, contributorId: contributorIdAsObjectId });
-    
+
             // Insert the new instance into the database
             await collection.insertOne(newMoment);
-    
+
             // Return the newMoment object
             return newMoment;
         } catch (error) {
             console.error('Failed to create empty moment:', error);
         }
     }
-
-
 
     static async getpictureUribyStorylineId(storylineId, numPictures) {
         try {
