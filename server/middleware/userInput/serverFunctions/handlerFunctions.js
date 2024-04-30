@@ -41,27 +41,31 @@ export async function handleToolCallDone(toolCall, snapshot, userId, twyneId, th
             toolCallName = 'retrieval';
             const output = 'Retrieving files';
             return { output, toolCallName };
-        } else if (accumulatedArgs[threadId]) {
-            console.log('Processing final arguments for function tool call.');
-            if (toolCall.function.name === 'createRawNarrative') {
-                toolCallName = 'createRawNarrative';
-                const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
-                return { output, toolCallName };
-            } else if (toolCall.function.name === 'makeTwynes') {
-                toolCallName = 'makeTwynes';
-                const output = await processCreateTwynes(accumulatedArgs[threadId], userId, storyId, toolCall.id, threadId, currentRunId);
-                return { output, toolCallName };
-            } else if (toolCall.function.name === 'changeNarrative') {
-                toolCallName = 'changeNarrative';
-                // Delete the existing storyline and dissociate all prompts from the twyne
-                await deleteStorylineAndDissociatePrompts(twyneId);
-                const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
-                return { output, toolCallName };
+        } else if (toolCall.type === 'function') {
+            if (accumulatedArgs[threadId]) {
+                console.log('Processing final arguments for function tool call.');
+                if (toolCall.function.name === 'createRawNarrative') {
+                    toolCallName = 'createRawNarrative';
+                    const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
+                    return { output, toolCallName };
+                } else if (toolCall.function.name === 'makeTwynes') {
+                    toolCallName = 'makeTwynes';
+                    const output = await processCreateTwynes(accumulatedArgs[threadId], userId, storyId, toolCall.id, threadId, currentRunId);
+                    return { output, toolCallName };
+                } else if (toolCall.function.name === 'changeNarrative') {
+                    toolCallName = 'changeNarrative';
+                    // Delete the existing storyline and dissociate all prompts from the twyne
+                    await deleteStorylineAndDissociatePrompts(twyneId);
+                    const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
+                    return { output, toolCallName };
+                } else {
+                    console.error('Unknown function name:', toolCall.function.name);
+                }
             } else {
-                console.error('Unknown function name:', toolCall.function.name);
+                console.error('Invalid or incomplete final arguments data');
             }
         } else {
-            console.error('Invalid or incomplete final arguments data');
+            console.error('Unknown tool call type:', toolCall.type);
         }
     } catch (error) {
         console.error('Error in handleToolCallDone:', error);
