@@ -9,10 +9,10 @@ export const firstLoginMiddleware = async (req, res, next) => {
     console.log('password:', password);
     console.log('email:', email);
 
-
     try {
         // Fetch the user from the database to get the hashed password
-        const user = await User.findByUsernameOrEmail(email);
+        const lowerCaseEmail = email.toLowerCase();
+        const user = await User.findByUsernameOrEmail(lowerCaseEmail);
         if (!user) {
             return res.status(400).json({ message: 'User not found' });
         }

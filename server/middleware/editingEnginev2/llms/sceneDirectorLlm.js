@@ -15,7 +15,7 @@ const subdivisionLlm = async (prompt) => {
     messages: [
       {
         role: "system",
-        content: "You are my subdivision bot who will analyze details about a scene and transform it into individual cuts. Be precise"
+        content: "You are my scene director who will help make me decisions about a scene and transform it into individual cuts. Be precise, and ultimately, we'll want engaging prompts created"
       },
       {
         role: "user",

@@ -48,6 +48,20 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
                 await Story.update(storyId, update);
             } else if (twyneId) {
                 await Twyne.update(twyneId, update);
+
+                // Get the Twyne document
+                const twyne = await Twyne.findById(twyneId);
+
+                // Check if the Twyne document has a twyneSummary
+                if (twyne && twyne.twyneSummary) {
+                    console.log('Twyne Summary:', twyne.twyneSummary);
+
+                    // Prepare a message for the assistant
+                    const assistantMessage = `This is the summary of the Twyne narrative: ${twyne.twyneSummary}. Please use this as context when interacting with the user.`;
+
+                    // Send the message to the assistant
+                    await addAssistantMessageToThread(assistantMessage, threadId);
+                }
             }
         }
 
@@ -83,7 +97,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
         const { results, toolCallOutputs } = await createAndManageRunStream(threadId, assistantId, userId, twyneId, storyId);
         const filteredResults = results.filter(result => result.type === 'textDone');
         let contentValues = filteredResults.map(result => result.data.content.value);
-        const toolCallResults = toolCallOutputs;  // This is an array of all resolved tool call outputs
+        const toolCallResults = toolCallOutputs || []; // This is an array of all resolved tool call outputs
         console.log('Tool Call Results:', toolCallResults);
 
         // Handle the tool call results

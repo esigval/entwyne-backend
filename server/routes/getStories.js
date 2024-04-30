@@ -31,9 +31,22 @@ router.get('/', validateTokenMiddleware, async (req, res) => {
             // Check if story.coCreators is defined and is an array
             let coCreatorsInfo = [];
             if (Array.isArray(story.coCreators)) {
-                // Get the firstName, lastName and avatar URL for each co-creator
+                // Get the user info for each co-creator
                 coCreatorsInfo = await Promise.all(story.coCreators.map(GetContributorInfo));
                 coCreatorsInfo = coCreatorsInfo.filter(info => info !== null); // Filter out null values
+            }
+
+            // Get the user info for the userId and add it to coCreatorsInfo
+            const userInfo = await GetContributorInfo(req.userId);
+            if (userInfo) {
+                coCreatorsInfo.push(userInfo);
+            }
+
+            // Check if story.contributors is defined and is an array
+            if (Array.isArray(story.contributors)) {
+                // Get the user info for each contributor and add it to coCreatorsInfo
+                const contributorsInfo = await Promise.all(story.contributors.map(GetContributorInfo));
+                coCreatorsInfo = coCreatorsInfo.concat(contributorsInfo.filter(info => info !== null)); // Filter out null values and add to coCreatorsInfo
             }
 
             return { ...storyObject, twynes, coCreatorsInfo };

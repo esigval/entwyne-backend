@@ -2,36 +2,38 @@ import Twyne from '../../../models/twyneModel.js'; // Import the Twyne model
 import Story from '../../../models/storyModel.js'; // Import the Story model
 
 function handleToolCallResults(toolCallResults, threadId, twyneId, storyId) {
-    // If toolCallResults is undefined, return null
     if (!toolCallResults) {
-        return null;
+        return [];
     }
 
-    let handledResults = []; // Array to store the handled results
+    let handledResults = [];
 
-    // Iterate over the toolCallResults array
     for (let result of toolCallResults) {
-        // Check the type of each result and perform an action accordingly
+        if (!result || !result.toolCallName) {
+            continue; // Skip if result is undefined or doesn't have the toolCallName property
+        }
+
         switch (result.toolCallName) {
+            case 'retrieval':
+                console.log('Skipping retrieval:', result);
+                continue; // Skip handling this tool call
             case 'makeTwynes':
-                // Perform action for makeTwynes
                 console.log('Handling makeTwynes:', result);
                 handledResults.push(result);
-                Story.deleteThreadId(storyId); 
+                Story.deleteThreadId(storyId);
                 break;
             case 'createRawNarrative':
                 console.log('Handling createRawNarrative:', result);
                 handledResults.push(result);
-                Twyne.deleteThreadId(twyneId); 
+                Twyne.deleteThreadId(twyneId);
                 break;
             default:
-                // Perform default action for unknown types
                 console.log('Unknown type:', result);
                 break;
         }
     }
 
-    return handledResults; // Return the handled results
+    return handledResults;
 }
 
 export default handleToolCallResults;

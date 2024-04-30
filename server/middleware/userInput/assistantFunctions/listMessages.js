@@ -2,7 +2,7 @@ import { openai } from '../../../services/openAiAssistant.js';
 
 async function main() {
   const threadMessages = await openai.beta.threads.messages.list(
-    "thread_ePJ0zK5LuhvX4FfnoGK2Cqlp"
+    "thread_GtuXBXvDqyVjtaoYpAudpqlQ"
   );
 
   threadMessages.data.forEach(message => {

@@ -37,11 +37,12 @@ export async function handleToolCallDone(toolCall, snapshot, userId, twyneId, th
     let toolCallName = null; // Variable to store the type of tool call
     try {
         console.log('Tool Call Done:', toolCall);
-        if (toolCall.type === 'retrieval') {
-            toolCallName = 'retrieval';
-            const output = 'Retrieving files';
-            return { output, toolCallName };
-        } else if (toolCall.type === 'function') {
+        // if (toolCall.type === 'retrieval') {
+        //     toolCallName = 'retrieval';
+        //     const output = 'Retrieving files';
+        //     return { output, toolCallName };
+        // } else 
+        if (toolCall.type === 'function') {
             if (accumulatedArgs[threadId]) {
                 console.log('Processing final arguments for function tool call.');
                 if (toolCall.function.name === 'createRawNarrative') {

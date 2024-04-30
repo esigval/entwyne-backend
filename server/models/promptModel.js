@@ -361,13 +361,21 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
     }
 
 
-    // I want a method that finds all prompts that match the userId
     static async findByUserId(userId) {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-            const prompts = await collection.find({ userId: new ObjectId(userId) }).toArray();
-            return prompts;
+            const prompts = await collection.find({
+                $or: [
+                    { userId: new ObjectId(userId) },
+                    { contributors: new ObjectId(userId) }
+                ]
+            }).toArray();
+    
+            // Remove duplicates
+            const uniquePrompts = Array.from(new Set(prompts.map(prompt => JSON.stringify(prompt)))).map(prompt => JSON.parse(prompt));
+    
+            return uniquePrompts;
         } catch (error) {
             console.error("Error in Prompts.findByUserId:", error);
             throw error;
@@ -513,6 +521,15 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
             console.error('Error getting prompt collected status:', error);
             throw error; // Rethrow or handle as needed
         }
+    }
+
+    static async findByContributorId(userId) {
+        const db = await connect();
+        const prompts = await db.collection('prompts').find({ contributors: userId }).toArray();
+        if (!prompts.length) {
+            throw new Error('No prompts found for the user');
+        }
+        return prompts;
     }
 
 

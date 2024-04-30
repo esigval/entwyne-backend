@@ -54,13 +54,13 @@ class User {
         try {
             const db = await connect();
             let updateOperation;
-    
+
             if (Array.isArray(connectionId)) {
                 updateOperation = { $addToSet: { connections: { $each: connectionId.map(id => new ObjectId(id)) } } };
             } else {
                 updateOperation = { $addToSet: { connections: new ObjectId(connectionId) } };
             }
-    
+
             const result = await db.collection('users').updateOne(
                 { _id: new ObjectId(userId) },
                 updateOperation
@@ -96,30 +96,37 @@ class User {
         }));
     }
 
-    
+
     static async create(userData) {
         const db = await connect();
         console.log('userData:', userData);
-    
+
+        // Convert username and email to lowercase
+        if (userData.username) {
+            userData.username = userData.username.toLowerCase();
+        }
+        if (userData.email) {
+            userData.email = userData.email.toLowerCase();
+        }
+
         // Check if a user with the given username or email already exists
-        
         const query = {
             $or: []
         };
-        
+
         if (userData.username) {
             query.$or.push({ username: userData.username });
         }
         if (userData.email) {
             query.$or.push({ email: userData.email });
         }
-        
+
         const existingUser = await db.collection('users').findOne(query);
-    
+
         if (existingUser) {
             throw new Error('User creation failed: Username or email already exists');
         }
-    
+
         const result = await db.collection('users').insertOne(userData);
         if (!result.insertedId) {
             throw new Error('User creation failed: No document was inserted');
@@ -168,13 +175,13 @@ class User {
 
     static async deleteRefreshToken(userId) {
         const db = await connect();
-    
+
         // Delete the refresh token
         const result = await db.collection('users').updateOne(
             { _id: new ObjectId(userId) },
             { $unset: { refreshToken: "" } }
         );
-    
+
         if (result.modifiedCount === 0) {
             throw new Error('No user found with this id');
         }
@@ -182,13 +189,13 @@ class User {
 
     static async storeEmailChangeToken(userId, token) {
         const db = await connect();
-    
+
         // Store the email change token
         const result = await db.collection('users').updateOne(
             { _id: new ObjectId(userId) },
             { $set: { emailVerifiedToken: token } }
         );
-    
+
         if (result.modifiedCount === 0) {
             throw new Error('No user found with this id');
         }
@@ -196,44 +203,44 @@ class User {
 
     static async findUserAndCompareToken(userId, refreshToken) {
         const db = await connect();
-    
+
         // Find the user
         const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
-    
+
         if (!user) {
             throw new Error('No user found');
         }
-    
+
         // Compare the given refresh token with the stored hashed refresh token
         const match = await bcrypt.compare(refreshToken, user.refreshToken);
-    
+
         if (!match) {
             throw new Error('Invalid refresh token');
         }
-    
+
         // If the tokens match, return the user
         return new User(user);
     }
-    
+
     static async findUserIdAndUpdateTokenStatus(userId, refreshToken) {
         console.log('userId:', userId);
         const db = await connect();
-    
+
         // Hash the refresh token
         const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    
+
         const result = await db.collection('users').findOneAndUpdate(
             { _id: new ObjectId(userId) },
             { $set: { refreshToken: hashedRefreshToken } },
             { returnOriginal: false, projection: { password: 0 } }
         );
-    
+
         if (!result) {
             throw new Error('No user found to update');
         }
         return new User(result);
     }
-    
+
     static async findByIdAndDelete(userId) {
         const db = await connect();
         const result = await db.collection('users').deleteOne({ _id: new ObjectId(userId) });
@@ -245,7 +252,7 @@ class User {
 
     static async findByIdAndUpdate(userId, updateData) {
         const db = await connect();
-    
+
         // Check if username or email already exists in the database
         const existingUser = await db.collection('users').findOne({
             $or: [
@@ -253,35 +260,36 @@ class User {
                 { email: updateData.email }
             ]
         });
-    
+
         if (existingUser && existingUser._id.toString() !== userId) {
             throw new Error('Username or email already exists');
         }
-    
+
         await db.collection('users').findOneAndUpdate(
             { _id: new ObjectId(userId) },
             { $set: updateData }
         );
-    
+
         const updatedUser = await db.collection('users').findOne({ _id: new ObjectId(userId) });
-    
+
         if (!updatedUser) {
             throw new Error('No user found to update');
         }
-    
+
         return new User(updatedUser);
     }
 
     static async findByUsernameOrEmail(login) {
         console.log('login:', login);
         const db = await connect();
+        const lowerCaseLogin = login.toLowerCase();
         const query = {
             $or: [
-                { username: login },
-                { email: login }
+                { username: lowerCaseLogin },
+                { email: lowerCaseLogin }
             ]
         };
-    
+
         const result = await db.collection('users').findOne(query);
         if (!result) {
             throw new Error('User not found');
@@ -289,23 +297,23 @@ class User {
         // Return the user with the password
         return new User(result);
     }
-    
-static async findById(userId) {
-    const db = await connect();
-    if (!(userId instanceof ObjectId)) {
-        try {
-            userId = new ObjectId(userId);
-        } catch (error) {
-            console.error('Invalid user ID:', error);
-            return null; // return null if userId is not a valid ObjectId
+
+    static async findById(userId) {
+        const db = await connect();
+        if (!(userId instanceof ObjectId)) {
+            try {
+                userId = new ObjectId(userId);
+            } catch (error) {
+                console.error('Invalid user ID:', error);
+                return null; // return null if userId is not a valid ObjectId
+            }
         }
+        const result = await db.collection('users').findOne({ _id: userId });
+        if (!result) {
+            return null; // return null if no user is found
+        }
+        return new User(result);
     }
-    const result = await db.collection('users').findOne({ _id: userId });
-    if (!result) {
-        return null; // return null if no user is found
-    }
-    return new User(result);
-}
     static async findAll() {
         const db = await connect();
         const result = await db.collection('users').find().toArray();
