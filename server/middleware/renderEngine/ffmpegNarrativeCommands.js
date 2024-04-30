@@ -14,17 +14,17 @@ const ffmpegNarrativeCommands = {
         }
     },
     "Interview": {
-        process: (clip, length, framerate, orientation, quality) => {
-            return `ffmpeg -i ${clip} -r ${framerate} -vf "${quality},pad=ih:ih:0:(ow-ih)/2,setsar=1" -c:a copy -af "volume=0.1" interview_output.mp4`;
+        process: (clip, length, framerate, pad, quality, outputPath) => {
+            return `ffmpeg -i ${clip} -r ${framerate} -vf "${quality},${pad},setsar=1" -c:a copy -c:v libx264 -pix_fmt yuv420p -profile:v main -t ${length} ${outputPath}`;
         }
     },
     "Montage": {
         cutAndNormalize: (clip, length, framerate, pad, quality, outputPath) => {
-            return `ffmpeg -i ${clip} -r ${framerate} -vf "${quality},${pad},setsar=1" -an -t ${length} ${outputPath}`;
+            return `ffmpeg -i ${clip} -r ${framerate} -vf "${quality},${pad},setsar=1" -c:v libx264 -an -t ${length} ${outputPath}`;
         },
-        mergeAndAddMusic: (clips, musicFile) => {
-            const fileList = clips.map((clip, index) => `file '${clip}_temp.mp4'`).join('\n');
-            return `printf "${fileList}" > concat_list.txt && ffmpeg -f concat -safe 0 -i concat_list.txt -i ${musicFile} -c:v copy -c:a aac -strict experimental -shortest montage_sequence.mp4`;
+        mergeAndAddMusic: (clips, musicFile, montageOutput) => {
+            const fileList = clips.map((clip) => `file '${clip}'`).join('\n');
+            return `printf "${fileList}" > concat_list.txt && ffmpeg -f concat -safe 0 -i concat_list.txt -i ${musicFile} -c:v copy -c:a aac -strict experimental -shortest ${montageOutput}`;
         }
     },
 

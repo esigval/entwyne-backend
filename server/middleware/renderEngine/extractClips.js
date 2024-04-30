@@ -53,6 +53,8 @@ async function extractClipData(storylineId) {
     return results;
 }
 
+export default extractClipData;
+
 // Get the extracted clip data
 extractClipData('662adef494d07d65cfb47cce').then(clipData => {
     console.log(JSON.stringify(clipData, null, 2));

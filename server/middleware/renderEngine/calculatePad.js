@@ -1,47 +1,30 @@
-const calculatePad = (scale, twyneOrientation) => {
-    // Remove 'scale=' from the start of the scale parameter
-    scale = scale.startsWith('scale=') ? scale.substring(6) : scale;
+function calculatePad(absoluteScale, targetWidth, targetHeight, clipOrientation) {
+    console.log(`absoluteScale: ${absoluteScale}`);
+    console.log(`Target Width: ${targetWidth}, Target Height: ${targetHeight}`);
+    console.log(`Clip Orientation: ${clipOrientation}`);
+    // Extract the dimensions from absoluteScale
+    const dimensions = absoluteScale.match(/scale[:=]\s*(\d+)\s*:\s*(\d+)/i);
+if (!dimensions) {
+    throw new Error(`Failed to parse dimensions from absoluteScale: ${absoluteScale}`);
+}
+const width = parseInt(dimensions[1], 10);
+const height = parseInt(dimensions[2], 10);
 
-    let [width, height] = scale.split(':').map(Number);
+    console.log(`Extracted Width: ${width}, Extracted Height: ${height}`);
 
-    // Validate the extracted width and height
-    if (isNaN(width) || isNaN(height)) {
-        throw new Error(`Invalid scale: ${scale}`);
-    }
-
-    // Validate the orientation parameter
-    if (twyneOrientation !== 'horizontal' && twyneOrientation !== 'vertical') {
-        throw new Error(`Invalid twyneOrientation: ${twyneOrientation}`);
-    }
-
-    // Calculate height based on a 16:9 aspect ratio if height is -2
-    if (height === -2) {
-        height = Math.ceil((9 / 16) * width);
-    }
-
-    // Assume the desired aspect ratio is 16:9 for both orientations
-    const desiredAspectRatio = 16 / 9;
-    let targetWidth, targetHeight;
-
-    if (twyneOrientation === 'horizontal') {
-        // Maintain the original width, adjust height to fit 16:9 aspect ratio
-        targetWidth = width;
-        targetHeight = Math.ceil(targetWidth / desiredAspectRatio);
+    // Calculate padding based on the target dimensions
+    let padX = 0, padY = 0;
+    if (clipOrientation === 'horizontal') {
+        // Calculate vertical padding for horizontal clips
+        padY = (height < targetHeight) ? Math.round((targetHeight - height) / 2) : 0;
     } else {
-        // Maintain the original height, adjust width to fit 16:9 aspect ratio
-        targetHeight = height;
-        targetWidth = Math.ceil(targetHeight * desiredAspectRatio);
+        // Calculate horizontal padding for vertical clips
+        padX = (width < targetWidth) ? Math.round((targetWidth - width) / 2) : 0;
     }
 
-    // Adjust pad dimensions to be at least as large as the original dimensions
-    const padWidth = Math.max(width, targetWidth) + 1; // Add 1 to the width
-    const padHeight = Math.max(height, targetHeight) + 1; // Add 1 to the height
+    console.log(`Calculated padX: ${padX}, padY: ${padY}`);
 
-    // Calculate padding offsets to center the original video
-    const padX = Math.ceil((padWidth - width) / 2) + 1;
-    const padY = Math.ceil((padHeight - height) / 2) + 1;
-
-    return `pad=${padWidth}:${padHeight}:${padX}:${padY}`;
+    return `pad=${width + 2 * padX}:${height + 2 * padY}:${padX}:${padY}`;
 }
 
 export default calculatePad;

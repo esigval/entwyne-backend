@@ -14,6 +14,8 @@ RUN npm install
 # Copy the current directory contents into the container at /server
 COPY . .
 
+COPY ./assets/fonts ./assets/fonts
+
 # Make port available to the world outside this container
 EXPOSE 19000
 EXPOSE 19001

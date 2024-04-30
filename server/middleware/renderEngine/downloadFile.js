@@ -1,4 +1,3 @@
-
 import universalPreSignedUrl from '../presignedUrls/universalPreSignedUrl.js'; // adjust the import path as necessary
 import axios from 'axios';
 import fs from 'fs';
@@ -9,12 +8,9 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Assuming AWS configuration is done within the universalPreSignedUrl module or before importing it
-const bucketName = 'dev-mezzanine-useast1'; // Set your S3 bucket name
-const getSignedUrl = universalPreSignedUrl(bucketName);
-
-async function downloadFile(key, outputPath) {
+async function downloadFile(bucketName, key, outputPath) {
     try {
+        const getSignedUrl = universalPreSignedUrl(bucketName);
         const presignedUrl = await getSignedUrl('getObject', key);
         console.log("Presigned URL:", presignedUrl);  // Confirm URL is printed correctly
 
