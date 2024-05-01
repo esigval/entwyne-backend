@@ -1,61 +1,52 @@
 {
-    "name": "Race Preparation",
-    "theme": "Inspirational, Motivating, and Energetic",
-    "totalTargetDuration": 60000,
+    "name": "Dinner Disasters: A Night of Mishaps and Laughter",
+    "theme": "Witty, Humorous, Light-Hearted",
+    "totalTargetDuration": 300000,
     "rawNarrative": [
         {
             "type": "Title Sequence",
-            "name": "Opening Title",
-            "description": "Introductory title displaying the event's name and the theme of the video",
-            "duration": 5
-        },
-        {
-            "type": "Interview",
-            "name": "Racer Interview 1",
-            "description": "First racer shares insights into their training regimen and mental preparations",
-            "duration": 12
+            "name": "Opening Titles: Dinner Disasters",
+            "duration": 15
         },
         {
             "type": "Montage",
-            "name": "Training Montage 1",
-            "description": "Dynamic clips of early morning training and equipment setup",
-            "duration": 10
+            "name": "Introductory Montage: Starting the Dinner",
+            "duration": 45
         },
         {
-            "type": "Interview",
-            "name": "Racer Interview 2",
-            "description": "Second racer discusses strategies for maintaining stamina",
-            "duration": 12
+            "type": "Character Introduction",
+            "name": "Character Intro: The Perpetual Food Mixer",
+            "duration": 30
         },
         {
-            "type": "Interview",
-            "name": "Racer Interview 3",
-            "description": "Third racer talks about personal goals for the relay",
-            "duration": 12
+            "type": "Character Introduction",
+            "name": "Character Intro: The Clueless Vegan",
+            "duration": 30
+        },
+        {
+            "type": "Character Introduction",
+            "name": "Character Intro: The Spice Hater",
+            "duration": 30
         },
         {
             "type": "Montage",
-            "name": "Final Preparation Montage",
-            "description": "Montage of racers discussing team strategies and last-minute checks",
-            "duration": 10
+            "name": "Main Event Montage: Dinner Mishaps Unfold",
+            "duration": 90
+        },
+        {
+            "type": "Comic Relief",
+            "name": "Comic Scene: The Tripping Waiter",
+            "duration": 45
         },
         {
             "type": "Interview",
-            "name": "Racer Interview 4",
-            "description": "Fourth racer highlights the importance of team dynamics",
-            "duration": "12"
+            "name": "Guest Reflections: Memorable Dinner Disasters",
+            "duration": 60
         },
         {
-            "type": "Interview",
-            "name": "Racer Interview 5",
-            "description": "Fifth racer talks about overcoming previous challenges",
-            "duration": 12
-        },
-        {
-            "type": "Outro Card",
-            "name": "Ending Credits",
-            "description": "Credits and thank you note to supporters and organizers",
-            "duration": 4
+            "type": "Conclusion",
+            "name": "Night Reflection: Laughter and Camaraderie",
+            "duration": 45
         }
     ]
 }

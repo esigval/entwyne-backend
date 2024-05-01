@@ -5,7 +5,7 @@ dotenv.config();
 export const modelVersion35 = `gpt-3.5-turbo-1106`;
 export const modelVersion = `gpt-4-1106-preview`;
 
-export const tokenExpiration = `1h`;
+export const tokenExpiration = `30d`;
 export const refreshTokenExpiration = `30d`;
 
 // Config settings for S3 buckets

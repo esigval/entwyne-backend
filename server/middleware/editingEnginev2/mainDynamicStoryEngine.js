@@ -9,6 +9,7 @@ import sceneDirectorLlm from './llms/sceneDirectorLlm.js';
 import rawNarrative from './rawDataTests/testPayload.json' assert { type: 'json' };
 import generateAndStorePrompts from './editing/generatePromptsandStorev2.js';
 import ProgressBar from 'progress';
+import validateNarratives from "./llms/confirmationAgent.js";
 
 
 /**
@@ -36,8 +37,11 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         bar.tick();
 
         console.log('Generating instructions...');
-        const constructedNarrative = await constructNarrative(rawNarrative);
+        const validatedNarratives = await validateNarratives(rawNarrative);
+
+        const constructedNarrative = await constructNarrative(validatedNarratives);
         // const instructions = await generateInstructions(twyne.storySummary, constructedNarrative);
+        console.log("constructed narrative", constructedNarrative);
         bar.tick();
 
         console.log('Parsing block instructions...');
@@ -81,4 +85,4 @@ async function processNarrative(twyneId, rawNarrative, userId) {
 export default processNarrative;
 
 // Testing Script
-// processNarrative('65f13b5b3c54a131c18aed0a', rawNarrative, '660d81337b0c94b81b3f1744');
+//processNarrative('661edb7d8efc37640c3d451a', rawNarrative, '660d81337b0c94b81b3f1744');

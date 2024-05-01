@@ -8,6 +8,7 @@ import Storyline from '../models/storylineModel.js';
 import dotenv from 'dotenv';
 import createThread from '../middleware/userInput/assistantFunctions/createThread.js';
 import handleToolCallResults from '../middleware/userInput/serverFunctions/toolCallHandler.js';
+import NarrativeBlock from '../models/narrativeBlockModel.js';
 
 dotenv.config();
 
@@ -51,13 +52,14 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
 
                 // Get the Twyne document
                 const twyne = await Twyne.findById(twyneId);
+                const narrativeBlocks = NarrativeBlock.list();
 
                 // Check if the Twyne document has a twyneSummary
                 if (twyne && twyne.twyneSummary) {
                     console.log('Twyne Summary:', twyne.twyneSummary);
 
                     // Prepare a message for the assistant
-                    const assistantMessage = `This is the summary of the Twyne narrative: ${twyne.twyneSummary}. Please use this as context when interacting with the user.`;
+                    const assistantMessage = `This is the summary of the Twyne narrative: ${twyne.twyneSummary}. Please use this as context when interacting with the user. Additionally, here are the available narrative blocks: ${narrativeBlocks}. Just keep these in mind when you create the narrative, but do not explicitly discuss them unless the user brings it up first.`;
 
                     // Send the message to the assistant
                     await addAssistantMessageToThread(assistantMessage, threadId);
@@ -104,8 +106,8 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
         const handledToolCallResults = handleToolCallResults(toolCallResults, threadId, twyneId, storyId);
 
         // If there is no contentValue, use the result from handleToolCallResults instead
-        if (contentValues.length === 0 && handledToolCallResults.length > 0) {
-            contentValues = handledToolCallResults.map(result => result.output);
+        if (contentValues.length === 0 && handledToolCallResults) {
+            contentValues = [handledToolCallResults.output];
         }
 
         // Final response includes tool call results
@@ -114,7 +116,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
             message: 'Run completed and all events handled including tool calls.',
             threadId: threadId,
             results: contentValues,
-            toolCalls: toolCallResults  // Send this additional data
+            toolCalls: handledToolCallResults  // Send this additional data
         });
     } catch (error) {
         console.error('Error during run management:', error);
