@@ -17,7 +17,7 @@ const processInterview = async (block, twyneQuality, twyneOrientation, music, tw
     const framerate = 30;
     const processingOutputFiles = []; // Array to hold output file names
     const downloadPromises = [];
-    const montageOutput = path.join(__dirname, `finals/interviews${block.orderIndex}_${twyneId}.mp4`);
+    const montageOutput = path.join(__dirname, `finals/interviews_${block.orderIndex}_${twyneId}.mp4`);
     const musicBucket = "music-tracks";
     const mezzanineBucket = "dev-mezzanine-useast1";
 

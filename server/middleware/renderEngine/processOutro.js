@@ -10,6 +10,7 @@ import calculatePad from './calculatePad.js';
 import fs from 'fs';
 import getTargetDimensions from './getTargetDimensions.js';
 const exec = promisify(execCb);
+
 const narrativeBlock = {
     "partType": "Outro Card",
     "orderIndex": 4,
@@ -32,11 +33,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const processOutro = async (block, twyneQuality, twyneOrientation, music, twyneId, title) => {
+    console.log("Starting processOutro with parameters:", block, twyneQuality, twyneOrientation, music, twyneId, title);
     const { clips } = block;
     const framerate = 30;
     const processingOutputFiles = []; // Array to hold output file names
     const downloadPromises = [];
    const montageOutput = path.join(__dirname, `finals/outro_${block.orderIndex}_${twyneId}`);
+   const montageOutputFile = path.join(__dirname, 'finals', `outro_${block.orderIndex}_${twyneId}.mp4`);
     const musicBucket = "music-tracks";
     const mezzanineBucket = "dev-mezzanine-useast1";
 
@@ -53,11 +56,13 @@ const processOutro = async (block, twyneQuality, twyneOrientation, music, twyneI
     // Wait for all downloads and processing to complete
     try {
         await Promise.all(downloadPromises);
-        mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput, title);
+        console.log('All clips downloaded and processed, initiating merge and music addition.');
+        await mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput, title);  // Ensure this is awaited
+        console.log('Outro processing completed successfully.');
     } catch (error) {
         console.error(`Error in processing: ${error}`);
     }
-    return montageOutput;
+    return montageOutputFile;
 };
 
 const prepareMusicPath = (music, orderIndex) => {
@@ -92,7 +97,7 @@ const handleClip = async (clip, bucket, quality, twyneOrientation, framerate, ou
     const { scale, absoluteScale, orientation } = getScale(quality, outputPath);
     const { width: targetWidth, height: targetHeight } = getTargetDimensions(quality, twyneOrientation);
     const pad = calculatePad(absoluteScale, targetWidth, targetHeight, orientation);
-    const outputClipPath = path.join(__dirname, `processing/${clip.partType.replace(/\s/g, '_')}_${clip.orderIndex.replace(/\s/g, '_')}_${clip.momentId.replace(/\s/g, '_')}.mp4`);
+    const outputClipPath = path.join(__dirname, `processing/${clip.partType.replace(/\s/g, '_')}_${clip.orderIndex.replace(/\s/g, '_')}_${clip.momentId.toString().replace(/\s/g, '_')}.mp4`);
     outputFiles.push(outputClipPath);
 
     const command = ffmpegCommands["Montage"].cutAndNormalize(outputPath, clip.length, framerate, pad, scale, outputClipPath);
@@ -130,7 +135,7 @@ const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput, title) => 
     }
 
     // Add background music
-    const montageWithMusic = path.join(tempDir, 'final_with_music.mp4');
+    const montageWithMusic = path.join(tempDir, 'final_outro_with_music.mp4');
     await addMusic(currentFile, musicFile, montageWithMusic);
     const finalOutputWithOverlay = path.join(montageOutput);
     await addTitleOverlay(montageWithMusic, finalOutputWithOverlay, title);
@@ -167,7 +172,7 @@ const applyCrossFade = (input1, input2, output, duration, offset) => {
 
 const addMusic = (videoFile, musicFile, outputFile) => {
     return new Promise((resolve, reject) => {
-        const cmd = `ffmpeg -i ${videoFile} -i ${musicFile} -c:v libx264 -c:a aac -strict experimental -shortest -f mp4 ${outputFile}`;
+        const cmd = `ffmpeg -i ${videoFile} -i ${musicFile} -c:v libx264 -pix_fmt yuv420p -profile:v main -c:a aac -strict experimental -shortest ${outputFile}`;
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.error('Error adding music:', stderr);
@@ -182,6 +187,6 @@ export default processOutro;
 
 
 
-processOutro(narrativeBlock, 'Proxy', 'horizontal', 's3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3', '28734623823387f', 'Made With Entwyne');
+// processOutro(narrativeBlock, 'Proxy', 'horizontal', 's3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3', '28734623823387f', 'Made With Entwyne');
 
 

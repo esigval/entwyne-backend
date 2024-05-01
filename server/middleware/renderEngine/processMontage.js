@@ -54,9 +54,11 @@ const narrativeBlock = {
 
 const processMontage = async (block, twyneQuality, twyneOrientation, music, twyneId) => {
     const { clips } = block;
+    console.log(clips); // Add this line to log the clips
     const framerate = 30;
     const processingOutputFiles = []; // Array to hold output file names
     const downloadPromises = [];
+    const montageOutputFile = path.join(__dirname, 'finals', `montage_${block.orderIndex}_${twyneId}.mp4`);
     const montageOutput = `finals/montage_${block.orderIndex}_${twyneId}.mp4`;
     const musicBucket = "music-tracks";
     const mezzanineBucket = "dev-mezzanine-useast1";
@@ -73,11 +75,14 @@ const processMontage = async (block, twyneQuality, twyneOrientation, music, twyn
 
     // Wait for all downloads and processing to complete
     try {
-        await Promise.all(downloadPromises);
-        mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput);
-    } catch (error) {
-        console.error(`Error in processing: ${error}`);
-    }
+      await Promise.all(downloadPromises);
+      // Make sure to await this function
+      await mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput);
+      console.log('Montage and music merge completed successfully.');
+  } catch (error) {
+      console.error(`Error in processing: ${error}`);
+  }
+  return montageOutputFile;
 };
 
 const prepareMusicPath = (music, orderIndex) => {
@@ -135,7 +140,8 @@ const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput) => {
     let currentFile = clips[0];
     for (let i = 1; i < clips.length; i++) {
       const nextFile = clips[i];
-      const outputFile = path.join(tempDir, `temp_${clips.momentId}_${i}.mp4`);
+const momentId = path.parse(nextFile).name.split('_')[2];
+const outputFile = path.join(tempDir, `temp_${momentId}_${i}.mp4`);
       const offset = i * 3;  // Example offset for crossfade
       await applyCrossFade(currentFile, nextFile, outputFile, 0.5, offset);
       currentFile = outputFile;  // Set the current file to the latest output

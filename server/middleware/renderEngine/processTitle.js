@@ -58,6 +58,7 @@ const processTitle = async (block, twyneQuality, twyneOrientation, music, twyneI
     const processingOutputFiles = []; // Array to hold output file names
     const downloadPromises = [];
     const montageOutput = path.join(__dirname, `finals`, `title_${block.orderIndex}_${twyneId}`);
+    const montageOutputFile = path.join(__dirname, 'finals', `title_${block.orderIndex}_${twyneId}.mp4`);
     const musicBucket = "music-tracks";
     const mezzanineBucket = "dev-mezzanine-useast1";
 
@@ -79,7 +80,7 @@ const processTitle = async (block, twyneQuality, twyneOrientation, music, twyneI
         console.error(`Error in processing: ${error}`);
     }
 
-    return montageOutput;
+    return montageOutputFile;
 };
 
 const prepareMusicPath = (music, orderIndex) => {
@@ -141,14 +142,15 @@ const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput, title) => 
     let currentFile = clips[0];
     for (let i = 1; i < clips.length; i++) {
         const nextFile = clips[i];
-        const outputFile = path.join(tempDir, `temp_${clips.momentId}_${i}.mp4`);
+        const momentId = path.parse(nextFile).name.split('_')[2]; // Extract momentId from filename
+        const outputFile = path.join(tempDir, `temp_${momentId}_${i}.mp4`);
         const offset = i * 1;  // Example offset for crossfade
         await applyCrossFade(currentFile, nextFile, outputFile, 0.5, offset);
         currentFile = outputFile;  // Set the current file to the latest output
     }
 
     // Add background music
-    const montageWithMusic = path.join(tempDir, 'final_with_music.mp4');
+    const montageWithMusic = path.join(tempDir, 'final_title_with_music.mp4');
     await addMusic(currentFile, musicFile, montageWithMusic);
     const finalOutputWithOverlay = path.join(montageOutput);
     await addTitleOverlay(montageWithMusic, finalOutputWithOverlay, title);
@@ -186,7 +188,7 @@ const applyCrossFade = (input1, input2, output, duration, offset) => {
 
 const addMusic = (videoFile, musicFile, outputFile) => {
     return new Promise((resolve, reject) => {
-        const cmd = `ffmpeg -i ${videoFile} -i ${musicFile} -c:v libx264 -c:a aac -strict experimental -shortest -f mp4 ${outputFile}`;
+        const cmd = `ffmpeg -i ${videoFile} -i ${musicFile} -c:v libx264 -c:a aac -strict experimental -shortest -pix_fmt yuv420p -profile:v main ${outputFile}`;
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.error('Error adding music:', stderr);
@@ -201,6 +203,6 @@ export default processTitle;
 
 
 
-processTitle(titleSequence, 'Proxy', 'horizontal', 's3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3', '28734623823387f', 'The Greatest Rock');
+// processTitle(titleSequence, 'Proxy', 'horizontal', 's3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3', '28734623823387f', 'The Greatest Rock');
 
 
