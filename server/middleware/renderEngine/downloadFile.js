@@ -12,7 +12,6 @@ async function downloadFile(bucketName, key, outputPath) {
     try {
         const getSignedUrl = universalPreSignedUrl(bucketName);
         const presignedUrl = await getSignedUrl('getObject', key);
-        console.log("Presigned URL:", presignedUrl);  // Confirm URL is printed correctly
 
         const response = await axios({
             method: 'GET',

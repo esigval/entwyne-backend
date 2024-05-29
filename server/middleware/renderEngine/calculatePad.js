@@ -1,30 +1,43 @@
 function calculatePad(absoluteScale, targetWidth, targetHeight, clipOrientation) {
-    console.log(`absoluteScale: ${absoluteScale}`);
-    console.log(`Target Width: ${targetWidth}, Target Height: ${targetHeight}`);
-    console.log(`Clip Orientation: ${clipOrientation}`);
-    // Extract the dimensions from absoluteScale
     const dimensions = absoluteScale.match(/scale[:=]\s*(\d+)\s*:\s*(\d+)/i);
-if (!dimensions) {
-    throw new Error(`Failed to parse dimensions from absoluteScale: ${absoluteScale}`);
-}
-const width = parseInt(dimensions[1], 10);
-const height = parseInt(dimensions[2], 10);
+    if (!dimensions) {
+        throw new Error(`Failed to parse dimensions from absoluteScale: ${absoluteScale}`);
+    }
+    const width = parseInt(dimensions[1], 10);
+    const height = parseInt(dimensions[2], 10);
 
-    console.log(`Extracted Width: ${width}, Extracted Height: ${height}`);
+    console.log(`Parsed dimensions: width=${width}, height=${height}`);
 
-    // Calculate padding based on the target dimensions
-    let padX = 0, padY = 0;
+    let finalWidth, finalHeight;
+
     if (clipOrientation === 'horizontal') {
-        // Calculate vertical padding for horizontal clips
-        padY = (height < targetHeight) ? Math.round((targetHeight - height) / 2) : 0;
+        finalWidth = targetWidth;
+        finalHeight = Math.round((height / width) * targetWidth);
+        if (finalHeight > targetHeight) {
+            finalHeight = targetHeight;
+            finalWidth = Math.round((width / height) * targetHeight);
+        }
     } else {
-        // Calculate horizontal padding for vertical clips
-        padX = (width < targetWidth) ? Math.round((targetWidth - width) / 2) : 0;
+        finalHeight = targetHeight;
+        finalWidth = Math.round((width / height) * targetHeight);
+        if (finalWidth > targetWidth) {
+            finalWidth = targetWidth;
+            finalHeight = Math.round((height / width) * targetWidth);
+        }
     }
 
-    console.log(`Calculated padX: ${padX}, padY: ${padY}`);
+    console.log(`Adjusted dimensions: finalWidth=${finalWidth}, finalHeight=${finalHeight}`);
 
-    return `pad=${width + 2 * padX}:${height + 2 * padY}:${padX}:${padY}`;
+    const padX = (finalWidth < targetWidth) ? Math.round((targetWidth - finalWidth) / 2) : 0;
+    const padY = (finalHeight < targetHeight) ? Math.round((targetHeight - finalHeight) / 2) : 0;
+
+    console.log(`Calculated padding: padX=${padX}, padY=${padY}`);
+
+    // Ensure padded dimensions are never smaller than the input dimensions
+    const paddedWidth = Math.max(finalWidth + 2 * padX, width);
+    const paddedHeight = Math.max(finalHeight + 2 * padY, height);
+
+    return `pad=${paddedWidth}:${paddedHeight}:${padX}:${padY}`;
 }
 
 export default calculatePad;

@@ -4,7 +4,6 @@ import Storyline from '../../models/storylineModel.js';
 
 async function extractClipData(storylineId) {
     const data = await Storyline.getStorylineById(storylineId)
-    console.log("Data:", data);
 
     // Initialize an empty array to hold the results
     let results = [];
@@ -21,7 +20,6 @@ async function extractClipData(storylineId) {
         };
 
         for (const [clipIndex, clip] of part.clips.entries()) {
-            console.log("Clip:", clip); // Debug log
 
             if (clip.promptId) {
                 let clipData = {
