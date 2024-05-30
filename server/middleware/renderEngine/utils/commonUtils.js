@@ -5,7 +5,7 @@ import { promisify } from 'util';
 import getScale from './getScale.js';
 import calculatePad from './calculatePad.js';
 import getTargetDimensions from './getTargetDimensions.js';
-import ffmpegCommands from './ffmpegNarrativeCommands.js';
+import ffmpegCommands from '../ffmpeg/ffmpegNarrativeCommands.js';
 import fs from 'fs';
 
 const execPromise = promisify(exec);
@@ -17,7 +17,7 @@ export const prepareMusicPath = (music, orderIndex, __dirname) => {
 
     // Add orderIndex to the music file name
     const musicFileName = `${musicParsedPath.name}_${orderIndex}${musicParsedPath.ext}`;
-    const musicFilePath = path.join(__dirname, `downloads/music${musicFileName}`);
+    const musicFilePath = path.join(__dirname, `./downloads/${musicFileName}`);
 
     // Keep the original music file name in the key
     const musicKey = (musicParsedPath.dir ? musicParsedPath.dir + '/' : '') + `${musicParsedPath.name}${musicParsedPath.ext}`;

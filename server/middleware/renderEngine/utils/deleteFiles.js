@@ -7,11 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Define the directories
-const directories = ['downloads', 'processing', 'temp'];
+const directories = ['downloads', 'processing', 'temp', 'finals'];
 
 const deleteFiles = () => {
   directories.forEach((dir) => {
-    const directoryPath = path.join(__dirname, dir);
+    // Go up one level from the current directory
+    const directoryPath = path.join(__dirname, '..', dir);
 
     fs.readdir(directoryPath, (err, files) => {
       if (err) throw err;

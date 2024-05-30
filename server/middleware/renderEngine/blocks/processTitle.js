@@ -8,23 +8,23 @@ import {
     addTitleOverlay,
     applyCrossFade,
     addMusic
-} from './commonUtils.js';
+} from '../utils/commonUtils.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import downloadFile from './downloadFile.js';
+import downloadFile from '../utils/downloadFile.js';
 import fs from 'fs';
 
 const exec = promisify(execCb);
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(dirname(__filename));
 
 const processTitle = async (block, twyneQuality, twyneOrientation, music, twyneId, title, crossfadeDuration, offsetInterval) => {
     const { clips } = block;
     const framerate = 30;
     const processingOutputFiles = []; // Array to hold output file names
     const downloadPromises = [];
-    const intermediateOutput = path.join(__dirname, `finals/title_intermediate_${block.orderIndex}_${twyneId}.mp4`);
-    const finalOutput = path.join(__dirname, `finals/title_${block.orderIndex}_${twyneId}.mp4`);
+    const intermediateOutput = path.join(__dirname, `./finals/title_intermediate_${block.orderIndex}_${twyneId}.mp4`);
+    const finalOutput = path.join(__dirname, `./finals/title_${block.orderIndex}_${twyneId}.mp4`);
     const musicBucket = "music-tracks";
     const mezzanineBucket = "dev-mezzanine-useast1";
 

@@ -1,6 +1,6 @@
-import Prompts from '../../models/promptModel.js';
-import Moment from '../../models/momentModel.js';
-import Storyline from '../../models/storylineModel.js';
+import Prompts from '../../../models/promptModel.js';
+import Moment from '../../../models/momentModel.js';
+import Storyline from '../../../models/storylineModel.js';
 
 async function extractClipData(storylineId) {
     const data = await Storyline.getStorylineById(storylineId)

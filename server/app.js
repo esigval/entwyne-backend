@@ -77,6 +77,7 @@ import setPromptCollected from './routes/setPromptCollected.js';
 // Twyne routes
 import twyneRoutes from './routes/modifyTwynes.js';
 import twyneByStory from './routes/getTwynesByStory.js';
+import renderTwyne from './routes/renderTwyne.js';
 
 // Routes for handling assistant interactions
 import createThread from './routes/createThread.js';
@@ -193,6 +194,7 @@ app.use('/v1/moments/publicPresign', getPresignedPublicUrl); // protected
 app.use('/v1/twyne', twyneRoutes); // protected
 app.use('/v1/twyne/story', twyneByStory);
 app.use('/v1/twyne/addUser', userAddToTwyne); // protected
+app.use('/v1/twyne/render', renderTwyne); // protected
 
 // Utility (protected)
 app.use('/v1/saveVideoUri', saveVideoUri); // protected

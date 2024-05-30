@@ -9,6 +9,26 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /twyne/render:
+    post:
+      tags:
+      - Twyne
+      summary: Process Twyne
+      operationId: processTwyne
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TwyneConfig'
+      responses:
+        '200':
+          description: Twyne processing started
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Processing Twyne'
   /stories/{id}:
     patch:
       tags:
@@ -503,6 +523,8 @@ paths:
           description: Twyne not found
         '500':
           description: Server error
+
+
 
   /changeEmail:
     post:
@@ -1254,6 +1276,36 @@ components:
       bearerFormat: JWT # optional, arbitrary value for
   schemas:
     schemas:
+    TwyneConfig:
+      type: object
+      properties:
+        storylineId:
+          type: string
+        twyneQuality:
+          type: string
+        twyneOrientation:
+          type: string
+        music:
+          type: string
+        twyneId:
+          type: string
+        title:
+          type: string
+        outro:
+          type: string
+        trackName:
+          type: string
+        crossfadeSettings:
+          type: array
+          items:
+            type: object
+            properties:
+              partType:
+                type: string
+              crossfadeDuration:
+                type: number
+              offsetInterval:
+                type: number
     Twyne:
       type: object
       properties:

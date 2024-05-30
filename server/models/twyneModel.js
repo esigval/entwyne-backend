@@ -21,6 +21,7 @@ class Twyne {
         lastUpdated = new Date(),
         twyneSummary,
         theme,
+        currentRender,
 
     }) {
         this._id = new ObjectId(_id);
@@ -40,6 +41,7 @@ class Twyne {
         this.lastUpdated = lastUpdated ? new Date(lastUpdated) : new Date();
         this.twyneSummary = twyneSummary;
         this.theme = theme;
+        this.currentRender = currentRender;
     }
 
     hasEdit() {
@@ -64,7 +66,22 @@ class Twyne {
         }
     }
 
-
+    static async setCurrentRender(twyneId, uri) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const result = await collection.updateOne(
+                { _id: new ObjectId(twyneId) },
+                { 
+                    $set: { currentRender: uri }
+                }
+            );
+            return result;
+        } catch (error) {
+            console.error("Error in Twyne.setCurrentRender:", error);
+            throw error;
+        }
+    }
 
     static async deleteTwyne(id) {
         try {

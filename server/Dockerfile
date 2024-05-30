@@ -7,6 +7,9 @@ WORKDIR /server
 # Print the architecture
 RUN uname -m
 
+# Install FFmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Install app dependencies
 COPY package.json package-lock.json ./
 RUN npm install

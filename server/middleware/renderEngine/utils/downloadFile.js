@@ -1,4 +1,4 @@
-import universalPreSignedUrl from '../presignedUrls/universalPreSignedUrl.js'; // adjust the import path as necessary
+import universalPreSignedUrl from '../../presignedUrls/universalPreSignedUrl.js'; // adjust the import path as necessary
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';

@@ -12,6 +12,9 @@ class Storyline {
         createdAt = new Date(),
         lastUpdated = new Date(),
         twyneId = new ObjectId(),
+        rendered,
+        twyneRenderUri,
+
     }) {
         this._id = ObjectId.isValid(_id) ? new ObjectId(_id) : new ObjectId();
         this.name = name;
@@ -48,6 +51,8 @@ class Storyline {
         this.createdAt = createdAt ? new Date(createdAt) : new Date();
         this.lastUpdated = lastUpdated ? new Date(lastUpdated) : new Date();
         this.twyneId = twyneId;
+        this.rendered = false;
+        this.twyneRenderUri = twyneRenderUri;
     }
 
 
@@ -67,6 +72,36 @@ class Storyline {
         }
     }   
 
+    static async updateTwyneRenderUri(storylineId, newUri) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            const result = await collection.updateOne(
+                { _id: new ObjectId(storylineId) },
+                { $set: { twyneRenderUri: newUri } }
+            );
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.updateTwyneRenderUri:", error);
+            throw error;
+        }
+    }
+
+    static async updateRenderedStatus(storylineId, newStatus) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            const result = await collection.updateOne(
+                { _id: new ObjectId(storylineId) },
+                { $set: { rendered: newStatus } }
+            );
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.updateRenderedStatus:", error);
+            throw error;
+        }
+    }
+
     static async linkStorylineToTwyne(storylineId, twyneId) {
         try {
             const db = await connect();
@@ -80,6 +115,8 @@ class Storyline {
             throw error;
         }
     }
+
+    
 
     static async getStorylineByTwyneId(twyneId) {
         try { 

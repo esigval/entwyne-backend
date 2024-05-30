@@ -1,24 +1,47 @@
-import extractClipData from "./extractClips.js";
-import processTitle from "./processTitle.js";
-import processOutro from "./processOutro.js";
-import processMontage from "./processMontage.js";
-import processInterview from "./processInterview.js";
-import deleteFiles from "./deleteFiles.js";
-import concatenateVideos from "./processTwyne.js";
+import extractClipData from "./utils/extractClips.js";
+import processTitle from "./blocks/processTitle.js";
+import processOutro from "./blocks/processOutro.js";
+import processMontage from "./blocks/processMontage.js";
+import processInterview from "./blocks/processInterview.js";
+import deleteFiles from "./utils/deleteFiles.js";
+import concatenateVideos from "./blocks/processTwyne.js";
+import AWS from 'aws-sdk';
+import fs from 'fs';
+import Storyline from "../../models/storylineModel.js";
+import Twyne from "../../models/twyneModel.js";
+import { config } from "../../config.js";
 import { dirname } from 'path';
 import path from 'path';
+import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import getMusicTracks from './music/getMusicTracks.js'; // Adjust the import path accordingly
 
+dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const renderVideo = async (jsonConfig) => {
+const environment = process.env.NODE_ENV || 'local';
+const currentConfig = config[environment];
+
+
+// Configure AWS
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION
+});
+
+// Create an S3 instance
+const s3 = new AWS.S3();
+
+const renderVideo = async (jsonConfig, userId) => {
     const { storylineId, twyneQuality, twyneOrientation, music, twyneId, title, outro, crossfadeSettings, trackName } = jsonConfig;
 
     try {
         const narrativeBlocks = await extractClipData(storylineId);
-
+        if (!narrativeBlocks || narrativeBlocks.length === 0) {
+            return { status: 'error', message: 'No narrative blocks found.' };
+        }
         // Get the music tracks for the specified track name
         const musicTracks = await getMusicTracks(trackName);
 
@@ -71,7 +94,48 @@ const renderVideo = async (jsonConfig) => {
 
         // Call the concatenateVideos function
         const outputPath = path.join(__dirname, 'twyne', `twyne_${twyneId}.mp4`);
-        await concatenateVideos(fileLocations, outputPath);
+        const concatenatedFilePath = await concatenateVideos(fileLocations, outputPath);
+
+        // Read the output file into a variable
+        const fileContent = fs.readFileSync(concatenatedFilePath);
+
+        // name the twyne entry for s3
+
+        const params = {
+            Bucket: currentConfig.TWYNE_BUCKET,
+            Key: `${userId}/${twyneId}/twyne_${twyneQuality}_${storylineId}.mp4`, // File name you want to save as in S3
+            Body: fileContent,
+        };
+
+        // Uploading files to the bucket
+        s3.upload(params, function (err, data) {
+            if (err) {
+                throw err;
+            }
+            console.log(`File uploaded successfully. ${data.Location}`);
+
+            // Delete the local file
+            fs.unlink(concatenatedFilePath, function (err) {
+                if (err) {
+                    console.error(`Error deleting file ${concatenatedFilePath}: ${err}`);
+                } else {
+                    console.log(`File deleted successfully: ${concatenatedFilePath}`);
+                }
+            });
+        });
+
+        // Add the S3 prefix to params.Key
+    params.Key = `s3://${params.Bucket}/${params.Key}`;
+
+        // Update the storyline record with the S3 link
+        const renderSwitch = await Storyline.updateTwyneRenderUri(storylineId, params.Key);
+        console.log('UpdatedUri:', renderSwitch);
+
+        const updatedStoryline = await Storyline.updateRenderedStatus(storylineId, true);
+        console.log('UpdatedStoryline:', updatedStoryline);
+
+        const twyneCurrent = await Twyne.setCurrentRender(twyneId, params.Key);
+        console.log('TwyneCurrent:', twyneCurrent);
 
         // Optionally delete the intermediate files
         await deleteFiles(fileLocations);
@@ -79,15 +143,20 @@ const renderVideo = async (jsonConfig) => {
         console.log(`Video rendering completed successfully. Output path: ${outputPath}`);
     } catch (error) {
         console.error(`An error occurred during video rendering: ${error}`);
+        return { status: 'error', message: `An error occurred during video rendering: ${error.message}` };
     }
 };
+
+export default renderVideo;
+
+const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
     "storylineId": "662adef494d07d65cfb47cce",
     "twyneQuality": "Proxy",
     "twyneOrientation": "horizontal",
     "music": "s3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3",
-    "twyneId": "65f138c9336de84ab7cb3ed7",
+    "twyneId": "662ade3694d07d65cfb47ccb",
     "title": "The Greatest Rock",
     "outro": "Made With Entwyne",
     "trackName": "Neon Beach Conspiracy Nation",
@@ -114,4 +183,4 @@ const jsonConfig = {
 };
 
 // Example call to the function
-renderVideo(jsonConfig);
+renderVideo(jsonConfig, userId); 
