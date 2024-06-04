@@ -149,6 +149,7 @@ const renderVideo = async (jsonConfig, userId) => {
 
 export default renderVideo;
 
+/*
 const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
@@ -182,5 +183,6 @@ const jsonConfig = {
     ]
 };
 
+
 // Example call to the function
-renderVideo(jsonConfig, userId); 
+renderVideo(jsonConfig, userId); */

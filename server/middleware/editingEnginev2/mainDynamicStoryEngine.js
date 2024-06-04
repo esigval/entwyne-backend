@@ -1,5 +1,6 @@
 import Twyne from "../../models/twyneModel.js";
 import Storyline from "../../models/storylineModel.js";
+import Story from "../../models/storyModel.js";
 import generateInstructions from './generateInstructions.js';
 import parseBlockInstructions from './parseBlockInstructions.js';
 import updateNarrativeStylesWithInstructions from './updateNarrativeStylesWithInstructions.js';
@@ -34,6 +35,9 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         console.time('Processing Time');
         // Fetch documents from the database
         const twyne = await Twyne.findById(twyneId);
+        console.log("twyne", twyne);
+        const story = await Story.findById(twyne.storyId);
+        console.log("story", story);
         bar.tick();
 
         console.log('Generating instructions...');
@@ -53,7 +57,7 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         bar.tick();
 
         console.log('Running scene director...');
-        const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative);
+        const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative, story.storySummary);
         bar.tick();
 
         console.log('Generating and storing prompts...');

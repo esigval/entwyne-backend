@@ -4,7 +4,7 @@ info:
   description: API for managing stories in the application.
   version: "1.0.0"
 servers:
-- url: http://ec2-54-196-0-54.compute-1.amazonaws.com:3001/v1
+- url: https://dev.entwye.com/v1
   description: Development server
 - url: http://localhost:3001/v1
   description: Local server

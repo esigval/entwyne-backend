@@ -28,21 +28,3 @@ const subdivisionLlm = async (prompt) => {
 
   return completion.choices[0];
 };
-
-const sceneDirectorLlm = async (twyneSummary, storylineInstance, storySummary) => {
-  for (let subdivision of storylineInstance.structure) {
-    const prompt = generateSubDivisionPrompt(subdivision, twyneSummary, storylineInstance.theme, storySummary);
-    const response = await subdivisionLlm(prompt);
-    const clips = parseLLMResponseToJson(response.message.content);
-    subdivision.clips = clips.map(clip => ({
-      ...clip,
-      id: new ObjectId().toString(), // Generate a unique ObjectId for each clip
-    }));
-
-  }
-  console.log(JSON.stringify(storylineInstance, null, 2));
-   // Optionally print the modified structure to console or save it
-  return storylineInstance;
-}
-
-export default sceneDirectorLlm;

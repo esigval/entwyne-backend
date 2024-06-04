@@ -69,10 +69,6 @@ export const handleClip = async (clip, bucket, quality, twyneOrientation, framer
 };
 
 
-
-
-
-// Adds music to a video file
 // Adds music to a video file based on the part type
 export const addMusic = (videoFile, musicFile, outputFile, partType) => {
     return new Promise((resolve, reject) => {

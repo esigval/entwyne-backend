@@ -1,5 +1,6 @@
 import data from './testTwyne.json' assert { type: 'json' };
 import Twyne from '../../models/twyneModel.js'
+import Story from '../../models/storyModel.js' // Import the Story model
 import { ObjectId } from 'mongodb';
 
 async function createTwynes(data, userId, storyId) {
@@ -9,6 +10,9 @@ async function createTwynes(data, userId, storyId) {
     }
     try {
         const results = [];
+        // Extract storySummary from the top level of the data
+        const storySummary = data.storySummary;
+
         for (let twyneData of data.twynes) {
             const twyneProps = {
                 name: twyneData.name,
@@ -20,6 +24,10 @@ async function createTwynes(data, userId, storyId) {
             const result = await Twyne.create(twyneProps);
             results.push(result);
         }
+
+        // Update the storySummary in the Story model
+        await Story.update(storyId, { storySummary: storySummary });
+
         return `Successfully created ${results.length} Twyne models.`;
     } catch (error) {
         console.error("Failed to create Twyne models:", error);
@@ -28,7 +36,3 @@ async function createTwynes(data, userId, storyId) {
 }
 
 export default createTwynes;
-
-/*createTwyneModels(data, userId, storyId)
-    .then(results => console.log("Successfully created Twyne models:", results))
-    .catch(error => console.error("An error occurred:", error));*/

@@ -93,7 +93,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
             }
         }
 
-        // Add initial message to thread85
+        // Add initial message to thread
         await addMessageToThread(message, threadId);
 
         const { results, toolCallOutputs } = await createAndManageRunStream(threadId, assistantId, userId, twyneId, storyId);

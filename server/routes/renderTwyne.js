@@ -11,7 +11,6 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
     console.log(jsonConfig);
     renderVideo(jsonConfig, userId);
     
-
     res.send('Processing Twyne');
 });
 

@@ -60,7 +60,7 @@ const processOutro = async (block, twyneQuality, twyneOrientation, music, twyneI
         }
 
         if (title) {
-            const fontPath = '/server/fonts/GearedSlab.ttf';  // Ensure the font path is correct
+            const fontPath = '/usr/local/share/fonts/GearedSlab.ttf';  // Ensure the font path is correct
             console.log(`Adding title overlay...`);
             await addTitleOverlay(montageOutputIntermediate, montageOutputFinal, title, fontPath);
             console.log(`Title overlay added. Final output: ${montageOutputFinal}`);
