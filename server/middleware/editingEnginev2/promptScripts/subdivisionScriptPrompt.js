@@ -19,7 +19,7 @@ function generateSubDivisionPrompt(structurePart, summary, theme, storySummary) 
   prompt += `Theme: ${theme}.\n\n`;
   prompt += `Using the scene instructions, Twyne Summary, Story Summary, create the number of clips indicated above. For each clip, provide:\n`;
   prompt += `- Objective: [A brief, 15-20 word description of what needs to be captured, taking into context the type. If its an interview, make the prompt a curious question about the user, and if its a montage, make it descriptive following the theme.]\n`;
-  prompt += `- Length: [Clip Length]\n`;
+  prompt += `- Length: [Clip Length Indicated Above]\n`;
   prompt += `- Type: [Suggested media type: video, audio, image]\n\n`;
   prompt += `Ensure the decision on the number of clips and their characteristics effectively uses the suggested duration, aligning with the story's theme and the scene's instructions.`;
 
@@ -28,5 +28,3 @@ function generateSubDivisionPrompt(structurePart, summary, theme, storySummary) 
 }
 
 export default generateSubDivisionPrompt;
-
-

@@ -1,156 +1,172 @@
 {
   "_id": {
-    "$oid": "661705b6a4ff9e8ddf2445b4"
+    "$oid": "665e64df17e3752bd12640b8"
   },
-  "name": "Adventure Narrative",
-  "theme": "Fun, High Energy, and Exciting",
+  "name": "Family Journey Reflection",
+  "theme": "Heartfelt, Reflective, Emotional",
   "totalTargetDuration": 60000,
   "structure": [
     {
-      "part": "Title Sequence",
-      "type": "Title",
+      "part": "Opening Titles",
+      "type": "Title Sequence",
       "order": 0,
       "durationRange": {
         "min": 2000,
         "max": 5000
       },
       "suggestedDuration": 5000,
+      "targetedDuration": 5000,
       "blockInstructions": "used to introduce the film or segment",
-      "sceneInstructions": "Open with aerial shots of Southern California, transitioning to a father and son packing their bags, excitement visible on their faces. Overlay with upbeat music to set the tone.",
+      "sceneInstructions": "Introduce the video with a catchy title showcasing the theme of reflection and journey.",
       "clipPace": {
         "type": "timed",
-        "bpm": null,
-        "interval": 2
-      }
+        "bpm": 120,
+        "quantity": 3,
+        "interval": 2,
+        "clipLength": 2
+      },
+      "clips": []
     },
     {
-      "part": "Interview",
+      "part": "Family Insights",
       "type": "Interview",
       "order": 1,
       "durationRange": {
         "min": 5000,
-        "max": 20000
+        "max": 30000
       },
-      "suggestedDuration": 8333.333333333334,
+      "suggestedDuration": 15000,
+      "targetedDuration": 15000,
       "blockInstructions": "used to provide insights or personal perspectives directly by film",
-      "sceneInstructions": "Cut to father and son sitting on the plane, sharing their expectations for the trip. Include close-ups of their animated conversation, interspersed with shots of the plane taking off.",
+      "sceneInstructions": "Brief interview clips of family members sharing their feelings and thoughts about the journey.",
       "clipPace": {
         "type": "fixed",
         "bpm": null,
-        "interval": null
-      }
+        "quantity": 1,
+        "interval": null,
+        "clipLength": 15
+      },
+      "clips": [
+        {
+          "prompt": "\"What was the most memorable moment of the journey for your family?\"",
+          "length": "15 seconds",
+          "type": "Video",
+          "id": "665e64e217e3752bd12640ba",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c1"
+          }
+        }
+      ]
     },
     {
-      "part": "Montage",
+      "part": "Farewell Moments",
       "type": "Montage",
       "order": 2,
       "durationRange": {
         "min": 5000,
-        "max": 15000
+        "max": 25000
       },
-      "suggestedDuration": 8333.333333333334,
+      "suggestedDuration": 20000,
+      "targetedDuration": 20000,
       "blockInstructions": "used to fill in background information or compress time",
-      "sceneInstructions": "Show a rapid sequence of college campuses, highlighting their unique features with quick cuts. Intersperse with shots of father and son interacting with college representatives and students.",
+      "sceneInstructions": "A compilation of emotional and significant moments during the farewell.",
       "clipPace": {
         "type": "timed",
-        "bpm": null,
-        "interval": 4
-      }
+        "bpm": 120,
+        "quantity": 5,
+        "interval": 4,
+        "clipLength": 4
+      },
+      "clips": [
+        {
+          "prompt": "Capture the family reflecting on their journey across Europe, sharing insights and memories.",
+          "length": "4 seconds",
+          "type": "Video",
+          "id": "665e64e517e3752bd12640bb",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c2"
+          }
+        },
+        {
+          "prompt": "Show a heartfelt moment during the emotional farewell as the family says goodbye.",
+          "length": "4 seconds",
+          "type": "Video",
+          "id": "665e64e517e3752bd12640bc",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c3"
+          }
+        },
+        {
+          "prompt": "Highlight the emotional reunion and return home after the trip.",
+          "length": "4 seconds",
+          "type": "Video",
+          "id": "665e64e517e3752bd12640bd",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c4"
+          }
+        },
+        {
+          "prompt": "Showcase a montage of diverse cultures experienced during the journey.",
+          "length": "4 seconds",
+          "type": "Video",
+          "id": "665e64e517e3752bd12640be",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c5"
+          }
+        },
+        {
+          "prompt": "Illustrate personal growth and reflection through scenic views of the destinations visited.",
+          "length": "4 seconds",
+          "type": "Video",
+          "id": "665e64e517e3752bd12640bf",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c6"
+          }
+        }
+      ]
     },
     {
-      "part": "Interview",
-      "type": "Interview",
+      "part": "Reflective Conclusion",
+      "type": "Outro Card",
       "order": 3,
-      "durationRange": {
-        "min": 5000,
-        "max": 20000
-      },
-      "suggestedDuration": 8333.333333333334,
-      "blockInstructions": "used to provide insights or personal perspectives directly by film",
-      "sceneInstructions": "Focus on the father sharing stories of his college days, comparing them with what they are experiencing. Include emotional close-ups and reactions from the son.",
-      "clipPace": {
-        "type": "fixed",
-        "bpm": null,
-        "interval": null
-      }
-    },
-    {
-      "part": "Montage",
-      "type": "Montage",
-      "order": 4,
-      "durationRange": {
-        "min": 5000,
-        "max": 15000
-      },
-      "suggestedDuration": 8333.333333333334,
-      "blockInstructions": "used to fill in background information or compress time",
-      "sceneInstructions": "Compile a vibrant montage of city exploration, from bustling streets to serene beaches, capturing the essence of Southern California. Include snippets of their laughter and playful moments.",
-      "clipPace": {
-        "type": "timed",
-        "bpm": null,
-        "interval": 4
-      }
-    },
-    {
-      "part": "Interview",
-      "type": "Interview",
-      "order": 5,
-      "durationRange": {
-        "min": 5000,
-        "max": 20000
-      },
-      "suggestedDuration": 8333.333333333334,
-      "blockInstructions": "used to provide insights or personal perspectives directly by film",
-      "sceneInstructions": "Have the son reflect on the trip so far, discussing his thoughts on the colleges and the bonding experience with his father. Use a relaxed setting, possibly during a meal, for a more intimate feel.",
-      "clipPace": {
-        "type": "fixed",
-        "bpm": null,
-        "interval": null
-      }
-    },
-    {
-      "part": "Montage",
-      "type": "Montage",
-      "order": 6,
-      "durationRange": {
-        "min": 5000,
-        "max": 15000
-      },
-      "suggestedDuration": 8333.333333333334,
-      "blockInstructions": "used to fill in background information or compress time",
-      "sceneInstructions": "Create a dynamic montage of the hiking adventure, emphasizing the challenge and the beauty of the landscape. Conclude with the moment of connection atop the hill, using slow-motion for emphasis.",
-      "clipPace": {
-        "type": "timed",
-        "bpm": null,
-        "interval": 4
-      }
-    },
-    {
-      "part": "Outro Card",
-      "type": "Card",
-      "order": 7,
       "durationRange": {
         "min": 2000,
         "max": 5000
       },
       "suggestedDuration": 5000,
+      "targetedDuration": 20000,
       "blockInstructions": "used to display credits or closing information",
-      "sceneInstructions": "End with a series of stills from the trip, overlaying each with text detailing their significance. Close with a final shot of the plane flying home, accompanied by uplifting music.",
+      "sceneInstructions": "Narration on the lessons learned and the value of the journey, ending with a return home and a final message.",
       "clipPace": {
         "type": "fixed",
         "bpm": null,
-        "interval": null
-      }
+        "quantity": 1,
+        "interval": null,
+        "clipLength": 20
+      },
+      "clips": [
+        {
+          "prompt": "Capture a heartfelt narration reflecting on the journey, sharing family insights, the emotional farewell, and the return home.",
+          "length": "20 seconds",
+          "type": "Video",
+          "id": "665e64e817e3752bd12640c0",
+          "promptId": {
+            "$oid": "665e64e817e3752bd12640c7"
+          }
+        }
+      ]
     }
   ],
   "soundRules": null,
   "createdAt": {
-    "$date": "2024-04-10T21:33:42.193Z"
+    "$date": "2024-06-04T00:50:39.145Z"
   },
   "lastUpdated": {
-    "$date": "2024-04-10T21:33:42.193Z"
+    "$date": "2024-06-04T00:50:39.145Z"
   },
   "twyneId": {
-    "$oid": "65f13b5b3c54a131c18aed0a"
-  }
-}
+    "$oid": "665e40629efa62160f5c5e91"
+  },
+  "rendered": false,
+  "twyneRenderUri": null
+}ghnf

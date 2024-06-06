@@ -11,6 +11,7 @@ class Prompts {
         mediaType,
         promptTitle,
         collected,
+        progress,
         primers,
         userId,
         twyneId,
@@ -30,6 +31,7 @@ class Prompts {
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
         this.collected = String(collected);
+        this.progress = progress;
         this.primers = primers ?? [];
         this.userId = ObjectId.isValid(userId) ? new ObjectId(userId) : userId;
         this.twyneId = ObjectId.isValid(twyneId) ? new ObjectId(twyneId) : twyneId;
@@ -282,6 +284,21 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
         }
     }
 
+    static async setProgress(promptId, progress) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const result = await collection.updateOne(
+                { _id: new ObjectId(promptId) },
+                { $set: { progress, lastUpdated: new Date() } }
+            );
+            return result;
+        } catch (error) {
+            console.error("Error in Prompts.setProgress:", error);
+            throw error;
+        }
+    }
+
     static async checkPromptsCollected(storylineId) {
         try {
             // we'll want to check if all prompts for the given storylineId that match mediaType "video" have been collected
@@ -327,7 +344,7 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
             // Update the momentId and lastUpdated in the document with the given promptId
             const updateResult = await collection.updateOne(
                 { _id: promptId },
-                { $set: { momentId: momentId, lastUpdated: new Date() } }
+                { $push: { momentId: momentId }, $set: { lastUpdated: new Date() } }
             );
 
             return updateResult;

@@ -35,9 +35,6 @@ router.get('/:promptId/', async (req, res, next) => {
         }
 
         await updateMomentWithS3Uris(req, res, next);
-
-        req.params.status = "true"; // always true if successful
-
         await setPromptCollected(req, res, next);
         await setMomentIdPrompt(req, res, next);
 

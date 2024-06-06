@@ -138,14 +138,27 @@ class Twyne {
             const convertedUpdateData = { ...updateData };
             fieldsToConvert.forEach(field => {
                 if (convertedUpdateData[field]) {
-                    convertedUpdateData[field] = new ObjectId(convertedUpdateData[field]);
+                    try {
+                        console.log(`Converting ${field} to ObjectId:`, convertedUpdateData[field]);
+                        convertedUpdateData[field] = new ObjectId(convertedUpdateData[field]);
+                    } catch (e) {
+                        console.error(`Error converting ${field} to ObjectId:`, e);
+                    }
                 }
             });
     
             // Convert arrays of IDs for prompts, coCreators, contributors to ObjectId instances
             ['prompts', 'coCreators', 'contributors'].forEach(arrayField => {
                 if (convertedUpdateData[arrayField] && Array.isArray(convertedUpdateData[arrayField])) {
-                    convertedUpdateData[arrayField] = convertedUpdateData[arrayField].map(id => new ObjectId(id));
+                    convertedUpdateData[arrayField] = convertedUpdateData[arrayField].map(id => {
+                        try {
+                            console.log(`Converting ${arrayField} element to ObjectId:`, id);
+                            return ObjectId.isValid(id) ? new ObjectId(id) : id;
+                        } catch (e) {
+                            console.error(`Error converting ${arrayField} element to ObjectId:`, e);
+                            return id; // Returning the original id if conversion fails
+                        }
+                    });
                 }
             });
     
@@ -154,13 +167,16 @@ class Twyne {
     
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateDataWithLastUpdated });
+            const result = await collection.updateOne({ _id: id instanceof ObjectId ? id : new ObjectId(id) }, { $set: updateDataWithLastUpdated });
             return result;
         } catch (error) {
             console.error("Error in Twyne.update:", error);
             throw error;
         }
     }
+    
+    
+    
 
     static async addNewCoCreator(twyneId, userId) {
         try {
@@ -344,3 +360,4 @@ class Twyne {
 }
 
 export default Twyne;
+

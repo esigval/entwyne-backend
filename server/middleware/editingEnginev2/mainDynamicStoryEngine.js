@@ -8,7 +8,7 @@ import linkStorylineToTwyne from './linkFields.js';
 import constructNarrative from './constructNarrative.js';
 import sceneDirectorLlm from './llms/sceneDirectorLlm.js';
 import rawNarrative from './rawDataTests/testPayload.json' assert { type: 'json' };
-import generateAndStorePrompts from './editing/generatePromptsandStorev2.js';
+import generateAndStorePrompts from './editing/generatePromptsandStorev3.js';
 import ProgressBar from 'progress';
 import validateNarratives from "./llms/confirmationAgent.js";
 
@@ -57,7 +57,7 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         bar.tick();
 
         console.log('Running scene director...');
-        const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative, story.storySummary);
+        // const sceneDirectorOutput = await sceneDirectorLlm(twyne.twyneSummary, constructedNarrative, story.storySummary);
         bar.tick();
 
         console.log('Generating and storing prompts...');
@@ -73,7 +73,7 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         await linkStorylineToTwyne(twyneId, insertedId);
         bar.tick();
 
-        const totalClips = await Storyline.getTotalClips(insertedId);
+        const totalClips = await Storyline.getTotalParts(insertedId);
         const message = `We've created ${totalClips} Tasks based on your request. Check out your Tasks to see what has been made!`;
         console.log(message);
 

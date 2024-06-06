@@ -39,13 +39,15 @@ class Storyline {
                 interval: clipPace.interval ? Number(clipPace.interval) : null,
                 clipLength: clipPace.clipLength ? Number(clipPace.clipLength) : null,
             },
-            clips: clips.map(({ prompt, length, type, promptId, id }) => ({
+            clips: clips.map(({ prompt, length, type, promptId, id, momentId }) => ({
                 id: id ? id : new ObjectId().toString(), // Generate a new ObjectId or use the existing one
                 prompt,
                 length,
                 type,
-                promptId
+                promptId,
+                momentId: ObjectId.isValid(momentId) ? new ObjectId(momentId) : null, // Ensure momentId is always an ObjectId
             })),
+            promptId,
         }));
         this.soundRules = soundRules;
         this.createdAt = createdAt ? new Date(createdAt) : new Date();
@@ -70,7 +72,7 @@ class Storyline {
             console.error("Error in Storyline.createStorylineInstance:", error);
             throw error;
         }
-    }   
+    }
 
     static async updateTwyneRenderUri(storylineId, newUri) {
         try {
@@ -116,14 +118,14 @@ class Storyline {
         }
     }
 
-    
+
 
     static async getStorylineByTwyneId(twyneId) {
-        try { 
+        try {
             const db = await connect();
             const collection = db.collection(Storyline.collectionName);
             const document = await collection.findOne({ twyneId: new ObjectId(twyneId) });
-    
+
             if (document) {
                 // Iterate over the structure and get the part, type, and sceneInstructions of each item
                 const processedStructure = document.structure.map(({ part, type, sceneInstructions }) => {
@@ -133,11 +135,11 @@ class Storyline {
                         sceneInstructions: sceneInstructions.replace(/\s+/g, ' ').trim()  // Remove unnecessary spaces
                     };
                 });
-    
+
                 // Replace the structure in the document with the processed structure
                 document.structure = processedStructure;
             }
-    
+
             return document;
         } catch (error) {
             console.error("Error in Storyline.getStorylineByTwyneId:", error);
@@ -161,16 +163,60 @@ class Storyline {
         }
     }
 
-    static async getStorylineById(storylineId) {
+    static async getTotalParts(storylineId) {
         try {
             const db = await connect();
             const collection = db.collection(Storyline.collectionName);
-            return await collection.findOne({ _id: new ObjectId(storylineId) });
+            const storyline = await collection.findOne({ _id: new ObjectId(storylineId) });
+            const totalParts = storyline.structure.length;
+            return totalParts;
         } catch (error) {
-            console.error("Error in Storyline.getStorylineById:", error);
+            console.error("Error in Storyline.getTotalParts:", error);
             throw error;
         }
     }
+
+    static async updateClipWithAssignedMoment(storylineId, promptId, clip) {
+    try {
+        const db = await connect();
+        const collection = db.collection(this.collectionName);
+
+        const normalizedStorylineId = new ObjectId(storylineId);
+        const normalizedPromptId = new ObjectId(promptId);
+
+        const doc = await collection.findOne(
+            { _id: normalizedStorylineId, structure: { $elemMatch: { promptId: normalizedPromptId } } }
+        );
+
+        if (doc === null) {
+            return 0;
+        }
+
+        const result = await collection.updateOne(
+            { _id: normalizedStorylineId, structure: { $elemMatch: { promptId: normalizedPromptId } } },
+            { $push: { 'structure.$.clips': clip } }
+        );
+
+        return result.modifiedCount;
+    } catch (error) {
+        console.error("Error in Storyline.updateClipWithAssignedMoment:", error);
+        throw error;
+    }
+}
+
+    static async findById(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            const document = await collection.findOne({ _id: new ObjectId(storylineId) });
+            return document;
+        } catch (error) {
+            console.error("Error in Storyline.findById:", error);
+            throw error;
+        }
+    }
+
+
 
 
 

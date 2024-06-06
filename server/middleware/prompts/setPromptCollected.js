@@ -1,11 +1,21 @@
 import Prompts from '../../models/promptModel.js'; // Import the Prompts model
+import calculatePromptProgress from './calculatePromptProgress.js';
 
-const setPromptCollected = async (req, res, next) => {
-    const promptId = req.params.promptId;
-    const status = req.params.status; // Get the status from the request body
-    await Prompts.setCollectedStatus(promptId, status); // Pass the status to the function
+const setPromptCollectedandStatus = async (req, res, next) => {
+    try {
+        const promptId = req.params.promptId;
+        const progress = await calculatePromptProgress(promptId); // Calculate the progress of the prompt
 
-    next();
+        // Only set the collected status to true if the progress is 100% or more
+        if (progress >= 1) {
+            await Prompts.setCollectedStatus(promptId, true); // Pass the status to the function
+        }
+
+        await Prompts.setProgress(promptId, progress); // Pass the progress to the function
+        next();
+    } catch (error) {
+        next(error);
+    }
 };
 
-export default setPromptCollected;
+export default setPromptCollectedandStatus;

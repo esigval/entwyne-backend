@@ -3,7 +3,7 @@ import Moment from '../../../models/momentModel.js';
 import Storyline from '../../../models/storylineModel.js';
 
 async function extractClipData(storylineId) {
-    const data = await Storyline.getStorylineById(storylineId)
+    const data = await Storyline.findById(storylineId)
 
     // Initialize an empty array to hold the results
     let results = [];
@@ -26,13 +26,11 @@ async function extractClipData(storylineId) {
                     orderIndex: `${index}.${clipIndex}`,
                     type: clip.type,
                     partType: part.type,
-                    promptId: clip.promptId,
-                    length: parseInt(clip.length),
+                    promptId: part.promptId,
+                    momentId: clip.momentId, // Access momentId directly from clip
+                    length: parseInt(clip.clipLength),
                     cutSpeed: part.clipPace.type === 'fixed' ? 'flexible' : part.clipPace.type
                 };
-                // Add momentId to clipData
-                const momentIds = await Prompts.findMomentIdsByPromptIds([clipData.promptId]);
-                clipData.momentId = momentIds[0]; // Assuming each promptId corresponds to one momentId
 
                 // Add proxy URIs to clipData
                 const proxyUris = proxyUrisMap[clipData.momentId];
@@ -53,9 +51,10 @@ async function extractClipData(storylineId) {
 
 export default extractClipData;
 
+/*
 // Get the extracted clip data
 extractClipData('662adef494d07d65cfb47cce').then(clipData => {
     console.log(JSON.stringify(clipData, null, 2));
 }).catch(error => {
     console.error('Error extracting clip data:', error);
-});
+});*/

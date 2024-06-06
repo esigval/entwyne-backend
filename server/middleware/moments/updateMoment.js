@@ -8,23 +8,39 @@ const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];
 
 const updateMomentWithS3Uris = async (req, res, next) => {
-    let { promptId } = req.params;
-    const momentId = req.s3Keys.momentId;
-    console.log('momentId:', momentId);
 
-    // Convert promptId to an ObjectId if it's not already one
-    promptId = new ObjectId(promptId);
+    try {
+        let { promptId } = req.params;
 
-    // construct the S3 URIs
-    const audioUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.audioKey}.pcm`;
-    const videoUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.videoKey}.mp4`;
-    const thumbnailUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.thumbnailKey}.png`;
-    const proxyUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.proxyKey}.mp4`;
+        const momentId = req.s3Keys.momentId;
 
-    // update the moment
-    await Moment.updateMoment({ momentId, update: { audioUri, videoUri, thumbnailUri, proxyUri, associatedPromptId: promptId } });
+        // Convert promptId to an ObjectId if it's not already one
+        if (!(promptId instanceof ObjectId)) {
+            promptId = new ObjectId(promptId);
+        }
 
-    next();
+        // Construct the S3 URIs
+        const audioUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.audioKey}.pcm`;
+        const videoUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.videoKey}.mp4`;
+        const thumbnailUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.thumbnailKey}.png`;
+        const proxyUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${req.s3Keys.proxyKey}.mp4`;
+
+        // Update the moment
+        await Moment.updateMoment({
+            momentId,
+            update: {
+                audioUri,
+                videoUri,
+                thumbnailUri,
+                proxyUri,
+                associatedPromptId: promptId
+            }
+        });
+        next();
+    } catch (error) {
+        console.error('Error in updateMomentWithS3Uris:', error);
+        next(error);
+    }
 };
 
 export default updateMomentWithS3Uris;
