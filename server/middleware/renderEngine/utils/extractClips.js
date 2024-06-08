@@ -20,27 +20,24 @@ async function extractClipData(storylineId) {
         };
 
         for (const [clipIndex, clip] of part.clips.entries()) {
+            let clipData = {
+                orderIndex: `${index}.${clipIndex}`,
+                type: clip.type,
+                partType: part.type,
+                promptId: part.promptId, // Moved promptId to be accessed from part
+                momentId: clip.momentId, // Access momentId directly from clip
+                length: parseInt(clip.clipLength),
+                cutSpeed: part.clipPace.type === 'fixed' ? 'flexible' : part.clipPace.type
+            };
 
-            if (clip.promptId) {
-                let clipData = {
-                    orderIndex: `${index}.${clipIndex}`,
-                    type: clip.type,
-                    partType: part.type,
-                    promptId: part.promptId,
-                    momentId: clip.momentId, // Access momentId directly from clip
-                    length: parseInt(clip.clipLength),
-                    cutSpeed: part.clipPace.type === 'fixed' ? 'flexible' : part.clipPace.type
-                };
-
-                // Add proxy URIs to clipData
-                const proxyUris = proxyUrisMap[clipData.momentId];
-                if (proxyUris) {
-                    clipData.proxyUri = proxyUrisMap[clipData.momentId.toString()];
-                }
-
-                // Add the clip data to the clips array for this block
-                block.clips.push(clipData);
+            // Add proxy URIs to clipData
+            const proxyUris = proxyUrisMap[clipData.momentId];
+            if (proxyUris) {
+                clipData.proxyUri = proxyUrisMap[clipData.momentId.toString()];
             }
+
+            // Add the clip data to the clips array for this block
+            block.clips.push(clipData);
         }
 
         // Add the block to the results array

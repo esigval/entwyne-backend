@@ -15,11 +15,9 @@ async function calculatePromptProgress(promptId) {
     const promptObjectId = new ObjectId(promptId);
 
     const storylineId = await Prompts.getStorylineId(promptObjectId);
-    console.log(storylineId);
 
     // Fetch the storyline from the database
     const storyline = await Storyline.findById(storylineId);
-    console.log(storyline);
 
     // Find the structure item that contains the prompt
     const structureItem = storyline.structure.find(item => item.promptId.equals(promptObjectId));
@@ -39,3 +37,10 @@ async function calculatePromptProgress(promptId) {
 
 
 export default calculatePromptProgress;
+/*
+const result = await calculatePromptProgress('66638ac677ea7e88a49cadc0');
+
+console.log(result);
+*/
+
+

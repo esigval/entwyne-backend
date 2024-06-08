@@ -91,7 +91,7 @@ const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storyline
                 prompt: promptText,
                 mediaType: block.type,
                 promptTitle: block.part,
-                collected: false,
+                collected: "false",
                 userId: new ObjectId(userId),
                 createdAt: new Date(),
                 lastUpdated: new Date(),

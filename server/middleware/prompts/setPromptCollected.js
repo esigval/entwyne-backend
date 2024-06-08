@@ -6,10 +6,14 @@ const setPromptCollectedandStatus = async (req, res, next) => {
         const promptId = req.params.promptId;
         const progress = await calculatePromptProgress(promptId); // Calculate the progress of the prompt
 
-        // Only set the collected status to true if the progress is 100% or more
+        // Determine and set the collected status based on the progress
+        let status = "false"; // Default status
         if (progress >= 1) {
-            await Prompts.setCollectedStatus(promptId, true); // Pass the status to the function
+            status = "true"; // Progress is 100% or more
+        } else if (progress > 0) {
+            status = "inProgress"; // Progress is more than 0 but less than 100%
         }
+        await Prompts.setCollectedStatus(promptId, status); // Pass the status to the function
 
         await Prompts.setProgress(promptId, progress); // Pass the progress to the function
         next();

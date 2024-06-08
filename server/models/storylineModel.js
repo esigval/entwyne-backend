@@ -20,7 +20,7 @@ class Storyline {
         this.name = name;
         this.theme = theme;
         this.totalTargetDuration = totalTargetDuration;
-        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, targetedDuration, sceneInstructions, blockInstructions, clipPace, clips = [] }) => ({
+        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, targetedDuration, sceneInstructions, blockInstructions, clipPace, clips =[], promptId = [] }) => ({
             part,
             type,
             order: Number(order),
@@ -39,7 +39,7 @@ class Storyline {
                 interval: clipPace.interval ? Number(clipPace.interval) : null,
                 clipLength: clipPace.clipLength ? Number(clipPace.clipLength) : null,
             },
-            clips: clips.map(({ prompt, length, type, promptId, id, momentId }) => ({
+            clips: clips.map(({ prompt, length, type, id, promptId, momentId }) => ({
                 id: id ? id : new ObjectId().toString(), // Generate a new ObjectId or use the existing one
                 prompt,
                 length,

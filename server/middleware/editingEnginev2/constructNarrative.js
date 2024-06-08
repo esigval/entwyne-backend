@@ -69,6 +69,7 @@ const constructNarrative = async (rawNarrative) => {
     if (remainder !== 0) {
         distributeRemainder();
     }
+    
 
     const constructedNarrative = new Storyline({
         _id: undefined, // Omit _id
