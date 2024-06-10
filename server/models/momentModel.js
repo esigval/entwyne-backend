@@ -107,28 +107,34 @@ class Moment {
         }
     }
 
-    static async createMoment({ associatedPromptId, contributorId, userId }) {
-        try {
-            const db = await connect();
-            const collection = db.collection(Moment.collectionName);
+    static async createMoment({ associatedPromptId, contributorId, userId, storylineId }) {
+    try {
+        const db = await connect();
+        const collection = db.collection(Moment.collectionName);
 
-            // convert userId and contributorId to ObjectId if they're not already
-            const userIdAsObjectId = userId instanceof ObjectId ? userId : new ObjectId(userId);
-            const contributorIdAsObjectId = contributorId instanceof ObjectId ? contributorId : new ObjectId(contributorId);
-            const associatedPromptIdAsObjectId = associatedPromptId instanceof ObjectId ? associatedPromptId : new ObjectId(associatedPromptId);
+        // Convert userId, contributorId, and storylineId to ObjectId if they're not already
+        const userIdAsObjectId = userId instanceof ObjectId ? userId : new ObjectId(userId);
+        const contributorIdAsObjectId = contributorId instanceof ObjectId ? contributorId : new ObjectId(contributorId);
+        const associatedPromptIdAsObjectId = associatedPromptId instanceof ObjectId ? associatedPromptId : new ObjectId(associatedPromptId);
+        const storylineIdAsObjectId = storylineId instanceof ObjectId ? storylineId : new ObjectId(storylineId);
 
-            // Create a new instance of Moment
-            const newMoment = new Moment({ associatedPromptId: associatedPromptIdAsObjectId, userId: userIdAsObjectId, contributorId: contributorIdAsObjectId });
+        // Create a new instance of Moment with storylineId
+        const newMoment = new Moment({
+            associatedPromptId: associatedPromptIdAsObjectId,
+            userId: userIdAsObjectId,
+            contributorId: contributorIdAsObjectId,
+            storylineId: storylineIdAsObjectId // Include storylineId in the new instance
+        });
 
-            // Insert the new instance into the database
-            await collection.insertOne(newMoment);
+        // Insert the new instance into the database
+        await collection.insertOne(newMoment);
 
-            // Return the newMoment object
-            return newMoment;
-        } catch (error) {
-            console.error('Failed to create empty moment:', error);
-        }
+        // Return the newMoment object
+        return newMoment;
+    } catch (error) {
+        console.error('Failed to create moment:', error);
     }
+}
 
     static async getpictureUribyStorylineId(storylineId, numPictures) {
         try {
@@ -285,6 +291,7 @@ class Moment {
     }
 
     static async findProxyUriById(momentId) {
+        console.log("momentId:", momentId);
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);

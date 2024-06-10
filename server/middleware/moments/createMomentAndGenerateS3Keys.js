@@ -8,8 +8,13 @@ const createMomentAndGenerateS3Keys = async (req, res, next) => {
   const mimeType = req.query.mimeType;
   
   // create moment with associated prompt id and user id
-  const promptUserId = await Prompt.findUserIdByPromptId(promptId);
-  const moment = await Moment.createMoment({ associatedPromptId: promptId, contributorId: userId, userId: promptUserId });
+  const { userId: promptUserId, storylineId } = await Prompt.findUserIdAndStorylineByPromptId(promptId);
+  const moment = await Moment.createMoment({
+    associatedPromptId: promptId,
+    contributorId: userId, // Assuming this is defined elsewhere in your code
+    userId: promptUserId,
+    storylineId: storylineId // Add storylineId to the moment creation if your schema supports it
+  });
   await assignMomentToClip(promptId, moment._id.toString(), mimeType);
 
   console.log('moment made:', moment);

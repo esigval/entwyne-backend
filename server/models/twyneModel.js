@@ -46,7 +46,7 @@ class Twyne {
 
     hasEdit() {
         return this.edit !== null;
-      }
+    }
 
     static get collectionName() {
         return 'twynes'; // Name of the collection in the database
@@ -72,13 +72,25 @@ class Twyne {
             const collection = db.collection(Twyne.collectionName);
             const result = await collection.updateOne(
                 { _id: new ObjectId(twyneId) },
-                { 
+                {
                     $set: { currentRender: uri }
                 }
             );
             return result;
         } catch (error) {
             console.error("Error in Twyne.setCurrentRender:", error);
+            throw error;
+        }
+    }
+
+    static async findCurrentRenderByTwyneId(twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const document = await collection.findOne({ _id: new ObjectId(twyneId) }, { projection: { currentRender: 1 } });
+            return document ? document.currentRender : null;
+        } catch (error) {
+            console.error("Error in Twyne.findCurrentRenderByTwyneId:", error);
             throw error;
         }
     }
@@ -94,9 +106,11 @@ class Twyne {
             throw error;
         }
     }
-    
+
+
+
     static async deleteThreadId(twyneId) {
-        try { 
+        try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
             const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $set: { threadId: null } });
@@ -106,7 +120,7 @@ class Twyne {
             throw error;
         }
     }
-    
+
     static async findById(id) {
         try {
             const db = await connect();
@@ -120,6 +134,7 @@ class Twyne {
     }
 
     static async findByStoryId(storyId) {
+        console.log("Finding Twynes by storyId:", storyId); 
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
@@ -146,7 +161,7 @@ class Twyne {
                     }
                 }
             });
-    
+
             // Convert arrays of IDs for prompts, coCreators, contributors to ObjectId instances
             ['prompts', 'coCreators', 'contributors'].forEach(arrayField => {
                 if (convertedUpdateData[arrayField] && Array.isArray(convertedUpdateData[arrayField])) {
@@ -161,10 +176,10 @@ class Twyne {
                     });
                 }
             });
-    
+
             // Include lastUpdated timestamp in the update
             const updateDataWithLastUpdated = { ...convertedUpdateData, lastUpdated: new Date() };
-    
+
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
             const result = await collection.updateOne({ _id: id instanceof ObjectId ? id : new ObjectId(id) }, { $set: updateDataWithLastUpdated });
@@ -174,9 +189,29 @@ class Twyne {
             throw error;
         }
     }
-    
-    
-    
+
+    static async updateThumbnail(twyneId, twyneThumbnail) {
+        try {
+            // Prepare the update data with the correct property name
+            const updateData = { twyneThumbnail, lastUpdated: new Date() };
+
+            // Connect to the database
+            const db = await connect();
+            const collection = db.collection(this.collectionName);
+
+            // Convert twyneId to ObjectId if necessary
+            const objectId = twyneId instanceof ObjectId ? twyneId : new ObjectId(twyneId);
+
+            // Perform the update
+            const result = await collection.updateOne({ _id: objectId }, { $set: updateData });
+
+            console.log(`Updated Twyne ${twyneId} with new thumbnail URL: ${twyneThumbnail}`);
+            return result;
+        } catch (error) {
+            console.error("Error in TwyneModel.updateThumbnail:", error);
+            throw error;
+        }
+    }
 
     static async addNewCoCreator(twyneId, userId) {
         try {
@@ -188,7 +223,7 @@ class Twyne {
             console.error("Error in Twyne.addNewCoCreator:", error);
             throw error;
         }
-    }   
+    }
 
     static async addNewContributor(twyneId, userId) {
         try {
@@ -233,7 +268,7 @@ class Twyne {
             throw error;
         }
     }
-    
+
     static async findByIdAndContributorId(storyId, contributorId) {
         try {
             const db = await connect();
@@ -317,30 +352,46 @@ class Twyne {
             const collection = db.collection(Twyne.collectionName);
             const twyneObjectId = new ObjectId(twyneId);
             const twyne = await collection.findOne({ _id: twyneObjectId });
-    
+
             const totalPrompts = twyne.prompts.length;
             if (totalPrompts === 0) {
                 console.log("No prompts exist.");
                 return 0;
             }
-    
+
             let collectedPromptsCount = 0;
-    
+
             for (const promptId of twyne.prompts) {
                 const collected = await Prompts.getPromptCollectedStatus(promptId);
                 if (collected === "true") collectedPromptsCount++;
             }
-    
+
             const ratio = collectedPromptsCount / totalPrompts;
             const progress = Math.round(ratio * 100);
             console.log(`Progress is: ${progress}`);
-    
+
             await collection.updateOne({ _id: twyneObjectId }, { $set: { progress: progress } });
-    
+
             return progress;
         } catch (error) {
             console.error('Error calculating prompt function:', error);
             throw error; // Rethrow or handle as needed
+        }
+    }
+
+    static async getThumbnailByTwyneId(twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const document = await collection.findOne({ _id: new ObjectId(twyneId) });
+            if (document) {
+                return document.twyneThumbnail;
+            } else {
+                return null; // Or any appropriate response indicating not found
+            }
+        } catch (error) {
+            console.error("Error in Twyne.getThumbnailByTwyneId:", error);
+            throw error;
         }
     }
 
@@ -356,7 +407,7 @@ class Twyne {
         }
     }
 
-    
+
 }
 
 export default Twyne;

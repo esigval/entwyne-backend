@@ -14,25 +14,13 @@ import { dirname } from 'path';
 import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { generateS3Key, uploadToS3 } from './utils/generateS3Key.js';
 import getMusicTracks from './music/getMusicTracks.js'; // Adjust the import path accordingly
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const environment = process.env.NODE_ENV || 'local';
-const currentConfig = config[environment];
-
-
-// Configure AWS
-AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION
-});
-
-// Create an S3 instance
-const s3 = new AWS.S3();
 
 const renderVideo = async (jsonConfig, userId) => {
     const { storylineId, twyneQuality, twyneOrientation, music, twyneId, title, outro, crossfadeSettings, trackName } = jsonConfig;
@@ -92,50 +80,28 @@ const renderVideo = async (jsonConfig, userId) => {
         const fileLocations = await Promise.all(processingPromises);
         console.log(`All blocks processed successfully. File locations:`, fileLocations);
 
+        
         // Call the concatenateVideos function
         const outputPath = path.join(__dirname, 'twyne', `twyne_${twyneId}.mp4`);
-        const concatenatedFilePath = await concatenateVideos(fileLocations, outputPath);
+        const { outputPath: concatenatedFilePath, thumbnailPath } = await concatenateVideos(fileLocations, outputPath);
 
-        // Read the output file into a variable
-        const fileContent = fs.readFileSync(concatenatedFilePath);
+        // Upload the concatenated video and get the S3 key
+        const videoS3Key = await uploadToS3(concatenatedFilePath, false, userId, twyneId, twyneQuality, storylineId);
 
-        // name the twyne entry for s3
-
-        const params = {
-            Bucket: currentConfig.TWYNE_BUCKET,
-            Key: `${userId}/${twyneId}/twyne_${twyneQuality}_${storylineId}.mp4`, // File name you want to save as in S3
-            Body: fileContent,
-        };
-
-        // Uploading files to the bucket
-        s3.upload(params, function (err, data) {
-            if (err) {
-                throw err;
-            }
-            console.log(`File uploaded successfully. ${data.Location}`);
-
-            // Delete the local file
-            fs.unlink(concatenatedFilePath, function (err) {
-                if (err) {
-                    console.error(`Error deleting file ${concatenatedFilePath}: ${err}`);
-                } else {
-                    console.log(`File deleted successfully: ${concatenatedFilePath}`);
-                }
-            });
-        });
-
-        // Add the S3 prefix to params.Key
-    params.Key = `s3://${params.Bucket}/${params.Key}`;
+        // Upload the thumbnail and get the S3 key
+        const thumbnailS3Key = await uploadToS3(thumbnailPath, true, userId, twyneId, 'thumbnail', storylineId);
 
         // Update the storyline record with the S3 link
-        const renderSwitch = await Storyline.updateTwyneRenderUri(storylineId, params.Key);
+        const renderSwitch = await Storyline.updateTwyneRenderUri(storylineId, videoS3Key);
         console.log('UpdatedUri:', renderSwitch);
 
         const updatedStoryline = await Storyline.updateRenderedStatus(storylineId, true);
         console.log('UpdatedStoryline:', updatedStoryline);
 
-        const twyneCurrent = await Twyne.setCurrentRender(twyneId, params.Key);
+        const twyneCurrent = await Twyne.setCurrentRender(twyneId, videoS3Key);
         console.log('TwyneCurrent:', twyneCurrent);
+
+        const setTwyneThumbnail = await Twyne.updateThumbnail(twyneId, thumbnailS3Key);
 
         // Optionally delete the intermediate files
         await deleteFiles(fileLocations);
@@ -153,11 +119,11 @@ export default renderVideo;
 const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
-    "storylineId": "662adef494d07d65cfb47cce",
+    "storylineId": "6663e641c5323a36019b885a",
     "twyneQuality": "Proxy",
     "twyneOrientation": "horizontal",
     "music": "s3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3",
-    "twyneId": "662ade3694d07d65cfb47ccb",
+    "twyneId": "6663e5eac5323a36019b8859",
     "title": "The Greatest Rock",
     "outro": "Made With Entwyne",
     "trackName": "Neon Beach Conspiracy Nation",

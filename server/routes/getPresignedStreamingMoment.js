@@ -15,15 +15,16 @@ const currentConfig = config[environment];
 const router = express.Router();
 
 router.get('/:momentId', validateTokenMiddleware, async (req, res) => {
+    console.log('momentId:', req.params.momentId);
     try {
-        const s3Url = await Moments.findProxyUriById(momentId);
-        if (!moment) {
+        const s3Url = await Moments.findProxyUriById(req.params.momentId);
+        if (!s3Url) {
             return res.status(404).json({ error: 'Moment not found' });
         }
 
         const keyWithExtension = s3Url.replace('s3://', '').split('/').slice(1).join('/');
         const key = keyWithExtension.substring(0, keyWithExtension.lastIndexOf('.'));
-ey
+
 
         const presignedUrlFunction = universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET);
         const presignedUrl = await presignedUrlFunction('getObject', key, 'audio/mp4');

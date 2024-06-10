@@ -21,6 +21,8 @@ router.get('/:promptId', validateTokenMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'Prompt not found' });
         }
 
+        console.log('momentId:', momentId);
+
         const s3Url = await Moments.findProxyUriById(momentId);
 
         const keyWithExtension = s3Url.replace('s3://', '').split('/').slice(1).join('/'); // Remove 's3://' and the bucket name

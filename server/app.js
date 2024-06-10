@@ -78,6 +78,7 @@ import setPromptCollected from './routes/setPromptCollected.js';
 import twyneRoutes from './routes/modifyTwynes.js';
 import twyneByStory from './routes/getTwynesByStory.js';
 import renderTwyne from './routes/renderTwyne.js';
+import getTwyneThumbnail from './routes/getTwyneThumbnail.js';
 
 // Routes for handling assistant interactions
 import createThread from './routes/createThread.js';
@@ -93,6 +94,7 @@ import instructions from './routes/instructions.js';
 // Streaming
 import getPresignedStreamingUrlPrompt from './routes/getPresignedStreamingPrompt.js';
 import getPresignedStreamingUrlMoment from './routes/getPresignedStreamingMoment.js';
+import getPresignedStreamingUrlTwyne from './routes/getPresignedStreamingTwyne.js';
 
 // Chat Routes
 import directorChat from './routes/chatBot.js';
@@ -195,6 +197,7 @@ app.use('/v1/twyne', twyneRoutes); // protected
 app.use('/v1/twyne/story', twyneByStory);
 app.use('/v1/twyne/addUser', userAddToTwyne); // protected
 app.use('/v1/twyne/render', renderTwyne); // protected
+app.use('/v1/twyne/getTwyneThumbnail', getTwyneThumbnail); // protected
 
 // Utility (protected)
 app.use('/v1/saveVideoUri', saveVideoUri); // protected
@@ -221,6 +224,7 @@ app.use('/v1/instructions', instructions);
 // Streaming
 app.use('/v1/streamingPrompt', getPresignedStreamingUrlPrompt); // protected
 app.use('/v1/streamingMoment', getPresignedStreamingUrlMoment); // protected
+app.use('/v1/streamingTwyne', getPresignedStreamingUrlTwyne); // protected
 
 // Chat
 

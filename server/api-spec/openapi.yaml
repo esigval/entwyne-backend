@@ -139,6 +139,54 @@ paths:
                 properties:
                   error:
                     type: string
+  /twyne/getTwyneThumbnail/{twyneId}/:
+
+    get:
+      tags:
+      - Twyne
+      summary: Generate pre-signed URLs for uploading media to a moment
+      parameters:
+      - in: path
+        name: twyneId
+        required: true
+        schema:
+          type: string
+        description: The ID of the twyne
+      responses:
+        '200':
+          description: Pre-signed URLs for uploading media
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audioUrl:
+                    type: string
+                    format: uri
+                  videoUrl:
+                    type: string
+                    format: uri
+                  imageUrl:
+                    type: string
+                    format: uri
+        '400':
+          description: Invalid MIME type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Error generating pre-signed URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   /directorChat:
     post:
       summary: Starts a new chat bot session
@@ -221,10 +269,10 @@ paths:
     get:
       tags:
       - Streaming
-      summary: Get a pre-signed URL for a moment by its prompt ID
+      summary: Get a pre-signed URL for a moment by its moment ID
       parameters:
       - in: path
-        name: promptId
+        name: momentId
         required: true
         schema:
           type: string
@@ -269,6 +317,32 @@ paths:
           description: Prompt or moment not found
         '500':
           description: Error in getMoment or Failed to get presigned URL
+  /streamingTwyne/{twyneId}:
+    get:
+      tags:
+      - Streaming
+      summary: Get a pre-signed URL for a twyne by its prompt ID
+      parameters:
+      - in: path
+        name: twyneId
+        required: true
+        schema:
+          type: string
+        description: The ID of the twyne
+      responses:
+        '200':
+          description: A pre-signed URL for the twyne
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presignedUrl:
+                    type: string
+        '404':
+          description: twyneId or twyne not found
+        '500':
+          description: Error in getTwyne or Failed to get presigned URL
   /moments/{momentId}:
     get:
       tags:

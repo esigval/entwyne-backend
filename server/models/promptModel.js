@@ -511,7 +511,7 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
         }
     }
 
-    static async findUserIdByPromptId(promptId) {
+    static async findUserIdAndStorylineByPromptId(promptId) {
         console.log('promptId:', promptId);
         try {
             const db = await connect();
@@ -520,7 +520,8 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
             if (!prompt) {
                 throw new Error('No prompt found with the provided ID');
             }
-            return prompt.userId;
+            // Assuming the prompt object contains a storylineId field
+            return { userId: prompt.userId, storylineId: prompt.storylineId };
         } catch (error) {
             console.error('Error in findUserIdByPromptId:', error);
             throw error;

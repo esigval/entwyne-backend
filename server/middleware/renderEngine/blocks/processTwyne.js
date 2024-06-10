@@ -70,7 +70,18 @@ const concatenateVideos = async (fileLocations, outputPath = 'output.mp4') => {
                     }
                 });
 
-                resolve(outputPath);
+                // New code to take a thumbnail of the concatenated video
+                const thumbnailPath = outputPath.replace('.mp4', '_thumbnail.jpg');
+                const thumbnailCommand = `ffmpeg -ss 00:00:01 -i ${outputPath} -frames:v 1 ${thumbnailPath}`;
+                exec(thumbnailCommand, (thumbnailError, thumbnailStdout, thumbnailStderr) => {
+                    if (thumbnailError) {
+                        console.error(`An error occurred while capturing the thumbnail: ${thumbnailStderr}`);
+                        reject(thumbnailError);
+                    } else {
+                        console.log(`Thumbnail captured successfully. Thumbnail path: ${thumbnailPath}`);
+                        resolve({ outputPath, thumbnailPath });
+                    }
+                });
             }
         });
     });
