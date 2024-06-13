@@ -124,18 +124,18 @@ const renderVideo = async (jsonConfig, userId) => {
 
 export default renderVideo;
 
-/*
+
 const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
-    "storylineId": "6669e8c9650b195433a45d0c",
+    "storylineId": "666853b82fd5288688800091",
     "twyneQuality": "Proxy",
     "twyneOrientation": "horizontal",
-    "music": "s3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3",
-    "twyneId": "6669e7da650b195433a45d0b",
+    "music": "s3://music-tracks/Montage/Neon_Beach_Humblebrag_instrumental_verse_0_21.mp3",
+    "twyneId": "6668526b2fd5288688800090",
     "title": "Cascade Lakes Relay 2023",
     "outro": "Join Us Next Year",
-    "trackName": "Neon Beach Conspiracy Nation",
+    "trackName": "Neon Beach Humblebrag Instrumental",
     "crossfadeSettings": [
         {
             "partType": "Title Sequence",
@@ -161,4 +161,3 @@ const jsonConfig = {
 
 // Example call to the function
 renderVideo(jsonConfig, userId); 
-*/
