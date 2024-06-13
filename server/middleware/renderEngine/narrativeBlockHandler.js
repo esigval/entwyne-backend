@@ -21,7 +21,6 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-
 const renderVideo = async (jsonConfig, userId) => {
     const { storylineId, twyneQuality, twyneOrientation, music, twyneId, title, outro, crossfadeSettings, trackName } = jsonConfig;
 
@@ -30,14 +29,24 @@ const renderVideo = async (jsonConfig, userId) => {
         if (!narrativeBlocks || narrativeBlocks.length === 0) {
             return { status: 'error', message: 'No narrative blocks found.' };
         }
+
         // Get the music tracks for the specified track name
         const musicTracks = await getMusicTracks(trackName);
 
+        // Map the crossfade settings by part type for easier lookup
+        const crossfadeSettingsMap = crossfadeSettings.reduce((acc, setting) => {
+            acc[setting.partType] = setting;
+            return acc;
+        }, {});
+
         // Enrich narrative blocks with crossfade settings and music paths
-        const enrichedNarrativeBlocks = narrativeBlocks.map((block, index) => {
-            const settings = crossfadeSettings[index];
+        const enrichedNarrativeBlocks = narrativeBlocks.map((block) => {
             const clipsPartType = block.clips[0]?.partType || block.partType;
+            const settings = crossfadeSettingsMap[clipsPartType] || {};
             const musicPath = musicTracks[clipsPartType]?.uri || music;
+
+            console.log(`Block:`, JSON.stringify(block, null, 2));
+            console.log(`Crossfade Settings:`, JSON.stringify(settings, null, 2));
 
             return { ...block, ...settings, partType: clipsPartType, musicPath };
         });
@@ -119,13 +128,13 @@ export default renderVideo;
 const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
-    "storylineId": "6663e641c5323a36019b885a",
+    "storylineId": "6669e8c9650b195433a45d0c",
     "twyneQuality": "Proxy",
     "twyneOrientation": "horizontal",
     "music": "s3://music-tracks/Neon_Beach_Conspiracy_Nation_background_vocals_2_32.mp3",
-    "twyneId": "6663e5eac5323a36019b8859",
-    "title": "The Greatest Rock",
-    "outro": "Made With Entwyne",
+    "twyneId": "6669e7da650b195433a45d0b",
+    "title": "Cascade Lakes Relay 2023",
+    "outro": "Join Us Next Year",
     "trackName": "Neon Beach Conspiracy Nation",
     "crossfadeSettings": [
         {
@@ -136,7 +145,7 @@ const jsonConfig = {
         {
             "partType": "Outro Card",
             "crossfadeDuration": 0.7,
-            "offsetInterval": 4
+            "offsetInterval": 1
         },
         {
             "partType": "Montage",
@@ -151,4 +160,5 @@ const jsonConfig = {
 
 
 // Example call to the function
-renderVideo(jsonConfig, userId); */
+renderVideo(jsonConfig, userId); 
+*/

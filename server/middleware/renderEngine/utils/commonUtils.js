@@ -34,7 +34,7 @@ export const handleClip = async (clip, bucket, quality, twyneOrientation, framer
     const outputPath = path.join(__dirname, `downloads/${parsedPath.base}`);
     await downloadFile(bucket, key, outputPath);
 
-    const { targetScale, absoluteScale, orientation } = getScale(quality, outputPath, twyneOrientation);
+    const { targetScale, absoluteScale, orientation, duration } = getScale(quality, outputPath, twyneOrientation);
     const { width: targetWidth, height: targetHeight } = getTargetDimensions(quality, twyneOrientation);
     const pad = calculatePad(absoluteScale, targetWidth, targetHeight, orientation);
 
@@ -53,7 +53,7 @@ export const handleClip = async (clip, bucket, quality, twyneOrientation, framer
         throw new Error('Pad value is undefined');
     }
 
-    const command = ffmpegCommands[partType].process(outputPath, clip.length, framerate, pad, targetScale, outputClipPath);
+    const command = ffmpegCommands[partType].process(outputPath, duration, clip.length, framerate, pad, targetScale, outputClipPath);
     console.log(`Executing command: ${command}`);
     return new Promise((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
@@ -120,16 +120,18 @@ export const addTitleOverlay = async (videoFile, outputFile, titleText, fontPath
 };
 
 // Merges clips and adds music
-export const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput, applyCrossFade, addMusic, __dirname, crossfadeDuration, offsetInterval, partType) => {
+export const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput, applyCrossFade, addMusic, __dirname, crossfadeDuration, offsetInterval, partType, orderIndex) => {
     const tempDir = path.join(__dirname, 'temp');
     if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir);
     }
 
+    console.log(`Beginning on ${clips[0]}${montageOutput}`); 
+
     let currentFile = clips[0];
     for (let i = 1; i < clips.length; i++) {
         const nextFile = clips[i];
-        const outputFile = path.join(tempDir, `temp_${path.parse(nextFile).name.split('_')[2]}_${i}.mp4`);
+        const outputFile = path.join(tempDir, `temp_${path.parse(nextFile).name.split('_')[2]}_${i}_${partType}_${orderIndex}_${Math.floor(Math.random() * 10000)}.mp4`);
         const offset = i * offsetInterval;  // Calculate the offset dynamically
         const duration = crossfadeDuration;  // Use the provided crossfade duration
         await applyCrossFade(currentFile, nextFile, outputFile, duration, offset);

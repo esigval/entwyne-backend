@@ -44,7 +44,7 @@ const processMontage = async (block, twyneQuality, twyneOrientation, music, twyn
         await Promise.all(downloadPromises);
         console.log(`Processing output files: ${processingOutputFiles}`);
         console.log(`Music file path: ${musicFilePath.path}`);
-        await mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput, applyCrossFade, addMusic, __dirname, crossfadeDuration, offsetInterval, 'Montage');
+        await mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput, applyCrossFade, addMusic, __dirname, crossfadeDuration, offsetInterval, 'Montage', block.orderIndex);
     } catch (error) {
         console.error(`Error in processing: ${error}`);
     }

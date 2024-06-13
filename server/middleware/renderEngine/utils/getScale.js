@@ -1,10 +1,9 @@
 import { execSync } from 'child_process';
 
-// Function to calculate quality based on user settings
 function getScale(quality, videoPath, twyneOrientation) {
-    // Use ffprobe to get the width and height of the video
-    const ffprobeOutput = execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 ${videoPath}`);
-    const [width, height] = ffprobeOutput.toString().trim().split('x').map(Number);
+    // Use ffprobe to get the width, height, and duration of the video
+    const ffprobeOutput = execSync(`ffprobe -v error -select_streams v:0 -show_entries stream=width,height,duration -of csv=s=x:p=0 ${videoPath}`);
+    const [width, height, durationStr] = ffprobeOutput.toString().trim().split('x').map((value, index) => index < 2 ? Number(value) : parseFloat(value));
 
     // Determine the orientation based on the width and height
     const orientation = width > height ? 'horizontal' : 'vertical';
@@ -33,20 +32,21 @@ function getScale(quality, videoPath, twyneOrientation) {
     }
 
     if (twyneOrientation === 'horizontal') {
-        // Horizontal target orientation
         targetScale = orientation === 'horizontal' ? `scale=${targetWidth}:-1` : `scale=-1:${targetHeight}`;
         absoluteScale = orientation === 'horizontal' 
             ? `scale=${targetWidth}:${Math.round(targetWidth / aspectRatio)}` 
             : `scale=${Math.round(targetHeight * aspectRatio)}:${targetHeight}`;
     } else {
-        // Vertical target orientation
         targetScale = orientation === 'vertical' ? `scale=-1:${targetHeight}` : `scale=${targetWidth}:-1`;
         absoluteScale = orientation === 'vertical' 
             ? `scale=${Math.round(targetHeight * aspectRatio)}:${targetHeight}`
             : `scale=${targetWidth}:${Math.round(targetWidth / aspectRatio)}`;
     }
 
-    return { targetScale, absoluteScale, orientation };
+    // Duration in seconds
+    const duration = durationStr;
+
+    return { targetScale, absoluteScale, orientation, duration };
 }
 
 export default getScale;
