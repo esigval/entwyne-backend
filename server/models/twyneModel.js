@@ -107,6 +107,25 @@ class Twyne {
         }
     }
 
+    static async listUserTwynes(userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Twyne.collectionName);
+            const query = {
+                $or: [
+                    { userId: new ObjectId(userId) },
+                    { coCreators: new ObjectId(userId) },
+                    { contributors: new ObjectId(userId) }
+                ]
+            };
+            const documents = await collection.find(query).toArray();
+            return documents.map(document => new Twyne(document));
+        } catch (error) {
+            console.error("Error in Twyne.listUserTwynes:", error);
+            throw error;
+        }
+    }
+
 
 
     static async deleteThreadId(twyneId) {

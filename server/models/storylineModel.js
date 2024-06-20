@@ -74,6 +74,30 @@ class Storyline {
         }
     }
 
+    static async removeClipByMomentId(storylineId, momentId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(this.collectionName);
+            const normalizedStorylineId = new ObjectId(storylineId);
+            const normalizedMomentId = ObjectId.isValid(momentId) ? new ObjectId(momentId) : null;
+    
+            if (!normalizedMomentId) {
+                throw new Error("Invalid momentId provided");
+            }
+    
+            // Find the storyline and update it by pulling the clip with the matching momentId from the clips array
+            const result = await collection.updateOne(
+                { _id: normalizedStorylineId },
+                { $pull: { 'structure.$[].clips': { momentId: normalizedMomentId } } }
+            );
+    
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.removeClipByMomentId:", error);
+            throw error;
+        }
+    }
+
     static async updateTwyneRenderUri(storylineId, newUri) {
         try {
             const db = await connect();

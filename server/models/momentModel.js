@@ -193,18 +193,22 @@ class Moment {
         }
     }
 
-    static async deleteOne(momentId) {
+    static async deleteOneForce(momentId) {
+        console.log("momentId:", momentId);
         try {
             const db = await connect();
             const collection = db.collection(Moment.collectionName);
-            const result = await collection.deleteOne({ _id: new ObjectId(momentId) });
+    
+            // Check if momentId is already an ObjectId, if not convert it
+            const id = momentId instanceof ObjectId ? momentId : new ObjectId(momentId);
+    
+            const result = await collection.deleteOne({ _id: id });
             return result;
         } catch (error) {
-            console.error("Error in Moment.delete:", error);
+            console.error("Error in Moment.deleteOneForce:", error);
             throw error;
         }
     }
-
     static async createPictureMoments({ associatedPromptId, key, storylineId }) {
         try {
             const db = await connect();

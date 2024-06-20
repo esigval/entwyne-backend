@@ -87,18 +87,42 @@ class Prompts {
         }
     }
 
-static async linkStorylineIdtoPrompts(storylineId, promptIds) {
-    const db = await connect();
-    const collection = db.collection('prompts'); // Adjust with your actual collection name
+    static async removeMomentIdFromPrompts(momentId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const objectId = new ObjectId(momentId);
 
-    const storylineObjectId = ObjectId.isValid(storylineId) ? new ObjectId(storylineId) : storylineId;
-    const promptObjectIds = Array.isArray(promptIds) ? promptIds.map(id => ObjectId.isValid(id) ? new ObjectId(id) : id) : [promptIds];
+            // Find prompts containing the momentId
+            const prompts = await collection.find({ momentId: objectId }).toArray();
 
-    await collection.updateMany(
-        { _id: { $in: promptObjectIds } },
-        { $set: { storylineId: storylineObjectId } }
-    );
-}
+            // Remove the momentId from each found prompt
+            for (const prompt of prompts) {
+                await collection.updateOne(
+                    { _id: prompt._id },
+                    { $pull: { momentId: objectId } }
+                );
+            }
+
+            return { status: 'success', message: `MomentId ${momentId} removed from prompts` };
+        } catch (error) {
+            console.error('Error in Prompts.removeMomentIdFromPrompts:', error);
+            throw error;
+        }
+    }
+
+    static async linkStorylineIdtoPrompts(storylineId, promptIds) {
+        const db = await connect();
+        const collection = db.collection('prompts'); // Adjust with your actual collection name
+
+        const storylineObjectId = ObjectId.isValid(storylineId) ? new ObjectId(storylineId) : storylineId;
+        const promptObjectIds = Array.isArray(promptIds) ? promptIds.map(id => ObjectId.isValid(id) ? new ObjectId(id) : id) : [promptIds];
+
+        await collection.updateMany(
+            { _id: { $in: promptObjectIds } },
+            { $set: { storylineId: storylineObjectId } }
+        );
+    }
 
     static async insertMany(prompts) {
         try {
@@ -388,10 +412,10 @@ static async linkStorylineIdtoPrompts(storylineId, promptIds) {
                     { contributors: new ObjectId(userId) }
                 ]
             }).toArray();
-    
+
             // Remove duplicates
             const uniquePrompts = Array.from(new Set(prompts.map(prompt => JSON.stringify(prompt)))).map(prompt => JSON.parse(prompt));
-    
+
             return uniquePrompts;
         } catch (error) {
             console.error("Error in Prompts.findByUserId:", error);

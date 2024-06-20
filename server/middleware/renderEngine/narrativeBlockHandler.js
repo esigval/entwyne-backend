@@ -5,16 +5,13 @@ import processMontage from "./blocks/processMontage.js";
 import processInterview from "./blocks/processInterview.js";
 import deleteFiles from "./utils/deleteFiles.js";
 import concatenateVideos from "./blocks/processTwyne.js";
-import AWS from 'aws-sdk';
-import fs from 'fs';
 import Storyline from "../../models/storylineModel.js";
 import Twyne from "../../models/twyneModel.js";
-import { config } from "../../config.js";
 import { dirname } from 'path';
 import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { generateS3Key, uploadToS3 } from './utils/generateS3Key.js';
+import { uploadToS3 } from './utils/generateS3Key.js';
 import getMusicTracks from './music/getMusicTracks.js'; // Adjust the import path accordingly
 
 dotenv.config();
@@ -124,15 +121,15 @@ const renderVideo = async (jsonConfig, userId) => {
 
 export default renderVideo;
 
-
+/*
 const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
-    "storylineId": "666853b82fd5288688800091",
+    "storylineId": "666c6c3d630867dd329cd2ff",
     "twyneQuality": "Proxy",
     "twyneOrientation": "horizontal",
     "music": "s3://music-tracks/Montage/Neon_Beach_Humblebrag_instrumental_verse_0_21.mp3",
-    "twyneId": "6668526b2fd5288688800090",
+    "twyneId": "666b72aa630867dd329cd2e5",
     "title": "Cascade Lakes Relay 2023",
     "outro": "Join Us Next Year",
     "trackName": "Neon Beach Humblebrag Instrumental",
@@ -159,5 +156,7 @@ const jsonConfig = {
 };
 
 
+
 // Example call to the function
 renderVideo(jsonConfig, userId); 
+*/

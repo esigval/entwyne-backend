@@ -187,6 +187,20 @@ paths:
                 properties:
                   error:
                     type: string
+  /getTwynes:
+    get:
+      summary: Get a list of Twynes
+      description: Retrieves a list of Twynes, optionally filtered by the user ID of the creator or contributors.
+      operationId: getTwynes
+      tags:
+      - Twynes
+      responses:
+        '200':
+          description: A JSON array of Twynes
+          content:
+
+        '500':
+          description: Error fetching Twynes
   /directorChat:
     post:
       summary: Starts a new chat bot session

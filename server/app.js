@@ -79,6 +79,7 @@ import twyneRoutes from './routes/modifyTwynes.js';
 import twyneByStory from './routes/getTwynesByStory.js';
 import renderTwyne from './routes/renderTwyne.js';
 import getTwyneThumbnail from './routes/getTwyneThumbnail.js';
+import getTwynes from './routes/getTwynes.js';
 
 // Routes for handling assistant interactions
 import createThread from './routes/createThread.js';
@@ -198,6 +199,7 @@ app.use('/v1/twyne/story', twyneByStory);
 app.use('/v1/twyne/addUser', userAddToTwyne); // protected
 app.use('/v1/twyne/render', renderTwyne); // protected
 app.use('/v1/twyne/getTwyneThumbnail', getTwyneThumbnail); // protected
+app.use('/v1/getTwynes', getTwynes); // protected
 
 // Utility (protected)
 app.use('/v1/saveVideoUri', saveVideoUri); // protected

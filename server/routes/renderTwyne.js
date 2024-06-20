@@ -5,13 +5,22 @@ import { render } from 'ejs';
 const router = express.Router();
 
 router.post('/', validateTokenMiddleware, async (req, res) => {
-    const userId = req.userId;
-    const jsonConfig = req.body;
+    try {
+        const userId = req.userId;
+        const jsonConfig = req.body;
 
-    console.log(jsonConfig);
-    renderVideo(jsonConfig, userId);
-    
-    res.send('Processing Twyne');
+        console.log(jsonConfig);
+        const result = await renderVideo(jsonConfig, userId);
+        
+        if (result.status === 'error') {
+            return res.status(500).json(result);
+        }
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while processing Twyne');
+    }
 });
 
 export default router;

@@ -3,6 +3,7 @@ import Prompts from '../../../models/promptModel.js';
 import Moment from '../../../models/momentModel.js';
 import Storyline from '../../../models/storylineModel.js';
 import { config } from '../../../config.js';
+import setPromptCollectedandStatus from '../../prompts/setPromptCollected.js';
 
 const environment = process.env.NODE_ENV || 'local';
 const currentConfig = config[environment];
@@ -14,12 +15,50 @@ const s3 = new AWS.S3({
     region: process.env.AWS_REGION
 });
 
+async function deleteMoments(momentIds) {
+    try {
+        for (const momentId of momentIds) {
+            await Moment.deleteOneForce(momentId);
+            console.log(`Deleted moment with ID: ${momentId}`);
+        }
+    } catch (error) {
+        console.error('Error deleting moments:', error);
+    }
+}
+
+async function removeClipsByMomentId(storylineId, momentIds) {
+    try {
+        for (const momentId of momentIds) {
+            const result = await Storyline.removeClipByMomentId(storylineId, momentId);
+            if (result) {
+                console.log(`Removed clip with moment ID: ${momentId} from storyline: ${storylineId}`);
+            } else {
+                console.log(`No clip found with moment ID: ${momentId} in storyline: ${storylineId}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error removing clips by moment ID:', error);
+    }
+}
+
+async function removeMomentIdFromPrompts(momentIds) {
+    try {
+        for (const momentId of momentIds) {
+            const result = await Prompts.removeMomentIdFromPrompts(momentId);
+            if (result) {
+                console.log(`Removed moment ID: ${momentId} from prompts`);
+            } else {
+                console.log(`No prompt found with moment ID: ${momentId}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error removing moment ID from prompts:', error);
+    }
+}
+
 async function checkS3FileExists(s3Path) {
-    // Remove "s3://" prefix and split the path
-    // Remove "s3://" prefix and split the path
     const pathWithoutScheme = s3Path.replace('s3://', '');
     const [bucket, ...keyParts] = pathWithoutScheme.split('/');
-    // Join the key parts and remove the file extension
     let key = keyParts.join('/');
     key = key.substring(0, key.lastIndexOf('.')); // Remove the file extension
     try {
@@ -66,19 +105,29 @@ async function extractClipData(storylineId) {
                 clipData.s3Exists = await checkS3FileExists(clipData.proxyUri);
 
                 if (!clipData.s3Exists) {
-                    nonExistingClips.push({ orderIndex: clipData.orderIndex, momentId: clipData.momentId });
+                    nonExistingClips.push({ orderIndex: clipData.orderIndex, momentId: clipData.momentId, promptId: clipData.promptId });
                 }
-            } 
+            }
             block.clips.push(clipData);
         }
         results.push(block);
     }
 
-    // Output the list of clips that don't exist in S3
+    // If there are any non-existing clips, throw an error
     if (nonExistingClips.length > 0) {
-        console.log("Warning: Clips not found in S3:", nonExistingClips);
-    } else {
-        console.log("All clips exist in S3.");
+        const momentIds = nonExistingClips.map(clip => clip.momentId);
+        await deleteMoments(momentIds);
+        await removeClipsByMomentId(storylineId, momentIds);
+        await removeMomentIdFromPrompts(momentIds);
+        // Extract unique promptIds
+        const uniquePromptIds = [...new Set(nonExistingClips.map(clip => clip.promptId))];
+
+        // Set collected status for each unique promptId
+        for (const promptId of uniquePromptIds) {
+            await Prompts.setCollectedStatus(promptId, "inProgress");
+        }
+
+        throw new Error(`Clips not found in S3: ${JSON.stringify(nonExistingClips)}`);
     }
 
     return results;
@@ -89,9 +138,10 @@ export default extractClipData;
 // Uncomment the following code to run the script directly
 /*
 // Get the extracted clip data
-extractClipData('666889732051e77f4aee4ae8').then(clipData => {
+extractClipData('666c6c3d630867dd329cd2ff').then(clipData => {
     console.log(JSON.stringify(clipData, null, 2));
 }).catch(error => {
     console.error('Error extracting clip data:', error);
 });
+
 */
