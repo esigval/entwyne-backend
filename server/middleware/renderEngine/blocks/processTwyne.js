@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 
 const normalizeFile = (inputFile, outputFile) => {
     return new Promise((resolve, reject) => {
-        const command = `ffmpeg -i ${inputFile} -c:v libx264 -pix_fmt yuv420p -profile:v main -vf "scale=720:480,setsar=1" -c:a aac -b:a 192k -ar 44100 ${outputFile}`;
+        const command = `ffmpeg -i ${inputFile} -c:v libx265 -pix_fmt yuv420p -profile:v main -c:a aac -b:a 192k -ar 44100 ${outputFile}`;
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error normalizing file ${inputFile}: ${stderr}`);
@@ -38,13 +38,16 @@ const concatenateVideos = async (fileLocations, outputPath = 'output.mp4') => {
         return normalizeFile(file, normalizedFile);
     }));
 
-    // Create a text file that lists all the normalized files to be concatenated
-    const listFile = path.join(__dirname, 'list.txt');
-    fs.writeFileSync(listFile, normalizedFiles.map(file => `file '${file}'`).join('\n'));
+    // Construct the FFmpeg command for complex filter concatenation
+    const filterComplexParts = normalizedFiles.map((file, index) => `[${index}:v:0][${index}:a:0]`);
+    const filterComplex = filterComplexParts.join('') + `concat=n=${normalizedFiles.length}:v=1:a=1[v][a]`;
+
+    const inputFiles = normalizedFiles.map(file => `-i ${file}`).join(' ');
+
+    const command = `ffmpeg ${inputFiles} -filter_complex "${filterComplex}" -map "[v]" -map "[a]" -c:v libx265 -pix_fmt yuv420p -profile:v main -c:a aac -b:a 192k -ar 44100 ${outputPath}`;
 
     // Run the FFmpeg command to concatenate
     return new Promise((resolve, reject) => {
-        const command = `ffmpeg -f concat -safe 0 -i ${listFile} -c:v libx264 -pix_fmt yuv420p -profile:v main -c:a aac -b:a 192k -ar 44100 ${outputPath}`;
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`An error occurred during video concatenation: ${stderr}`);
@@ -52,7 +55,7 @@ const concatenateVideos = async (fileLocations, outputPath = 'output.mp4') => {
             } else {
                 console.log(`Video concatenated successfully. Output path: ${outputPath}`);
 
-                // Delete the normalized files and the list file
+                // Delete the normalized files
                 normalizedFiles.forEach(file => {
                     fs.unlink(file, err => {
                         if (err) {
@@ -61,13 +64,6 @@ const concatenateVideos = async (fileLocations, outputPath = 'output.mp4') => {
                             console.log(`File deleted: ${file}`);
                         }
                     });
-                });
-                fs.unlink(listFile, err => {
-                    if (err) {
-                        console.error(`Error deleting file ${listFile}: ${err}`);
-                    } else {
-                        console.log(`File deleted: ${listFile}`);
-                    }
                 });
 
                 // New code to take a thumbnail of the concatenated video

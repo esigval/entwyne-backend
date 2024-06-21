@@ -25,7 +25,7 @@ async function downloadFile(bucketName, key, outputPath) {
 
         return new Promise((resolve, reject) => {
             writer.on('finish', () => {
-                console.log('Download complete.');
+                //console.log('Download complete.');
                 resolve();
             });
             writer.on('error', (error) => {

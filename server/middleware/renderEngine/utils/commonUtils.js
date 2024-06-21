@@ -26,7 +26,7 @@ export const prepareMusicPath = (music, orderIndex, __dirname) => {
 };
 
 export const handleClip = async (clip, bucket, quality, twyneOrientation, framerate, outputFiles, __dirname, partType) => {
-    console.log(`Handling clip with partType: ${partType}`);
+    //console.log(`Handling clip with partType: ${partType}`);
     const uriKey = quality === 'HD' ? 'hdUri' : 'proxyUri';
     const s3Path = clip[uriKey].replace('s3://dev-mezzanine-useast1/', '');
     const parsedPath = path.parse(s3Path);
@@ -38,9 +38,9 @@ export const handleClip = async (clip, bucket, quality, twyneOrientation, framer
     const { width: targetWidth, height: targetHeight } = getTargetDimensions(quality, twyneOrientation);
     const pad = calculatePad(absoluteScale, targetWidth, targetHeight, orientation);
 
-    console.log(`Target Scale: ${targetScale}, Absolute Scale: ${absoluteScale}, Orientation: ${orientation}`);
-    console.log(`Target Width: ${targetWidth}, Target Height: ${targetHeight}`);
-    console.log(`Pad: ${pad}`);
+    //console.log(`Target Scale: ${targetScale}, Absolute Scale: ${absoluteScale}, Orientation: ${orientation}`);
+    //console.log(`Target Width: ${targetWidth}, Target Height: ${targetHeight}`);
+    //console.log(`Pad: ${pad}`);
 
     const outputClipPath = path.join(__dirname, `processing/${partType}_${clip.orderIndex}_${clip.momentId}.mp4`);
     outputFiles.push(outputClipPath);
@@ -54,14 +54,14 @@ export const handleClip = async (clip, bucket, quality, twyneOrientation, framer
     }
 
     const command = ffmpegCommands[partType].process(outputPath, duration, clip.length, framerate, pad, targetScale, outputClipPath);
-    console.log(`Executing command: ${command}`);
+    //console.log(`Executing command: ${command}`);
     return new Promise((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error executing command: ${error}`);
                 reject(error);
             } else {
-                console.log(`Command output: ${stdout}`);
+                // console.log(`Command output: ${stdout}`);
                 resolve();
             }
         });
@@ -73,13 +73,13 @@ export const handleClip = async (clip, bucket, quality, twyneOrientation, framer
 export const addMusic = (videoFile, musicFile, outputFile, partType) => {
     return new Promise((resolve, reject) => {
         const cmd = ffmpegCommands[partType].addMusic(videoFile, musicFile, outputFile);
-        console.log(`Executing command: ${cmd}`);
+        //console.log(`Executing command: ${cmd}`);
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.error('Error adding music:', stderr);
                 reject(error);
             }
-            console.log(`FFmpeg output: ${stdout}`);
+            //console.log(`FFmpeg output: ${stdout}`);
             resolve(outputFile);
         });
     });
@@ -89,7 +89,7 @@ export const addMusic = (videoFile, musicFile, outputFile, partType) => {
 export const applyCrossFade = (input1, input2, output, duration, offset) => {
     return new Promise((resolve, reject) => {
         const cmd = `ffmpeg -i "${input1}" -i "${input2}" -filter_complex "xfade=transition=wiperight:duration=${duration}:offset=${offset}" -c:v libx264 -pix_fmt yuv420p -profile:v main "${output}"`;
-        console.log(`Executing command: ${cmd}`);
+        //console.log(`Executing command: ${cmd}`);
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.error('Error applying crossfade:', stderr);
@@ -104,7 +104,7 @@ export const applyCrossFade = (input1, input2, output, duration, offset) => {
 // Adds a title overlay to a video file
 export const addTitleOverlay = async (videoFile, outputFile, titleText, fontPath) => {
     const cmd = `ffmpeg -i "${videoFile}" -vf "drawtext=text='${titleText}': fontfile=${fontPath}: fontsize=36: fontcolor=white@0.7: x=(w-text_w)/2: y=(h-text_h)/2" -c:v libx264 -c:a copy "${outputFile}"`;
-    console.log(`Executing title overlay command: ${cmd}`);
+    //console.log(`Executing title overlay command: ${cmd}`);
     try {
         const { stdout, stderr } = await execPromise(cmd);
         if (stderr) {
@@ -126,7 +126,7 @@ export const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput, app
         fs.mkdirSync(tempDir);
     }
 
-    console.log(`Beginning on ${clips[0]}${montageOutput}`); 
+    //console.log(`Beginning on ${clips[0]}${montageOutput}`); 
 
     let currentFile = clips[0];
     for (let i = 1; i < clips.length; i++) {
@@ -139,7 +139,7 @@ export const mergeClipsAndAddMusic = async (clips, musicFile, montageOutput, app
     }
 
     await addMusic(currentFile, musicFile, montageOutput, partType);
-    console.log('Montage created:', montageOutput);
+    //console.log('Montage created:', montageOutput);
 };
 
 

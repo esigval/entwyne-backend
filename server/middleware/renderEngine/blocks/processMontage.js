@@ -25,16 +25,16 @@ const processMontage = async (block, twyneQuality, twyneOrientation, music, twyn
     const musicBucket = "music-tracks";
     const mezzanineBucket = "dev-mezzanine-useast1";
 
-    console.log(`Processing Montage with block: ${JSON.stringify(block)}, twyneQuality: ${twyneQuality}, twyneOrientation: ${twyneOrientation}, music: ${music}, twyneId: ${twyneId}`);
+    //console.log(`Processing Montage with block: ${JSON.stringify(block)}, twyneQuality: ${twyneQuality}, twyneOrientation: ${twyneOrientation}, music: ${music}, twyneId: ${twyneId}`);
 
     // Download music file
     const musicFilePath = prepareMusicPath(music, block.orderIndex, __dirname);
-    console.log(`Prepared music path: ${JSON.stringify(musicFilePath)}`);
+    //console.log(`Prepared music path: ${JSON.stringify(musicFilePath)}`);
     downloadPromises.push(downloadFile(musicBucket, musicFilePath.key, musicFilePath.path));
 
     // Prepare and queue all video clip downloads and processing
     clips.forEach(clip => {
-        console.log(`Processing clip: ${JSON.stringify(clip)}`);
+        // console.log(`Processing clip: ${JSON.stringify(clip)}`);
         const clipPromise = handleClip(clip, mezzanineBucket, twyneQuality, twyneOrientation, framerate, processingOutputFiles, __dirname, 'Montage');
         downloadPromises.push(clipPromise);
     });
@@ -42,8 +42,8 @@ const processMontage = async (block, twyneQuality, twyneOrientation, music, twyn
     // Wait for all downloads and processing to complete
     try {
         await Promise.all(downloadPromises);
-        console.log(`Processing output files: ${processingOutputFiles}`);
-        console.log(`Music file path: ${musicFilePath.path}`);
+        //console.log(`Processing output files: ${processingOutputFiles}`);
+        //console.log(`Music file path: ${musicFilePath.path}`);
         await mergeClipsAndAddMusic(processingOutputFiles, musicFilePath.path, montageOutput, applyCrossFade, addMusic, __dirname, crossfadeDuration, offsetInterval, 'Montage', block.orderIndex);
     } catch (error) {
         console.error(`Error in processing: ${error}`);

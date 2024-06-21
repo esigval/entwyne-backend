@@ -34,8 +34,8 @@ const processInterview = async (block, twyneQuality, twyneOrientation, music, tw
     // Wait for all downloads and processing to complete
     try {
         await Promise.all(downloadPromises);
-        console.log(`Processing output files: ${processingOutputFiles}`);
-        console.log(`Music file path: ${musicFilePath.path}`);
+        // console.log(`Processing output files: ${processingOutputFiles}`);
+        // console.log(`Music file path: ${musicFilePath.path}`);
         await addMusic(processingOutputFiles[0], musicFilePath.path, montageOutput, 'Interview');
     } catch (error) {
         console.error(`Error in processing: ${error}`);

@@ -20,7 +20,7 @@ const __dirname = dirname(__filename);
 
 const renderVideo = async (jsonConfig, userId) => {
     const { storylineId, twyneQuality, twyneOrientation, music, twyneId, title, outro, crossfadeSettings, trackName } = jsonConfig;
-
+    let fileLocations = [];
     try {
         const narrativeBlocks = await extractClipData(storylineId);
         if (!narrativeBlocks || narrativeBlocks.length === 0) {
@@ -83,7 +83,7 @@ const renderVideo = async (jsonConfig, userId) => {
         });
 
         // Wait for all processing promises to resolve
-        const fileLocations = await Promise.all(processingPromises);
+        fileLocations = await Promise.all(processingPromises);
         console.log(`All blocks processed successfully. File locations:`, fileLocations);
 
         
@@ -109,28 +109,32 @@ const renderVideo = async (jsonConfig, userId) => {
 
         const setTwyneThumbnail = await Twyne.updateThumbnail(twyneId, thumbnailS3Key);
 
-        // Optionally delete the intermediate files
-        await deleteFiles(fileLocations);
-
         console.log(`Video rendering completed successfully. Output path: ${outputPath}`);
     } catch (error) {
         console.error(`An error occurred during video rendering: ${error}`);
         return { status: 'error', message: `An error occurred during video rendering: ${error.message}` };
+    } finally {
+        // Optionally delete the intermediate files in both success and error cases
+        if (fileLocations.length > 0) {
+            await deleteFiles(fileLocations);
+            console.log('Intermediate files deleted.');
+        }
     }
+    
 };
 
 export default renderVideo;
 
-/*
+
 const userId = '65e78760183d35f4ccc6c57d';
 
 const jsonConfig = {
-    "storylineId": "666c6c3d630867dd329cd2ff",
+    "storylineId": "66759714131265b4131a5ca5",
     "twyneQuality": "Proxy",
     "twyneOrientation": "horizontal",
     "music": "s3://music-tracks/Montage/Neon_Beach_Humblebrag_instrumental_verse_0_21.mp3",
-    "twyneId": "666b72aa630867dd329cd2e5",
-    "title": "Cascade Lakes Relay 2023",
+    "twyneId": "6675968f131265b4131a5c9b",
+    "title": "Pacific Crest Endurance Weekend",
     "outro": "Join Us Next Year",
     "trackName": "Neon Beach Humblebrag Instrumental",
     "crossfadeSettings": [
@@ -159,4 +163,3 @@ const jsonConfig = {
 
 // Example call to the function
 renderVideo(jsonConfig, userId); 
-*/

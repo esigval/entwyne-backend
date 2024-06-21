@@ -99,6 +99,11 @@ async function extractClipData(storylineId) {
                 s3Exists: false,
             };
 
+            // Adjust length if cutSpeed is set to flexible
+            if (clipData.cutSpeed === 'flexible') {
+                clipData.length = 1000; // Set to a big number
+            }
+
             const proxyUris = proxyUrisMap[clipData.momentId];
             if (proxyUris) {
                 clipData.proxyUri = proxyUrisMap[clipData.momentId.toString()];

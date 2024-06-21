@@ -17,7 +17,7 @@ const ffmpegNarrativeCommands = {
             return `ffmpeg -i ${clip} -r ${framerate} -vf "${quality},${pad},setsar=1" -c:a aac -b:a 192k -ar 44100 -c:v libx264 -pix_fmt yuv420p -profile:v main -t ${length} ${outputPath}`;
         },
         addMusic: (videoFile, musicFile, outputFile) => {
-            return `ffmpeg -i "${videoFile}" -i "${musicFile}" -filter_complex "[0:a]volume=2.0[a1];[1:a]volume=0.7[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=2" -c:v libx264 -c:a aac -b:a 192k -ar 44100 -strict experimental -shortest "${outputFile}"`;
+            return `ffmpeg -i "${videoFile}" -i "${musicFile}" -filter_complex "[0:a]volume=8.0[a1];[1:a]volume=0.5[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=2" -c:v libx264 -c:a aac -b:a 192k -ar 44100 -strict experimental -shortest "${outputFile}"`;
         }
     },
     "Montage": {
