@@ -13,6 +13,8 @@ const router = express.Router();
 
 router.get('/:twyneId', validateTokenMiddleware, async (req, res) => {
     try {
+        console.log('Getting presigned URL for twyneId:', req.params.twyneId);
+        
         const renderInfo = await Twyne.findCurrentRenderByTwyneId(req.params.twyneId);
         if (!renderInfo) {
             return res.status(404).json({ error: 'Twyne not found' });
