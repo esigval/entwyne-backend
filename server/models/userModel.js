@@ -101,6 +101,11 @@ class User {
         const db = await connect();
         console.log('userData:', userData);
 
+        // If username is not provided but email is, create a username from the email
+        if (!userData.username && userData.email) {
+            userData.username = userData.email.split('@')[0].toLowerCase();
+        }
+
         // Convert username and email to lowercase
         if (userData.username) {
             userData.username = userData.username.toLowerCase();

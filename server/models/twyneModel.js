@@ -236,7 +236,7 @@ class Twyne {
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { coCreators: new ObjectId(userId) }, $set: { lastUpdated: new Date() } });
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $addToSet: { coCreators: new ObjectId(userId) }, $set: { lastUpdated: new Date() } });
             return result;
         } catch (error) {
             console.error("Error in Twyne.addNewCoCreator:", error);
@@ -248,7 +248,7 @@ class Twyne {
         try {
             const db = await connect();
             const collection = db.collection(Twyne.collectionName);
-            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $push: { contributors: new ObjectId(userId) }, $set: { lastUpdated: new Date() } });
+            const result = await collection.updateOne({ _id: new ObjectId(twyneId) }, { $addToSet: { contributors: new ObjectId(userId) }, $set: { lastUpdated: new Date() } });
             return result;
         } catch (error) {
             console.error("Error in Twyne.addNewContributor:", error);
@@ -371,33 +371,33 @@ class Twyne {
             const collection = db.collection(Twyne.collectionName);
             const twyneObjectId = new ObjectId(twyneId);
             const twyne = await collection.findOne({ _id: twyneObjectId });
-
-            const totalPrompts = twyne.prompts.length;
-            if (totalPrompts === 0) {
-                console.log("No prompts exist.");
-                return 0;
+    
+            // Check if twyne is null or twyne.prompts is undefined
+            if (!twyne || !twyne.prompts) {
+                console.log("Twyne not found or Twyne has no prompts.");
+                return 0; // Return 0 or appropriate value indicating no progress
             }
-
+    
+            const totalPrompts = twyne.prompts.length;
             let collectedPromptsCount = 0;
-
+    
             for (const promptId of twyne.prompts) {
                 const collected = await Prompts.getPromptCollectedStatus(promptId);
                 if (collected === "true") collectedPromptsCount++;
             }
-
+    
             const ratio = collectedPromptsCount / totalPrompts;
             const progress = Math.round(ratio * 100);
             console.log(`Progress is: ${progress}`);
-
+    
             await collection.updateOne({ _id: twyneObjectId }, { $set: { progress: progress } });
-
+    
             return progress;
         } catch (error) {
             console.error('Error calculating prompt function:', error);
             throw error; // Rethrow or handle as needed
         }
     }
-
     static async getThumbnailByTwyneId(twyneId) {
         try {
             const db = await connect();
