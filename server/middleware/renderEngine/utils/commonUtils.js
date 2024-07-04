@@ -103,7 +103,10 @@ export const applyCrossFade = (input1, input2, output, duration, offset) => {
 
 // Adds a title overlay to a video file
 export const addTitleOverlay = async (videoFile, outputFile, titleText, fontPath) => {
-    const cmd = `ffmpeg -i "${videoFile}" -vf "drawtext=text='${titleText}': fontfile=${fontPath}: fontsize=36: fontcolor=white@0.7: x=(w-text_w)/2: y=(h-text_h)/2" -c:v libx264 -c:a copy "${outputFile}"`;
+    // Escape special characters in titleText
+    const escapedTitleText = titleText.replace(/'/g, "\\'").replace(/:/g, '\\:').replace(/!/g, '\\!');
+    
+    const cmd = `ffmpeg -i "${videoFile}" -vf "drawtext=text='${escapedTitleText}': fontfile=${fontPath}: fontsize=36: fontcolor=white@0.7: x=(w-text_w)/2: y=(h-text_h)/2" -c:v libx264 -c:a copy "${outputFile}"`;
     //console.log(`Executing title overlay command: ${cmd}`);
     try {
         const { stdout, stderr } = await execPromise(cmd);
