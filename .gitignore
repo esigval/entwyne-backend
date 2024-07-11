@@ -11,6 +11,9 @@ lambda/renderVideoLambda/node_modules
 lambda/sendRenderDemo/node_modules
 lambda/processMedia/node_modules
 lambda/extractionBucket/node_modules
+lambda/cloudPrep/node_modules
+
+
 environments/
 lambda_layers/
 

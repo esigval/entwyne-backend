@@ -13,6 +13,7 @@ export const config = {
   production: {
 
     // S3 Buckets
+    INPUT_BUCKET: process.env.PROD_INPUT_BUCKET,
     EXTRACTION_BUCKET: process.env.PROD_EXTRACTION_BUCKET,
     NORMALIZATION_BUCKET: process.env.PROD_NORMALIZATION_BUCKET,
     CONCATENATION_BUCKET: process.env.PROD_CONCATENATION_BUCKET,
@@ -45,6 +46,7 @@ export const config = {
     
   },
   development: {
+    INPUT_BUCKET: process.env.DEV_INPUT_BUCKET,
     EXTRACTION_BUCKET: process.env.DEV_EXTRACTION_BUCKET,
     NORMALIZATION_BUCKET: process.env.DEV_NORMALIZATION_BUCKET,
     CONCATENATION_BUCKET: process.env.DEV_CONCATENATION_BUCKET,
@@ -78,6 +80,7 @@ export const config = {
 
   local: {
     // BUCKETS
+    INPUT_BUCKET: process.env.DEV_INPUT_BUCKET,
     EXTRACTION_BUCKET: process.env.DEV_EXTRACTION_BUCKET,
     NORMALIZATION_BUCKET: process.env.DEV_NORMALIZATION_BUCKET,
     CONCATENATION_BUCKET: process.env.DEV_CONCATENATION_BUCKET,

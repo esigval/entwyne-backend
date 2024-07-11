@@ -31,7 +31,7 @@ router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys,
     async (req, res, next) => {
         const key = req.s3Keys.videoKey;
         try {
-            req.videoPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'video/mp4');
+            req.videoPreSignedUrl = await universalPreSignedUrl(currentConfig.INPUT_BUCKET)('putObject', key, 'video/mp4');
             next();
         } catch (err) {
             res.status(500).json({ error: 'Error generating video pre-signed URL' });
