@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const fs = require('fs').promises;
 const path = require('path');
+
 const { extractAudio, extractThumbnail, getVideoDetails, compressVideo, createSilentAudioTrack, checkBinary } = require('./videoUtils.js');
 
 const s3 = new AWS.S3();
@@ -20,7 +21,22 @@ const mockEvent = {
     ]
 };*/
 
-const handler = async (event = mockEvent) => {
+// Cleanup function to delete files in the /tmp directory
+const cleanupTmpDirectory = async () => {
+    try {
+        const files = await fs.readdir('/tmp');
+        for (const file of files) {
+            await fs.unlink(path.join('/tmp', file));
+        }
+        console.log("Temporary files cleaned up");
+    } catch (error) {
+        console.error("Error cleaning up temporary files:", error);
+    }
+};
+
+const handler = async (event) => {
+    await cleanupTmpDirectory();
+    
     console.log("Handler started");
     console.log("Checking FFmpeg and FFprobe binaries");
     const ffmpegWorking = await checkBinary('/usr/bin/ffmpeg', 'FFmpeg');  
@@ -30,9 +46,11 @@ const handler = async (event = mockEvent) => {
     }
     console.log("FFmpeg and FFprobe binaries are working");
 
-    const bucketName = event.Records[0].s3.bucket.name;
+    const inputBucketName = event.Records[0].s3.bucket.name;
+    const outputBucketName = process.env.OUTPUT_BUCKET_NAME;
+    console.log(`Input bucket: ${inputBucketName}, Output bucket: ${outputBucketName}`);
     const objectKey = event.Records[0].s3.object.key;
-    console.log(`Processing file from bucket: ${bucketName}, key: ${objectKey}`);
+    console.log(`Processing file from bucket: ${inputBucketName}, key: ${objectKey}`);
     
     // Use the local test video file path for testing
     const inputFilePath = process.env.VIDEO_INPUT_PATH || path.join('/tmp', path.basename(objectKey));
@@ -48,12 +66,21 @@ const handler = async (event = mockEvent) => {
         return parts.join('/');
     };
 
+    const getContentType = (type) => {
+        switch (type) {
+            case 'audiopcm': return 'audio/wav';
+            case 'thumbnail': return 'image/png';
+            case 'proxy': return 'video/mp4';
+            default: return 'application/octet-stream';
+        }
+    };
+
     try {
         // Skip the S3 download step for local testing
         if (!process.env.VIDEO_INPUT_PATH) {
             console.log("Downloading file from S3");
             const params = {
-                Bucket: bucketName,
+                Bucket: inputBucketName,
                 Key: objectKey,
             };
             const data = await s3.getObject(params).promise();
@@ -99,9 +126,10 @@ const handler = async (event = mockEvent) => {
                 console.log(`Uploading ${type}`);
                 const outputData = await fs.readFile(filePath);
                 const outputParams = {
-                    Bucket: bucketName,
+                    Bucket: outputBucketName,
                     Key: getOutputKey(type),
                     Body: outputData,
+                    ContentType: getContentType(type),
                 };
                 await s3.putObject(outputParams).promise();
                 console.log(`${type} uploaded`);
@@ -126,13 +154,14 @@ const handler = async (event = mockEvent) => {
 };
 
 module.exports = { handler };
+
+// Uncomment this section for local testing
 /*
 (async () => {
     try {
-        await handler();
+        await handler(mockEvent);
         console.log("Handler executed successfully");
     } catch (error) {
         console.error("Error executing handler:", error);
     }
-})();
-*/
+})(); */

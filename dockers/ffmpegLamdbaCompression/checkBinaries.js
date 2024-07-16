@@ -35,5 +35,3 @@ const checkBinary = async (binaryPath, binaryName) => {
         return false; // Binary does not exist, is not executable, or is not working
     }
 };
-
-checkBinary(ffmpegPath, 'FFmpeg');

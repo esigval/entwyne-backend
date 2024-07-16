@@ -87,6 +87,7 @@ const createSilentAudioTrack = async (videoPath, audioOutputPath) => {
         }
 
         const generateSilentAudioCommand = `${ffmpegPath} -f lavfi -i anullsrc=r=44100:cl=stereo -t ${duration} "${audioOutputPath}"`;
+        console.log('Creating silent audio track:', generateSilentAudioCommand);
         await new Promise((resolve, reject) => {
             exec(generateSilentAudioCommand, (error, stdout, stderr) => {
                 if (error) {
@@ -106,6 +107,7 @@ const createSilentAudioTrack = async (videoPath, audioOutputPath) => {
 
 const extractAudio = async (input, audioOutput) => {
     const command = `${ffmpegPath} -i "${input}" -acodec pcm_s16le -ar 16000 "${audioOutput}"`;
+    console.log('Extracting audio command:', command);
     console.log('Extracting audio from:', input, 'to:', audioOutput);
 
     return new Promise((resolve, reject) => {
@@ -121,8 +123,16 @@ const extractAudio = async (input, audioOutput) => {
 const extractThumbnail = async (input, thumbnailOutputUri) => {
     try {
         console.log(`Extracting thumbnail from: ${input} to: ${thumbnailOutputUri}`);
+        // Log file existence and details
+    try {
+        const stats = await fs.stat(input);
+        console.log(`Input file stats: ${JSON.stringify(stats)}`);
+    } catch (error) {
+        console.error(`Error accessing input file: ${error.message}`);
+        throw new Error(`Input file error: ${error.message}`);
+    }
         const command = `${ffmpegPath} -i "${input}" -ss 00:00:01 -vframes 1 -vf scale=-1:240 -c:v png -update 1 "${thumbnailOutputUri}"`;
-
+        console.log('Thumbnail extraction command:', command);
         await new Promise((resolve, reject) => {
             exec(command, (error, stdout, stderr) => {
                 if (error) {
@@ -159,6 +169,7 @@ const compressVideo = async (input, output, quality, orientation) => {
     }
 
     const command = `${ffmpegPath} -i "${input}" -vf "${scale},fps=30" -vcodec libx264 -preset ultrafast -ar 16000 "${output}"`;
+    console.log('Compression command:', command);
     return new Promise((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
