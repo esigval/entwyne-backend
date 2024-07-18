@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 
 class Story {
-    constructor({ _id, createdAt = new Date(), storyName, storyline, twyneId, threadId, storySummary, userId, coCreators = [], thumbnail, lastUpdated = new Date(), defaultVideoSettings = { orientation: 'landscape', quality: 'high' }, defaultNarrative }) {
+    constructor({ _id, createdAt = new Date(), storyName, storyline, twyneId, threadId, storySummary, userId, coCreators = [], thumbnail, lastUpdated = new Date(), defaultVideoSettings = { orientation: 'landscape', quality: 'high' }, defaultNarrative, contributors = [] }) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.threadId = threadId;
         this.createdAt = createdAt || new Date(); // Default to current date if not provided
@@ -19,6 +19,7 @@ class Story {
         this.lastUpdated = lastUpdated || new Date(); // Default to current date if not provided
         this.defaultVideoSettings = defaultVideoSettings || { orientation: 'vertical', quality: 'high' };
         this.defaultNarrative = defaultNarrative || null; // Default to null if not provided
+        this.contributors = contributors.map(id => new ObjectId(id));
     }
 
 
@@ -203,6 +204,38 @@ class Story {
             return story.threadId; // Assuming the story model has a 'threadId' field
         } catch (error) {
             console.error('Error finding story:', error);
+            throw error;
+        }
+    }
+
+    static async addContributorToStory(id, storyId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            const result = await collection.updateOne({ _id: new ObjectId(storyId) }, { $addToSet: { contributors: new ObjectId(id) } });
+            return result;
+        } catch (error) {
+            console.error("Error in Story.addContributor:", error);
+            throw error;
+        }
+    }
+
+    static async getCollaborationStories(userId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Story.collectionName);
+            // Convert userId to ObjectId and update query to search both coCreators and contributors arrays
+            const objectId = new ObjectId(userId); // Convert userId to ObjectId
+            const query = {
+                $or: [
+                    { coCreators: objectId },
+                    { contributors: objectId }
+                ]
+            };
+            const result = await collection.find(query).toArray();
+            return result.map(doc => new Story(doc)); // return an array of Story instances
+        } catch (error) {
+            console.error("Error in Story.getCollaborationStories:", error);
             throw error;
         }
     }

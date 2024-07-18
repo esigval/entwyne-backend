@@ -9,6 +9,20 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /colloboration-stories/:
+    get:
+      tags:
+      - Stories
+      summary: Get collaboration stories by user ID
+      description: Returns a list of stories where the user is a collaborator but not the creator.
+      responses:
+        '200':
+          description: A JSON array of stories
+        '401':
+          description: Unauthorized - Invalid or expired token
+        '404':
+          description: Not Found - The specified user ID does not exist
+
   /twyne/render:
     post:
       tags:
@@ -637,26 +651,6 @@ paths:
           description: Verification email sent. Please check your new email to confirm the change.
         '400':
           description: Error message
-
-  /sharedStories:
-    get:
-      tags:
-      - Stories
-      summary: Get shared stories where the authenticated user is a co-creator
-      operationId: getSharedStories
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  sharedStories:
-                    type: array
-                    items:
-        '500':
-          description: Error getting shared stories
   /addCoCreator:
     post:
       tags:
