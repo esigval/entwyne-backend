@@ -40,7 +40,7 @@ import createStory from './routes/createStory.js';
 import deleteStory from './routes/deleteStory.js';
 import getStorylines from './routes/getStorylines.js';
 import updateStory from './routes/updateStory.js';
-import getCollaborationStories from './routes/getCollaborationStories.js';
+import getCollabStories from './routes/getCollaborationStories.js';
 
 // Prompt-related routes
 import createPrompt from './routes/createPrompt.js';
@@ -166,7 +166,7 @@ app.use('/v1', deleteStory);
 app.use('/v1/stories', getStory);
 app.use('/v1/getStorylines', getStorylines);
 app.use('/v1/stories', updateStory); // protected
-app.use('/v1/colloboration-stories/', getCollaborationStories); // protected
+app.use('/v1/colloboration-stories/', getCollabStories); // protected
 
 
 // Prompts (protected)
