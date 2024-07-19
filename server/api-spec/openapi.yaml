@@ -9,6 +9,44 @@ servers:
 - url: http://localhost:3001/v1
   description: Local server
 paths:
+  /getStorylinePrompts/{storylineId}:
+    get:
+      summary: Get storyline prompts by ID
+      description: Returns the prompts for a given storyline ID
+      parameters:
+      - in: path
+        name: storylineId
+        required: true
+        schema:
+          type: string
+        description: The ID of the storyline to fetch prompts for
+      responses:
+        '200':
+          description: Successfully retrieved storyline prompts
+        '401':
+          description: Unauthorized, valid token is required
+        '404':
+          description: Storyline not found
+  /getTwynePrompts/{twyneId}:
+    get:
+      tags:
+      - Prompts
+      summary: Get twyne prompts by twyne ID
+      description: Returns the prompts for a given twyne ID
+      parameters:
+      - in: path
+        name: twyneId
+        required: true
+        schema:
+          type: string
+        description: The ID of the twyne to fetch prompts for
+      responses:
+        '200':
+          description: Successfully retrieved twyneId prompts
+        '401':
+          description: Unauthorized, valid token is required
+        '404':
+          description: twyne not found
   /colloboration-stories/:
     get:
       tags:

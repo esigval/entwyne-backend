@@ -12,6 +12,7 @@ lambda/sendRenderDemo/node_modules
 lambda/processMedia/node_modules
 lambda/extractionBucket/node_modules
 lambda/cloudPrep/node_modules
+lambda/whisper-42c0ebf0-059b-460d-940c-cfcae0f9ed7e/node_modules
 
 
 environments/

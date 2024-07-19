@@ -22,15 +22,15 @@ async function GetContributorInfo(userId) {
     };
 }
 
-router.get('/:storylineId', validateTokenMiddleware, async (req, res) => {
+router.get('/:twyneId', validateTokenMiddleware, async (req, res) => {
     try {
-        const { storylineId } = req.params;
+        const { twyneId } = req.params;
         const userId = req.userId;
         console.log(`Route hit. User ID: ${userId}`);
         
-        const prompts = await Prompts.findByStorylineId(storylineId);
+        const prompts = await Prompts.findByTwyneId(twyneId);
         if (!prompts.length) {
-            return res.status(404).send('No prompts found for the storyline');
+            return res.status(404).send('No prompts found for the twyne');
         }
 
         const updatedPrompts = await Promise.all(prompts.map(async (prompt) => {

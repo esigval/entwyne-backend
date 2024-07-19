@@ -574,6 +574,22 @@ class Prompts {
         return prompts;
     }
 
+    static async findByTwyneId(twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            // Convert twyneId to ObjectId
+            const prompts = await collection.find({ twyneId: new ObjectId(twyneId) }).toArray();
+            if (!prompts.length) {
+                throw new Error('No prompts found for the specified Twyne ID');
+            }
+            return prompts;
+        } catch (error) {
+            console.error('Error finding prompts by Twyne ID:', error);
+            throw error; // Rethrow or handle as needed
+        }
+    }
+
 
 
 

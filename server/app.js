@@ -52,6 +52,7 @@ import checkPromptLoading from './routes/checkPromptLoading.js';
 import getStoryPrompts from './routes/getStoryPrompts.js';
 import getStorylinePrompts from './routes/getStorylinePrompts.js';
 import assignContributors from './routes/assignContributors.js'; 
+import getTwynePrompts from './routes/getTwynePrompts.js';
 
 // Moment (story segments) routes
 import getAllMoments from './routes/getMoments.js';
@@ -177,6 +178,7 @@ app.use('/v1/prompts', deletePrompt);
 app.use('/v1/prompts', updatePrompt);
 app.use('/v1/getStorylinePrompts', getStorylinePrompts);
 app.use('/v1/assignContributors', assignContributors); // protected
+app.use('/v1/getTwynePrompts', getTwynePrompts); // protected
 
 // Prompts internal
 app.use('/v1/checkPromptLoading', checkPromptLoading);
