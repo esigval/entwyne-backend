@@ -97,27 +97,37 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
         await addMessageToThread(message, threadId);
 
         const { results, toolCallOutputs } = await createAndManageRunStream(threadId, assistantId, userId, twyneId, storyId);
-        const filteredResults = results.filter(result => result.type === 'textDone');
-        let contentValues = filteredResults.map(result => result.data.content.value);
-        const toolCallResults = toolCallOutputs || []; // This is an array of all resolved tool call outputs
-        console.log('Tool Call Results:', toolCallResults);
+    const filteredResults = results.filter(result => result.type === 'textDone');
+    let contentValues = filteredResults.map(result => result.data.content.value);
+    const toolCallResults = toolCallOutputs || []; // This is an array of all resolved tool call outputs
+    console.log('Tool Call Results:', toolCallResults);
 
-        // Handle the tool call results
-        const handledToolCallResults = handleToolCallResults(toolCallResults, threadId, twyneId, storyId);
+    // Handle the tool call results
+    const handledToolCallResults = handleToolCallResults(toolCallResults, threadId, twyneId, storyId);
 
-        // If there is no contentValue, use the result from handleToolCallResults instead
-        if (contentValues.length === 0 && handledToolCallResults) {
-            contentValues = [handledToolCallResults.output];
-        }
+    // If there is no contentValue, use the result from handleToolCallResults instead
+    if (contentValues.length === 0 && handledToolCallResults) {
+        contentValues = [handledToolCallResults.output];
+    }
 
-        // Final response includes tool call results
-        res.json({
-            status: 'run_completed',
-            message: 'Run completed and all events handled including tool calls.',
-            threadId: threadId,
-            results: contentValues,
-            toolCalls: handledToolCallResults  // Send this additional data
-        });
+    let finalResults;
+    // Check if both contentValues and handledToolCallResults are not empty
+    if (contentValues.length > 0 && handledToolCallResults && handledToolCallResults.output) {
+        // Join contentValues with handledToolCallResults using a double newline
+        finalResults = `${contentValues.join('\n\n')}\n\n${handledToolCallResults.output}`;
+    } else {
+        // Use contentValues as is if the condition is not met
+        finalResults = contentValues;
+    }
+
+    // Final response includes tool call results
+    res.json({
+        status: 'run_completed',
+        message: 'Run completed and all events handled including tool calls.',
+        threadId: threadId,
+        results: finalResults, // Adjusted to use the combined string or contentValues directly
+        toolCalls: handledToolCallResults  // Send this additional data
+    });
     } catch (error) {
         console.error('Error during run management:', error);
         res.status(500).json({

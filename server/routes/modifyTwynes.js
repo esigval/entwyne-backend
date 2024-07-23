@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.post('/', validateTokenMiddleware, async (req, res) => {
     try {
+        const userId = req.userId;
+        req.body.userId = userId;
         const twyne = await Twyne.create(req.body);
         res.status(200).json(twyne);
     } catch (error) {

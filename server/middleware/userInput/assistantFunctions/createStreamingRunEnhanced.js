@@ -10,6 +10,27 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         let currentRunId = null;
         const runStream = openai.beta.threads.runs.stream(threadId, { assistant_id: assistantId });
 
+        // Handle Stream Completion
+        runStream.on('end', async () => {
+            try {
+                // Wait for all asynchronous operations including tool call handling to complete
+                await Promise.all(eventPromises);
+                console.log('All asynchronous events completed.');
+                resolve({ results, toolCallOutputs: await Promise.all(eventPromises) });  // Resolve with both the events and the tool call outputs
+            } catch (error) {
+                console.error('Error in processing events:', error);
+                reject(error);
+            }
+        });
+
+        runStream.on('toolCallDone', (toolCall, snapshot) => {
+            const handlerPromise = handleToolCallDone(toolCall, snapshot, userId, twyneId, threadId, processNarrative, currentRunId, storyId);
+            eventPromises.push(handlerPromise.then(result => {
+                results.push({ type: 'toolCallResult', data: result }); 
+                return result;
+            }));
+        });
+
         // Handle Text Creation and Updates
         runStream.on('textCreated', content => {
             console.log('Text Created:', content);
@@ -36,14 +57,6 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
             console.log('Tool Call Delta:', delta);
             console.log('threadId:', threadId);
             handleToolCallDelta(delta, snapshot, threadId);
-        });
-
-        runStream.on('toolCallDone', (toolCall, snapshot) => {
-            const handlerPromise = handleToolCallDone(toolCall, snapshot, userId, twyneId, threadId, processNarrative, currentRunId, storyId);
-            eventPromises.push(handlerPromise.then(result => {
-                results.push({ type: 'toolCallResult', data: result }); 
-                return result;
-            }));
         });
 
         // Handle Message Events
@@ -79,18 +92,7 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
             results.push({ type: 'runStepDone', data: runStep });
         });
 
-        // Handle Stream Completion
-        runStream.on('end', async () => {
-            try {
-                // Wait for all asynchronous operations including tool call handling to complete
-                await Promise.all(eventPromises);
-                console.log('All asynchronous events completed.');
-                resolve({ results, toolCallOutputs: await Promise.all(eventPromises) });  // Resolve with both the events and the tool call outputs
-            } catch (error) {
-                console.error('Error in processing events:', error);
-                reject(error);
-            }
-        });
+        
 
         // Handle any errors during the stream
         runStream.on('error', error => {

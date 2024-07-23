@@ -59,7 +59,8 @@ class Twyne {
             const collection = db.collection(Twyne.collectionName);
             const result = await collection.insertOne(twyne);
             // Use the insertedId to construct the new object
-            return result;
+            twyne.id = result.insertedId; // Assuming the Twyne model has an id field
+            return twyne; // Return the twyne object with its id
         } catch (error) {
             console.error("Error in Twyne.create:", error);
             throw error;
