@@ -59,6 +59,28 @@ class NarrativeBlock {
         }
     }
 
+    static async listShort() {
+        try {
+            const db = await connect();
+            const collection = db.collection(NarrativeBlock.collectionName);
+            // Fetching only the 'name' and 'description' fields from each document
+            const projection = { _id: 0, name: 1, description: 1 };
+            const items = await collection.find({}, { projection }).toArray();
+            
+            // Processing the result to extract 'name' and 'description'
+            const processedItems = items.map(item => ({
+                name: item.name,
+                description: item.description
+            }));
+            
+            // Minimizing empty spaces between JSON entities
+            return JSON.stringify(processedItems);
+        } catch (error) {
+            console.error('Error in listShort:', error);
+            throw error;
+        }
+    }
+
     static async findOne(query) {
         try {
             const db = await connect();

@@ -11,6 +11,7 @@ import rawNarrative from './rawDataTests/testPayload.json' assert { type: 'json'
 import generateAndStorePrompts from './editing/generatePromptsandStorev3.js';
 import ProgressBar from 'progress';
 import validateNarratives from "./llms/confirmationAgent.js";
+import summarizeTwyneStoryAndSave from "./summarizeTwyneStoryAndSave.js";
 
 
 /**
@@ -42,6 +43,9 @@ async function processNarrative(twyneId, rawNarrative, userId) {
 
         console.log('Generating instructions...');
         const validatedNarratives = await validateNarratives(rawNarrative);
+        
+        // Summarize the thread history of the twyne
+        const twyneSummary = await summarizeTwyneStoryAndSave(twyneId, twyne.threadId);
 
         const constructedNarrative = await constructNarrative(validatedNarratives);
         // const instructions = await generateInstructions(twyne.storySummary, constructedNarrative);
@@ -61,7 +65,7 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         bar.tick();
 
         console.log('Generating and storing prompts...');
-        const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.storyId, twyne.storyline, userId, constructedNarrative);
+        const promptStorylineInstance = await generateAndStorePrompts(twyneId, twyne.storyId, twyne.storyline, userId, constructedNarrative, twyneSummary);
 
         bar.tick();
 
@@ -89,4 +93,4 @@ async function processNarrative(twyneId, rawNarrative, userId) {
 export default processNarrative;
 
 // Testing Script
-//processNarrative('661edb7d8efc37640c3d451a', rawNarrative, '660d81337b0c94b81b3f1744');
+// processNarrative('661edb7d8efc37640c3d451a', rawNarrative, '660d81337b0c94b81b3f1744');

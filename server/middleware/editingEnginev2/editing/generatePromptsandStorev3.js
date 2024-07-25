@@ -11,29 +11,30 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-const generateLLMPrompt = (block) => {
-    let llmPrompt = `You are creating a ${block.type.toLowerCase()} prompt for the user. The language `;
+const generateLLMPrompt = (block, twyneSummary) => {
+    let llmPrompt = `You are creating a ${block.type.toLowerCase()} prompt for the user. The language should be personalized and in the second person, using specific names and descriptions of events. Keep the prompts short and focused on serving the story, which is the primary mandate.`;
 
     switch (block.type.toLowerCase()) {
         case 'interview':
-            llmPrompt += ` The user needs to provide insights or personal perspectives. Generate a question that encourages them to share their thoughts and experiences.`;
+            llmPrompt += ` Generate a casual question that encourages the user to share their thoughts and experiences.`;
             break;
         case 'montage':
-            llmPrompt += ` The user needs to upload pictures or videos highlighting key moments. Generate a prompt that encourages them to upload images or videos, especially focusing on key moments described in the scene instructions and clips.`;
+            llmPrompt += ` Generate a prompt that encourages the user to upload images or videos highlighting key moments, especially focusing on key moments described in the scene instructions and clips. Keep entire prompt less than two sentences.`;
             break;
         case 'title sequence':
         case 'title':
-            llmPrompt += ` The user needs to create an engaging title sequence for their video. Generate a prompt that guides them in creating a catchy title showcasing the theme of reflection and journey. Generally, titles will have montage with overlay, so focus on good establishing shots that could support the scene`;
+            llmPrompt += ` Generate a prompt that guides the user in uploading the right clips for the title sequence. We automatically create the title overlay, so this is just focusing on a sequence of establishing shots - help with ideas in a few words. Keep entire prompt less than two sentences.`;
             break;
         case 'outro card':
         case 'card':
-            llmPrompt += ` The user needs to summarize the journey and its significance in a concluding message. Generate a prompt that guides them in creating a conclusion video or image that summarizes their story`;
+            llmPrompt += ` Generate a short prompt that will be used for uploading the final shots of the film. The user only needs to upload videos, the text is automatically generated. Keep entire prompt less than two sentences.`;
             break;
         default:
-            llmPrompt += ` The user needs to provide content for this part of the video. Generate an appropriate prompt for them.`;
+            llmPrompt += ` Generate an appropriate prompt for the user to provide content for this part of the video.`;
     }
 
-    llmPrompt += `\n\nScene Instructions: ${block.sceneInstructions}.`;
+    llmPrompt += `\n\nTwyne Summary: ${twyneSummary}.`;
+    llmPrompt += `\n\nScene Instructions: ${block.blockInstructions}.`;
 
     if (block.clips && block.clips.length > 0) {
         llmPrompt += `\n\nConsider the following clips:\n`;
@@ -48,11 +49,11 @@ const generateLLMPrompt = (block) => {
 const promptSubmissionsLlm = async (prompt) => {
     try {
         const completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo-0125",
+            model: "gpt-4o-mini-2024-07-18",
             messages: [
                 {
                     role: "system",
-                    content: "Taking the summary of the clips, and the scene instructions, and finally, I will format this to be an actionable statement to the user."
+                    content: "Based on the summary of the clips, scene instructions, and the overall story summary provided by the user, format this into an actionable and personalized statement for the user."
                 },
                 {
                     role: "user",
@@ -71,18 +72,19 @@ const promptSubmissionsLlm = async (prompt) => {
     }
 };
 
-const generateDirectedPrompts = async (block) => {
-    const promptText = generateLLMPrompt(block);
+
+const generateDirectedPrompts = async (block, twyneSummary) => {
+    const promptText = generateLLMPrompt(block, twyneSummary);
     const completion = await promptSubmissionsLlm(promptText);
     return completion;
 };
 
-const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storylineId, userId, storylineInstance) => {
+const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storylineId, userId, storylineInstance, twyneSummary) => {
     try {
         console.log("Storyline Instance:", JSON.stringify(storylineInstance, null, 2));
 
         const promptsData = await Promise.all(storylineInstance.structure.map(async (block, index) => {
-            const promptText = await generateDirectedPrompts(block);
+            const promptText = await generateDirectedPrompts(block, twyneSummary);
             const promptData = {
                 order: block.order,
                 twyneId: new ObjectId(twyneId),
@@ -118,9 +120,9 @@ const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storyline
     }
 };
 
-const generateAndStorePrompts = async (twyneId, storyId, storylineId, userId, storylineInstance) => {
+const generateAndStorePrompts = async (twyneId, storyId, storylineId, userId, storylineInstance, twyneSummary) => {
     try {
-        const { insertedPrompts, updatedStorylineInstance } = await generatePromptsAndAssociateWithBlocks(twyneId, storyId, storylineId, userId, storylineInstance);
+        const { insertedPrompts, updatedStorylineInstance } = await generatePromptsAndAssociateWithBlocks(twyneId, storyId, storylineId, userId, storylineInstance, twyneSummary);
         console.log("Inserted Prompts with IDs:", insertedPrompts.map(prompt => prompt.toString()));
         await Twyne.update(new ObjectId(twyneId), { prompts: insertedPrompts });
         return updatedStorylineInstance;
