@@ -140,11 +140,22 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
         let finalResults;
         // Check if both contentValues and handledToolCallResults are not empty
         if (contentValues.length > 0 && handledToolCallResults && handledToolCallResults.output) {
-            // Join contentValues with handledToolCallResults using a double newline
-            finalResults = `${contentValues.join('\n\n')}\n\n${handledToolCallResults.output}`;
+            // Join contentValues with handledToolCallResults using a space
+            const joinedContent = contentValues.join(' ');
+            // Check if contentValues is equal to handledToolCallResults.output
+            if (joinedContent === handledToolCallResults.output) {
+                finalResults = [handledToolCallResults.output];
+            } else {
+                finalResults = [`${joinedContent} ${handledToolCallResults.output}`];
+            }
         } else {
             // Use contentValues as is if the condition is not met
             finalResults = contentValues;
+        }
+
+        // Ensure finalResults is always an array
+        if (!Array.isArray(finalResults)) {
+            finalResults = [finalResults];
         }
 
         // Final response includes tool call results and asyncAgentResponses
