@@ -8,7 +8,10 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         const results = [];
         const eventPromises = [];
         let currentRunId = null;
-        const runStream = openai.beta.threads.runs.stream(threadId, { assistant_id: assistantId });
+        const runStream = openai.beta.threads.runs.stream(threadId, { 
+            assistant_id: assistantId, 
+            parallel_tool_calls: false 
+        });
 
         // Handle Stream Completion
         runStream.on('end', async () => {
@@ -38,7 +41,7 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         });
 
         runStream.on('textDelta', (delta, snapshot) => {
-            console.log('Text Delta:', delta);
+            // console.log('Text Delta:', delta);
             results.push({ type: 'textDelta', data: { delta, snapshot } });
         });
 
@@ -54,8 +57,8 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         });
 
         runStream.on('toolCallDelta', (delta, snapshot) => {
-            console.log('Tool Call Delta:', delta);
-            console.log('threadId:', threadId);
+            // console.log('Tool Call Delta:', delta);
+            // console.log('threadId:', threadId);
             handleToolCallDelta(delta, snapshot, threadId);
         });
 
@@ -66,7 +69,7 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         });
 
         runStream.on('messageDelta', (delta, snapshot) => {
-            console.log('Message Delta:', delta);
+            // console.log('Message Delta:', delta);
             results.push({ type: 'messageDelta', data: { delta, snapshot } });
         });
 
@@ -83,7 +86,7 @@ const createAndManageRunStream = (threadId, assistantId, userId, twyneId, storyI
         });
 
         runStream.on('runStepDelta', (delta, snapshot) => {
-            console.log('Run Step Delta:', delta);
+            // console.log('Run Step Delta:', delta);
             results.push({ type: 'runStepDelta', data: { delta, snapshot } });
         });
 

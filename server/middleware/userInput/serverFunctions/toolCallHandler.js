@@ -16,6 +16,10 @@ function handleToolCallResults(toolCallResults, threadId, twyneId, storyId) {
                 console.log('Handling changeNarrative:', result);
                 Twyne.deleteThreadId(twyneId);
                 return result;
+            case 'changeTasks':
+                console.log('Handling changeTasks:', result);
+                Twyne.deleteThreadId(twyneId);
+                return result;
             default:
                 console.log('Unknown type:', result);
                 break;

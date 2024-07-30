@@ -27,5 +27,5 @@ async function listMessages(threadId) {
 
 export default listMessages;
 
-const response = await listMessages('thread_0gM0kS7zl410VYUIODHjZyKl');
+const response = await listMessages('thread_kpDcCUXi5XSKxKL9t7oJ9PuB');
 console.log(response);

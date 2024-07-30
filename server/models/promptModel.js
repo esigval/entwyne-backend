@@ -142,6 +142,28 @@ class Prompts {
         }
     }
 
+    static async updatePrompts(promptsArray) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const updateResults = [];
+
+            for (const prompt of promptsArray) {
+                const { _id, ...updateData } = prompt;
+                const result = await collection.updateOne(
+                    { _id: new ObjectId(_id) },
+                    { $set: updateData }
+                );
+                updateResults.push(result);
+            }
+
+            return updateResults;
+        } catch (error) {
+            console.error('Error in updatePrompts:', error);
+            throw error;
+        }
+    }
+
     static async findMomentIdByPromptId(promptId) {
         try {
             const db = await connect();
@@ -219,11 +241,15 @@ class Prompts {
         }
     }
 
-    static async findByStorylineId(storylineId) {
+    static async findByStorylineId(storylineId, fields = {}) {
         try {
             const db = await connect();
             const collection = db.collection(Prompts.collectionName);
-            const prompts = await collection.find({ storylineId }).toArray();
+            const prompts = await collection.find({ storylineId })
+                                            .project(fields)
+                                            .sort({ lastUpdated: -1 })
+                                            .limit(1)
+                                            .toArray();
             return prompts;
         } catch (error) {
             console.error("Error in Prompts.findByStorylineId:", error);
@@ -589,12 +615,24 @@ class Prompts {
             throw error; // Rethrow or handle as needed
         }
     }
-
-
-
+    static async findByStorylineId(storylineId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Prompts.collectionName);
+            const prompts = await collection.find({ storylineId: new ObjectId(storylineId) }).toArray();
+            return prompts;
+        }
+        catch (error) {
+            console.error('Error in findByStorylineId:', error);
+            throw error;
+        }
+    }
 
 }
 
 export default Prompts;
 
+// Simulated function call
 
+const response = await Prompts.findByStorylineId('66a83c7184f456c145ebedeb');
+console.log('Response:', response);

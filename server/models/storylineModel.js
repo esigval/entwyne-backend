@@ -145,6 +145,7 @@ class Storyline {
 
 
     static async getStorylineByTwyneId(twyneId) {
+        console.log("TwyneId insideStorylineId:", twyneId);
         try {
             const db = await connect();
             const collection = db.collection(Storyline.collectionName);
@@ -152,6 +153,7 @@ class Storyline {
 
             if (document) {
                 // Iterate over the structure and get the part, type, and sceneInstructions of each item
+                console.log("Document:", document);
                 const processedStructure = document.structure.map(({ part, type, sceneInstructions }) => {
                     return {
                         part,
@@ -236,6 +238,18 @@ class Storyline {
             return document;
         } catch (error) {
             console.error("Error in Storyline.findById:", error);
+            throw error;
+        }
+    }
+
+    static async deleteByTwyneId(twyneId) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Storyline.collectionName);
+            const result = await collection.deleteOne({ twyneId: new ObjectId(twyneId) });
+            return result.deletedCount > 0;
+        } catch (error) {
+            console.error("Error in Storyline.deleteByTwyneId:", error);
             throw error;
         }
     }

@@ -5,6 +5,7 @@ import createAndManageRunStream from '../middleware/userInput/assistantFunctions
 import Twyne from '../models/twyneModel.js';
 import Story from '../models/storyModel.js';
 import Storyline from '../models/storylineModel.js';
+import Prompts from '../models/promptModel.js';
 import dotenv from 'dotenv';
 import createThread from '../middleware/userInput/assistantFunctions/createThread.js';
 import handleToolCallResults from '../middleware/userInput/serverFunctions/toolCallHandler.js';
@@ -75,6 +76,7 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
         if (twyneId) {
             console.log(`Handling Twyne Director. Twyne ID: ${twyneId}`);
             existingThread = await Twyne.findById(twyneId);
+            console.log('Existing Twyne:', existingThread);
 
             // Add a condition to only proceed if the Twyne name is 'My New Twyne'
             if (existingThread.name === 'My New Twyne') {
@@ -103,14 +105,20 @@ router.post('/', validateTokenMiddleware, async (req, res) => {
             if (existingThread && existingThread.storyline) {
                 console.log('Existing Twyne has a storyline.');
                 const storylineSummary = await Storyline.getStorylineByTwyneId(twyneId);
+                const prompts = await Prompts.findByStorylineId(storylineSummary._id, {
+                    order: 1,
+                    _id: 1,
+                    prompt: 1,
+                });
+                const clips = await Storyline.getTotalClips(storylineSummary._id);
+                console.log('Prompts:', prompts);
                 console.log('Storyline Summary:', storylineSummary);
 
                 // Convert the storyline summary to a string
                 const storylineString = JSON.stringify(storylineSummary);
-                console.log('Storyline Summary:', storylineString);
 
                 // Prepare a message for the assistant
-                const assistantMessage = `This is the existing storyline for the Twyne narrative: ${storylineString}. Please use this as context when interacting with the user.`;
+                const assistantMessage = `This is the existing storyline for the Twyne narrative: ${storylineString}. Here are the tasks in the storyline related to those promptIds: ${JSON.stringify(prompts)},  Please use this as context when interacting with the user. If the user wishes to make a change to the storyline or prompts call the appropriate action.`;
 
                 // Send the message to the assistant
                 await addAssistantMessageToThread(assistantMessage, threadId);

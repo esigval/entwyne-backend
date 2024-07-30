@@ -1,0 +1,44 @@
+{
+    "taskpromptIds": [
+        {
+            "prompt": "Upload clips of Twyne building the rocket and launching into the sky.",
+            "_id": "66a8185ded391c0a8ef8356e",
+            "order": 0
+        },
+        {
+            "prompt": "Share which part of the snail's journey inspires you most.",
+            "_id": "66a8185ded391c0a8ef8356f",
+            "order": 1
+        },
+        {
+            "prompt": "Show key moments from the snail's whimsical rocket launch.",
+            "_id": "66a8185ded391c0a8ef83570",
+            "order": 2
+        },
+        {
+            "prompt": "Highlight the snail soaring in the sky.",
+            "_id": "66a8185ded391c0a8ef83571",
+            "order": 3
+        },
+        {
+            "prompt": "Capture moments of the snail meeting colorful characters.",
+            "_id": "66a8185ded391c0a8ef83572",
+            "order": 4
+        },
+        {
+            "prompt": "Show the obstacles faced during the journey.",
+            "_id": "66a8185ded391c0a8ef83573",
+            "order": 5
+        },
+        {
+            "prompt": "Celebrate the successful adventure and inspire viewers.",
+            "_id": "66a8185ded391c0a8ef83574",
+            "order": 6
+        },
+        {
+            "prompt": "Display credits and thank viewers for watching.",
+            "_id": "66a8185ded391c0a8ef83575",
+            "order": 7
+        }
+    ]
+}

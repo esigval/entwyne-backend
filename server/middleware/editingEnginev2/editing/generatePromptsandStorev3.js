@@ -33,7 +33,7 @@ const generateLLMPrompt = (block, twyneSummary) => {
             llmPrompt += ` Generate an appropriate prompt for the user to provide content for this part of the video.`;
     }
 
-    llmPrompt += `\n\nTwyne Summary: ${twyneSummary}.`;
+    llmPrompt += `\n\nStory Summary: ${twyneSummary}.`;
     llmPrompt += `\n\nScene Instructions: ${block.blockInstructions}.`;
 
     if (block.clips && block.clips.length > 0) {
@@ -98,6 +98,7 @@ const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storyline
                 createdAt: new Date(),
                 lastUpdated: new Date(),
             };
+
             console.log("Generated Prompt Data:", promptData);
             return promptData;
         }));
@@ -111,6 +112,11 @@ const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storyline
         const updatedStorylineInstance = { ...storylineInstance };
         updatedStorylineInstance.structure.forEach((block, index) => {
             block.promptId = insertedPrompts[index];
+
+            // Check if sceneInstructions is null or doesn't exist and set it to promptText if so
+            if (!block.sceneInstructions) {
+                block.sceneInstructions = promptsData[index].prompt; // Corrected to promptsData[index].prompt
+            }
         });
 
         return { insertedPrompts, updatedStorylineInstance };
@@ -119,6 +125,7 @@ const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storyline
         throw error;
     }
 };
+
 
 const generateAndStorePrompts = async (twyneId, storyId, storylineId, userId, storylineInstance, twyneSummary) => {
     try {

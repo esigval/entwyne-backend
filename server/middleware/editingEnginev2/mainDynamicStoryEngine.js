@@ -78,7 +78,7 @@ async function processNarrative(twyneId, rawNarrative, userId) {
         bar.tick();
 
         const totalClips = await Storyline.getTotalParts(insertedId);
-        const message = `We've created ${totalClips} Tasks based on your request. Check out your Tasks to see what has been made!`;
+        const message = `We've created ${totalClips} Tasks based on your request. Check out your Tasks to see what has been made, and come back and let me know if you need any changes.`;
         console.log(message);
 
         console.log('Process completed.');

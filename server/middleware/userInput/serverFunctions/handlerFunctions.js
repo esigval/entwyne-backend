@@ -2,7 +2,9 @@ import { openai } from '../../../services/openAiAssistant.js';
 import createTwynes from '../../twyneEngine/createTwynes.js';
 import processNarrative from "../../editingEnginev2/mainDynamicStoryEngine.js";
 import Prompts from "../../../models/promptModel.js";
+import Storyline from "../../../models/storylineModel.js";
 import Twyne from "../../../models/twyneModel.js";
+import changePromptsBulkExpert from '../prompts/changePromptsBulk.js';
 
 let accumulatedArgs = {};
 
@@ -59,6 +61,10 @@ export async function handleToolCallDone(toolCall, snapshot, userId, twyneId, th
                         await deleteStorylineAndDissociatePrompts(twyneId);
                         const output = await processNarrativeBasedOnArgs(accumulatedArgs[threadId], userId, twyneId, threadId, toolCall.id, currentRunId);
                         return { output, toolCallName };
+                    } else if (toolCall.function.name === 'changeTasks') {
+                        toolCallName = 'changeTasks';
+                        const output = await changePromptsBulk(accumulatedArgs[threadId], threadId, toolCall.id, currentRunId);
+                        return { output, toolCallName };
                     } else {
                         console.error('Unknown function name:', toolCall.function.name);
                     }
@@ -84,6 +90,25 @@ async function processCreateTwynes(args, userId, storyId, toolCallId, threadId, 
         return output;
     } catch (error) {
         console.error('Error in processCreateTwynes:', error);
+    }
+}
+
+async function changePromptsBulk(args, threadId, toolCallId, currentRunId) {
+    try {
+        console.log('Starting changePromptsBulk...');
+        const result = await changePromptsBulkExpert(args);
+        console.log('Result from changePromptsBulkExpert:', result);
+        
+        if (result && result.message) {
+            console.log('Submitting tool call output...');
+            const output = await submitToolCallOutput(threadId, toolCallId, currentRunId, result.message);
+            console.log('Tool call output submitted:', output);
+            return output;
+        } else {
+            console.error('Result from changePromptsBulkExpert is invalid:', result);
+        }
+    } catch (error) {
+        console.error('Error in changePromptsBulk:', error);
     }
 }
 
@@ -148,5 +173,6 @@ async function deleteStorylineAndDissociatePrompts(twyneId) {
     if (!anyCollected) {
         await Promise.all(promptIds.map(id => Prompts.deleteByPromptIdSystem(id)));
         await Twyne.update(twyneId, { prompts: [], storyline: null });
+        await Storyline.deleteByTwyneId(twyneId);
     }
 }
