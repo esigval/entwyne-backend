@@ -33,7 +33,8 @@ const updateMomentWithS3Uris = async (req, res, next) => {
                 videoUri,
                 thumbnailUri,
                 proxyUri,
-                associatedPromptId: promptId
+                associatedPromptId: promptId,
+                processed: false
             }
         });
         next();

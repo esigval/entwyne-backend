@@ -22,6 +22,7 @@ class Moment {
         stampedTranscription,
         lastUpdated,
         proxyUri,
+        processed,
     } = {}) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.associatedPromptId = associatedPromptId ? new ObjectId(associatedPromptId) : undefined;
@@ -40,6 +41,7 @@ class Moment {
         this.stampedTranscription = stampedTranscription;
         this.lastUpdated = lastUpdated || new Date();
         this.proxyUri = proxyUri;
+        this.processed = !!processed;
     }
 
     static get collectionName() {

@@ -4,6 +4,7 @@ import { validateTokenMiddleware } from '../middleware/authentication/validateTo
 import universalPresignedUrl from '../middleware/presignedUrls/universalPreSignedUrl.js';
 import { config } from '../config.js';
 import url from 'url';
+import checkMomentExistsS3 from '../middleware/moments/checkMomentProcessingStatusS3.js';
 import { removeExtensionFromKey } from '../utils/removeExtensionFromKey.js';
 
 const environment = process.env.NODE_ENV || 'local';
@@ -12,13 +13,37 @@ const currentConfig = config[environment];
 const router = express.Router();
 
 router.get('/', validateTokenMiddleware, async (req, res) => {
-    const userId  = req.userId;
+    const userId = req.userId;
     console.log('userId:', userId);
     try {
         const moments = await Moment.listAllByUserId(userId);
         const presignedUrlMiddleware = universalPresignedUrl(currentConfig.MEZZANINE_BUCKET);
 
+
+
         const momentsWithPresignedUrls = await Promise.all(moments.map(async (moment) => {
+            let initialProcessed = moment.processed;
+
+            if (moment.processed === false || moment.processed === undefined) {
+                const pendingUrls = [];
+                if (typeof moment.thumbnailUri === 'string') {
+                    pendingUrls.push(moment.thumbnailUri);
+                }
+                if (typeof moment.proxyUri === 'string') {
+                    pendingUrls.push(moment.proxyUri);
+                }
+                if (typeof moment.audioUri === 'string') {
+                    pendingUrls.push(moment.audioUri);
+                }
+                const isProcessed = await checkMomentExistsS3(pendingUrls);
+                console.log('isProcessed:', isProcessed);
+
+                if (isProcessed === true) {
+                    const update = { processed: true };
+                    await Moment.updateMoment({ moment, update });
+                    initialProcessed = true; // Update the local variable to reflect the change
+                }
+            }
             let presignedThumbnailUrl;
             let presignedProxyUrl;
             console.log('moment.thumbnailUri:', moment.thumbnailUri);
@@ -60,6 +85,7 @@ router.get('/', validateTokenMiddleware, async (req, res) => {
                 presignedProxyUrl,
                 transcription: moment.transcription,
                 sentiment: moment.sentiment,
+                processed: initialProcessed, // Use the initialProcessed variable
             };
         }));
 
