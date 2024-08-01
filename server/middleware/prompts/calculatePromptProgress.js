@@ -1,15 +1,14 @@
 import Storyline from '../../models/storylineModel.js';
 import Prompts from '../../models/promptModel.js';
+import storylineProgress from '../storyline/storylineProgress.js';
 import { ObjectId } from 'mongodb';
 
 /**
  * Calculates the progress percentage for a given prompt in a storyline.
  *
  * @param {string} promptId - The ID of the prompt.
- * @param {string} storylineId - The ID of the storyline.
- * @returns {Promise<number>} - The progress percentage, as a number between 0 and 100.
+ * @returns {Promise<{ progressPercentage: number, storylineProgressPercentage: number }>} - An object containing the progress percentage and storyline progress percentage.
  */
-
 async function calculatePromptProgress(promptId) {
     // Convert promptId to ObjectId
     const promptObjectId = new ObjectId(promptId);
@@ -30,17 +29,19 @@ async function calculatePromptProgress(promptId) {
     const totalClips = structureItem.clips.length;
 
     // Calculate the progress percentage
-    const progressPercentage = (totalClips / structureItem.clipPace.quantity);
+    const progressPercentage = (totalClips / structureItem.clipPace.quantity) * 100;
 
-    return progressPercentage;
+    // Update the progress field in the structure item
+    structureItem.progress = progressPercentage;
+
+    // Update the storyline object in the database
+    const modifiedCount = await Storyline.updateStoryline(storylineId, storyline);
+
+    const storylineProgressPercentage = await storylineProgress(storylineId);
+
+    console.log(`Updated storyline ${storylineId} with modified count:`, modifiedCount, storylineProgressPercentage);
+
+    return { progressPercentage, storylineProgressPercentage };
 }
 
-
 export default calculatePromptProgress;
-/*
-const result = await calculatePromptProgress('66638ac677ea7e88a49cadc0');
-
-console.log(result);
-*/
-
-

@@ -22,6 +22,7 @@ class Twyne {
         twyneSummary,
         theme,
         currentRender,
+        music,
 
     }) {
         this._id = new ObjectId(_id);
@@ -42,6 +43,7 @@ class Twyne {
         this.twyneSummary = twyneSummary;
         this.theme = theme;
         this.currentRender = currentRender;
+        this.music = music;
     }
 
     hasEdit() {

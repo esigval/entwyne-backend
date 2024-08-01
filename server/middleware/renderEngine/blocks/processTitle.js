@@ -58,7 +58,7 @@ const processTitle = async (block, twyneQuality, twyneOrientation, music, twyneI
             //console.log(`Music added. Intermediate output: ${intermediateOutput}`);
         }
 
-        if (title) {I
+        if (title) {
             const fontPath = '/usr/local/share/fonts/GearedSlab.ttf';  // Ensure the font path is correct
             //console.log(`Adding title overlay...`);
             await addTitleOverlay(intermediateOutput, finalOutput, title, fontPath);

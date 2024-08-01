@@ -1,11 +1,12 @@
 import express from 'express';
 import universalPreSignedUrl from '../middleware/presignedUrls/universalPreSignedUrl.js';
 
-
+import checkMomentProcessing from '../middleware/prompts/checkMomentProcessing.js';
 import createMomentAndGenerateS3Keys from '../middleware/moments/createMomentAndGenerateS3Keys.js';
 import updateMomentWithS3Uris from '../middleware/moments/updateMoment.js';
 import setPromptCollected from '../middleware/prompts/setPromptCollected.js';
 import setMomentIdPrompt from '../middleware/prompts/setMomentIdPrompt.js';
+import checkStorylineComplete from '../middleware/storyline/checkStorylineComplete.js';
 import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 import { config } from '../config.js';
 import dotenv from 'dotenv';
@@ -16,43 +17,26 @@ const currentConfig = config[environment];
 
 const router = express.Router();
 
+const generatePreSignedUrl = async (bucket, key, type) => {
+    try {
+        return await universalPreSignedUrl(bucket)('putObject', key, type);
+    } catch (err) {
+        throw new Error(`Error generating ${type} pre-signed URL`);
+    }
+};
+
 // Adjusted router code to pass the keys correctly
 
 router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys, 
     async (req, res, next) => {
-        const key = req.s3Keys.audioKey;
         try {
-            req.audioPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'audio/wav');
+            req.audioPreSignedUrl = await generatePreSignedUrl(currentConfig.MEZZANINE_BUCKET, req.s3Keys.audioKey, 'audio/wav');
+            req.videoPreSignedUrl = await generatePreSignedUrl(currentConfig.INPUT_BUCKET, req.s3Keys.videoKey, 'video/mp4');
+            req.thumbnailPreSignedUrl = await generatePreSignedUrl(currentConfig.MEZZANINE_BUCKET, req.s3Keys.thumbnailKey, 'image/png');
+            req.proxyPreSignedUrl = await generatePreSignedUrl(currentConfig.MEZZANINE_BUCKET, req.s3Keys.proxyKey, 'video/mp4');
             next();
         } catch (err) {
-            res.status(500).json({ error: 'Error generating audio pre-signed URL' });
-        }
-    },
-    async (req, res, next) => {
-        const key = req.s3Keys.videoKey;
-        try {
-            req.videoPreSignedUrl = await universalPreSignedUrl(currentConfig.INPUT_BUCKET)('putObject', key, 'video/mp4');
-            next();
-        } catch (err) {
-            res.status(500).json({ error: 'Error generating video pre-signed URL' });
-        }
-    },
-    async (req, res, next) => {
-        const key = req.s3Keys.thumbnailKey;
-        try {
-            req.thumbnailPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'image/png');
-            next();
-        } catch (err) {
-            res.status(500).json({ error: 'Error generating thumbnail pre-signed URL' });
-        }
-    },
-    async (req, res, next) => {
-        const key = req.s3Keys.proxyKey; // Assuming the key for the proxy is stored in req.s3Keys.proxyKey
-        try {
-            req.proxyPreSignedUrl = await universalPreSignedUrl(currentConfig.MEZZANINE_BUCKET)('putObject', key, 'video/mp4');
-            next();
-        } catch (err) {
-            res.status(500).json({ error: 'Error generating proxy pre-signed URL' });
+            res.status(500).json({ error: err.message });
         }
     },
     updateMomentWithS3Uris,
@@ -61,6 +45,7 @@ router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys,
         next();
     },
     setPromptCollected,
+    checkStorylineComplete,
     setMomentIdPrompt,
 
     (req, res) => {

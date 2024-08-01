@@ -11,6 +11,7 @@ class Prompts {
         mediaType,
         promptTitle,
         collected,
+        momentsAllExist,
         progress,
         primers,
         userId,
@@ -31,6 +32,7 @@ class Prompts {
         this.mediaType = mediaType;
         this.promptTitle = promptTitle;
         this.collected = String(collected);
+        this.momentsAllExist = momentsAllExist;
         this.progress = progress;
         this.primers = primers ?? [];
         this.userId = ObjectId.isValid(userId) ? new ObjectId(userId) : userId;
@@ -633,6 +635,3 @@ class Prompts {
 export default Prompts;
 
 // Simulated function call
-
-const response = await Prompts.findByStorylineId('66a83c7184f456c145ebedeb');
-console.log('Response:', response);

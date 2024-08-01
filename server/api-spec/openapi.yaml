@@ -60,19 +60,18 @@ paths:
           description: Unauthorized - Invalid or expired token
         '404':
           description: Not Found - The specified user ID does not exist
-
-  /twyne/render:
+  /twyne/render/{twyneId}:
     post:
       tags:
       - Twyne
       summary: Process Twyne
       operationId: processTwyne
-      requestBody:
+      parameters:
+      - name: twyneId
+        in: path
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TwyneConfig'
+        schema:
+          type: string
       responses:
         '200':
           description: Twyne processing started

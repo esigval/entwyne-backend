@@ -1,5 +1,6 @@
 import express from 'express';
 import Twyne from '../models/twyneModel.js';
+
 import User from '../models/userModel.js';
 import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 

@@ -295,6 +295,17 @@ class Moment {
             throw error;
         }
     }
+    static async findMultipleByIds(momentIds) {
+        try {
+            const db = await connect();
+            const collection = db.collection(Moment.collectionName);
+            const moments = await collection.find({ _id: { $in: momentIds.map(id => new ObjectId(id)) } }).toArray();
+            return moments;
+        } catch (error) {
+            console.error("Error in Moment.findMultipleByIds:", error);
+            throw error;
+        }
+    }
 
     static async findProxyUriById(momentId) {
         console.log("momentId:", momentId);

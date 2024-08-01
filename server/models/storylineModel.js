@@ -8,19 +8,21 @@ class Storyline {
         theme,
         totalTargetDuration,
         structure = [],
+        mediaIntegrityCheck,
         soundRules,
         createdAt = new Date(),
         lastUpdated = new Date(),
         twyneId = new ObjectId(),
         rendered,
         twyneRenderUri,
+        progress,
 
     }) {
         this._id = ObjectId.isValid(_id) ? new ObjectId(_id) : new ObjectId();
         this.name = name;
         this.theme = theme;
         this.totalTargetDuration = totalTargetDuration;
-        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, targetedDuration, sceneInstructions, blockInstructions, clipPace, clips =[], promptId = [] }) => ({
+        this.structure = structure.map(({ part, type, order, durationRange, suggestedDuration, targetedDuration, sceneInstructions, blockInstructions, clipPace, clips = [], promptId = [], clipsExist, progress }) => ({
             part,
             type,
             order: Number(order),
@@ -48,13 +50,18 @@ class Storyline {
                 momentId: ObjectId.isValid(momentId) ? new ObjectId(momentId) : null, // Ensure momentId is always an ObjectId
             })),
             promptId,
+            clipsExist,
+            progress,
         }));
+        this.mediaIntegrityCheck = mediaIntegrityCheck;
         this.soundRules = soundRules;
         this.createdAt = createdAt ? new Date(createdAt) : new Date();
         this.lastUpdated = lastUpdated ? new Date(lastUpdated) : new Date();
         this.twyneId = twyneId;
         this.rendered = false;
         this.twyneRenderUri = twyneRenderUri;
+        this.progress = progress;
+
     }
 
 
@@ -80,17 +87,17 @@ class Storyline {
             const collection = db.collection(this.collectionName);
             const normalizedStorylineId = new ObjectId(storylineId);
             const normalizedMomentId = ObjectId.isValid(momentId) ? new ObjectId(momentId) : null;
-    
+
             if (!normalizedMomentId) {
                 throw new Error("Invalid momentId provided");
             }
-    
+
             // Find the storyline and update it by pulling the clip with the matching momentId from the clips array
             const result = await collection.updateOne(
                 { _id: normalizedStorylineId },
                 { $pull: { 'structure.$[].clips': { momentId: normalizedMomentId } } }
             );
-    
+
             return result.modifiedCount;
         } catch (error) {
             console.error("Error in Storyline.removeClipByMomentId:", error);
@@ -203,32 +210,51 @@ class Storyline {
     }
 
     static async updateClipWithAssignedMoment(storylineId, promptId, clip) {
-    try {
-        const db = await connect();
-        const collection = db.collection(this.collectionName);
+        try {
+            const db = await connect();
+            const collection = db.collection(this.collectionName);
 
-        const normalizedStorylineId = new ObjectId(storylineId);
-        const normalizedPromptId = new ObjectId(promptId);
+            const normalizedStorylineId = new ObjectId(storylineId);
+            const normalizedPromptId = new ObjectId(promptId);
 
-        const doc = await collection.findOne(
-            { _id: normalizedStorylineId, structure: { $elemMatch: { promptId: normalizedPromptId } } }
-        );
+            const doc = await collection.findOne(
+                { _id: normalizedStorylineId, structure: { $elemMatch: { promptId: normalizedPromptId } } }
+            );
 
-        if (doc === null) {
-            return 0;
+            if (doc === null) {
+                return 0;
+            }
+
+            const result = await collection.updateOne(
+                { _id: normalizedStorylineId, structure: { $elemMatch: { promptId: normalizedPromptId } } },
+                { $push: { 'structure.$.clips': clip } }
+            );
+
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.updateClipWithAssignedMoment:", error);
+            throw error;
         }
-
-        const result = await collection.updateOne(
-            { _id: normalizedStorylineId, structure: { $elemMatch: { promptId: normalizedPromptId } } },
-            { $push: { 'structure.$.clips': clip } }
-        );
-
-        return result.modifiedCount;
-    } catch (error) {
-        console.error("Error in Storyline.updateClipWithAssignedMoment:", error);
-        throw error;
     }
-}
+
+    static async updateStructureMediaIntegrityCheck(storylineId, part, mediaIntegrityCheck) {
+        try {
+            const db = await connect();
+            const collection = db.collection(this.collectionName);
+
+            const normalizedStorylineId = new ObjectId(storylineId);
+
+            const result = await collection.updateOne(
+                { _id: normalizedStorylineId, 'structure.part': part },
+                { $set: { 'structure.$.mediaIntegrityCheck': mediaIntegrityCheck } }
+            );
+
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.updateStructureMediaIntegrityCheck:", error);
+            throw error;
+        }
+    }
 
     static async findById(storylineId) {
         try {
@@ -238,6 +264,36 @@ class Storyline {
             return document;
         } catch (error) {
             console.error("Error in Storyline.findById:", error);
+            throw error;
+        }
+    }
+
+    static async updateStructure(storylineId, structure) {
+        try {
+            const db = await connect();
+            const collection = db.collection(this.collectionName); // Ensure `this` refers to Storyline
+            const result = await collection.updateOne(
+                { _id: new ObjectId(storylineId) }, // Ensure storylineId is converted to ObjectId
+                { $set: { structure: structure } }
+            );
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.updateStructure:", error);
+            throw error;
+        }
+    }
+
+    static async updateStoryline(storylineId, storyline) {
+        try {
+            const db = await connect();
+            const collection = db.collection(this.collectionName); // Ensure `this` refers to Storyline
+            const result = await collection.updateOne(
+                { _id: new ObjectId(storylineId) }, // Ensure storylineId is converted to ObjectId
+                { $set: storyline } // Update the entire storyline object
+            );
+            return result.modifiedCount;
+        } catch (error) {
+            console.error("Error in Storyline.updateStoryline:", error);
             throw error;
         }
     }

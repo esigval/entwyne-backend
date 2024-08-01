@@ -19,7 +19,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const renderVideo = async (jsonConfig, userId) => {
+    console.log('Rendering video with config:', JSON.stringify(jsonConfig, null, 2));
     const { storylineId, twyneQuality, twyneOrientation, music, twyneId, title, outro, crossfadeSettings, trackName } = jsonConfig;
+    let twyneCurrent;
     let fileLocations = [];
     try {
         const narrativeBlocks = await extractClipData(storylineId);
@@ -119,6 +121,7 @@ const renderVideo = async (jsonConfig, userId) => {
             await deleteFiles(fileLocations);
             console.log('Intermediate files deleted.');
         }
+        return { twyneCurrent, results: 'success' };
     }
     
 };
