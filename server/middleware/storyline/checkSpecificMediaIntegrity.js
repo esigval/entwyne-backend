@@ -30,7 +30,7 @@ const checkSpecificMediaIntegrity = async (storylineId) => {
                 if (!isProcessed) {
                     unprocessedMoments.push({ partId: `${part.part}_${part.order}`, clipId: clip.id, momentId: moment._id });
                 } else if (!moment.processed) {
-                    await Moment.updateOne({ _id: moment._id }, { processed: true });
+                    await Moment.updateMoment({ momentId: moment._id, update: { processed: true } });
                 }
             }
         }

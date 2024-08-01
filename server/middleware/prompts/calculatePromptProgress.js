@@ -29,7 +29,7 @@ async function calculatePromptProgress(promptId) {
     const totalClips = structureItem.clips.length;
 
     // Calculate the progress percentage
-    const progressPercentage = (totalClips / structureItem.clipPace.quantity) * 100;
+    const progressPercentage = (totalClips / structureItem.clipPace.quantity);
 
     // Update the progress field in the structure item
     structureItem.progress = progressPercentage;
