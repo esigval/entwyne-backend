@@ -5,7 +5,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -27,12 +26,16 @@ const probeVideo = (filePath) => {
     });
 };
 
-const probeAllVideos = async () => {
+const probeAllVideos = async (specificFilePath) => {
     try {
-        const files = fs.readdirSync(finalsDir);
-        const videoFiles = files.filter(file => path.extname(file) === '.mp4');
-        const probePromises = videoFiles.map(file => probeVideo(path.join(finalsDir, file)));
+        let files;
+        if (specificFilePath) {
+            files = [specificFilePath];
+        } else {
+            files = fs.readdirSync(finalsDir).filter(file => path.extname(file) === '.mp4').map(file => path.join(finalsDir, file));
+        }
 
+        const probePromises = files.map(file => probeVideo(file));
         const results = await Promise.all(probePromises);
         fs.writeFileSync(outputFile, JSON.stringify(results, null, 2), 'utf-8');
 
@@ -42,4 +45,8 @@ const probeAllVideos = async () => {
     }
 };
 
-probeAllVideos();
+// Specific video file path
+const specificVideoFilePath = path.join(__dirname, '66b298659507955a0b52c6fe.mp4');
+
+// Probe the specific video file
+probeAllVideos(specificVideoFilePath);

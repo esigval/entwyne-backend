@@ -8,39 +8,51 @@ class Moment {
         _id,
         associatedPromptId,
         audioUri,
+        audioKey,
         beatTag,
         createdAt,
         sentiment,
         transcription,
         videoSettings,
         videoUri,
+        videoKey,
+        imageUri,
+        imageKey,
         mediaType,
         storylineId,
         userId,
         contributorId,
         thumbnailUri,
+        thumbnailKey,
         stampedTranscription,
         lastUpdated,
         proxyUri,
+        proxyKey,
         processed,
     } = {}) {
         this._id = _id ? new ObjectId(_id) : new ObjectId();
         this.associatedPromptId = associatedPromptId ? new ObjectId(associatedPromptId) : undefined;
         this.audioUri = audioUri;
+        this.audioKey = audioKey;
         this.beatTag = beatTag;
         this.createdAt = createdAt || new Date();
         this.sentiment = sentiment;
         this.transcription = transcription;
         this.videoSettings = videoSettings ? new ObjectId(videoSettings) : undefined;
         this.videoUri = videoUri;
+        this.videoKey = videoKey;
+        this.imageUri = imageUri;
+        this.imageKey = imageKey;
         this.mediaType = mediaType;
         this.storylineId = storylineId ? new ObjectId(storylineId) : undefined;
         this.userId = userId ? new ObjectId(userId) : undefined;
         this.contributorId = contributorId ? new ObjectId(contributorId) : undefined;
         this.thumbnailUri = thumbnailUri;
+        this.thumbnailKey = thumbnailKey;
         this.stampedTranscription = stampedTranscription;
         this.lastUpdated = lastUpdated || new Date();
         this.proxyUri = proxyUri;
+        this.proxyKey = proxyKey;
         this.processed = !!processed;
     }
 

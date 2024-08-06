@@ -3,7 +3,7 @@ import calculatePromptProgress from './calculatePromptProgress.js';
 
 const setPromptCollectedandStatus = async (req, res, next) => {
     try {
-        const promptId = req.params.promptId;
+        const promptId = req.s3Keys.promptId;
         const { progressPercentage, storylineProgressPercentage } = await calculatePromptProgress(promptId); // Calculate the progress of the prompt
 
         // Determine and set the collected status based on the progress

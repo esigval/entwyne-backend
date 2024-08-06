@@ -7,7 +7,7 @@ import { processTwyne } from '../renderEngine/processTwyne.js';
 import findAlternativeValidMoments from './findAlternativeValidMoments.js';
 
 const checkStorylineComplete = async (req, res, next) => {
-    const promptId = req.params.promptId;
+    const promptId = req.s3Keys.promptId;
     const userId = req.userId;
 
     try {

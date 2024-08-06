@@ -191,10 +191,11 @@ app.use('/v1/confirmMoment', confirmMoment); // protected
 app.use('/v1/uploadSaveMoment', saveMomentRouter); // protected
 app.use('/v1/checkMomentProcess', checkMomentProcess); // protected
 app.use(`/v1/collectPictures`, collectPictures); // protected
-app.use('/v1/moments/preSigned', uploadMoment); // protected
+app.use('/v1/moments/upload', uploadMoment); // protected
 app.use('/v1/moments/transcription', updateTranscriptionMoment); // unprotected - > Lambda
 app.use('/v1/moments', getMoment); // protected
 app.use('/v1/moments/publicPresign', getPresignedPublicUrl); // protected
+
 
 // Twynes (protected)
 app.use('/v1/twyne', twyneRoutes); // protected
