@@ -28,23 +28,26 @@ const updateMomentWithS3Uris = async (req, res, next) => {
 
         // Determine the file extension based on the mimeType
         let fileExtension;
-        switch (mimeType) {
-            case 'video/mp4':
-            case 'video/mov':
-            fileExtension = 'mp4';
-            break;
-            case 'image/jpeg':
-            fileExtension = 'jpeg';
-            break;
-            case 'image/png':
-            fileExtension = 'png';
-            break;
-            case 'image/gif':
-            fileExtension = 'gif';
-            break;
-            default:
-            throw new Error('Unsupported mimeType');
-        }
+                switch (mimeType) {
+                    case 'video/mp4':
+                        fileExtension = 'mp4';
+                        break;
+                    case 'video/mov':
+                    case 'video/quicktime':
+                        fileExtension = 'mov';
+                        break;
+                    case 'image/jpeg':
+                        fileExtension = 'jpeg';
+                        break;
+                    case 'image/png':
+                        fileExtension = 'png';
+                        break;
+                    case 'image/gif':
+                        fileExtension = 'gif';
+                        break;
+                    default:
+                        throw new Error('Unsupported mimeType');
+                }
 
         // Construct the S3 URIs
         const audioUri = `s3://${currentConfig.MEZZANINE_BUCKET}/${audioKey}.pcm`;

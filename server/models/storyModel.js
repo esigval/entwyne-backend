@@ -17,7 +17,7 @@ class Story {
         this.coCreators = coCreators.map(id => new ObjectId(id)); // Ensure coCreators are ObjectIds || [];
         this.storyThumbnail = thumbnail || null; // Default to null if not provided
         this.lastUpdated = lastUpdated || new Date(); // Default to current date if not provided
-        this.defaultVideoSettings = defaultVideoSettings || { orientation: 'vertical', quality: 'high' };
+        this.defaultVideoSettings = defaultVideoSettings || { orientation: 'vertical', quality: 'SD' };
         this.defaultNarrative = defaultNarrative || null; // Default to null if not provided
         this.contributors = contributors.map(id => new ObjectId(id));
     }

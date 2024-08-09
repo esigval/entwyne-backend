@@ -4,8 +4,6 @@ info:
   description: API for managing stories in the application.
   version: "1.0.0"
 servers:
-- url: https://dev.entwye.com/v1
-  description: Development server
 - url: http://localhost:3001/v1
   description: Local server
 paths:
@@ -99,6 +97,96 @@ paths:
                     type: string
                     description: Error message
                     example: Internal server error
+  /moments/upload/check-multipart-uploads:
+    get:
+      tags:
+      - Moments
+      summary: Check multipart uploads
+      description: Checks the status of multipart uploads.
+      parameters:
+      - in: query
+        name: key
+        schema:
+          type: string
+        required: false
+        description: The key of the multipart upload to check.
+      - in: query
+        name: uploadId
+        schema:
+          type: string
+        required: false
+        description: The upload ID of the multipart upload to check.
+      responses:
+        '200':
+          description: Multipart upload status checked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message
+                    example: Multipart upload status checked successfully.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: Internal server error
+
+  /moments/upload/check-s3-file-exists:
+    get:
+      tags:
+      - Moments
+      summary: Check if an S3 file exists
+      description: Checks if a file exists in the S3 bucket.
+      parameters:
+      - in: query
+        name: key
+        schema:
+          type: string
+        required: true
+        description: The key of the file to check in the S3 bucket.
+      responses:
+        '200':
+          description: S3 file existence checked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exists:
+                    type: boolean
+                    description: Indicates if the file exists in the S3 bucket
+                    example: true
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: Key parameter is required
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: An error occurred while checking the file existence
   /moments/upload/list-parts:
     post:
       tags:
@@ -213,7 +301,7 @@ paths:
                     type: string
                     description: Error message
                     example: Internal server error
-  /moments/initiate-multipart-upload/{promptId}:
+  /moments/upload/initiate-multipart-upload/{promptId}:
     post:
       tags:
       - Moments

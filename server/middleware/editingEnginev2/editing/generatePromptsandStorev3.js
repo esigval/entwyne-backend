@@ -16,18 +16,18 @@ const generateLLMPrompt = (block, twyneSummary) => {
 
     switch (block.type.toLowerCase()) {
         case 'interview':
-            llmPrompt += ` Generate a casual question that encourages the user to share their thoughts and experiences.`;
+            llmPrompt += ` Generate a short casual question that encourages the user to share their thoughts and experiences.`;
             break;
         case 'montage':
-            llmPrompt += ` Generate a prompt that encourages the user to upload images or videos highlighting key moments, especially focusing on key moments described in the scene instructions and clips. Keep entire prompt less than two sentences.`;
+            llmPrompt += ` Generate a short prompt that encourages the user to upload images or videos highlighting key moments, especially focusing on key moments described in the scene instructions and clips. Keep entire prompt one sentence  .`;
             break;
         case 'title sequence':
         case 'title':
-            llmPrompt += ` Generate a prompt that guides the user in uploading the right clips for the title sequence. We automatically create the title overlay, so this is just focusing on a sequence of establishing shots - help with ideas in a few words. Keep entire prompt less than two sentences.`;
+            llmPrompt += ` Generate a short prompt that guides the user in uploading the right clips for the title sequence. We automatically create the title overlay, so this is just focusing on a sequence of establishing shots - help with ideas in a few words. Keep entire prompt one sentence.`;
             break;
         case 'outro card':
         case 'card':
-            llmPrompt += ` Generate a short prompt that will be used for uploading the final shots of the film. The user only needs to upload videos, the text is automatically generated. Keep entire prompt less than two sentences.`;
+            llmPrompt += ` Generate a short prompt that will be used for uploading the final shots of the film. The user only needs to upload videos, the text is automatically generated. Keep entire prompt one sentence.`;
             break;
         default:
             llmPrompt += ` Generate an appropriate prompt for the user to provide content for this part of the video.`;
@@ -94,6 +94,8 @@ const generatePromptsAndAssociateWithBlocks = async (twyneId, storyId, storyline
                 mediaType: block.type,
                 promptTitle: block.part,
                 collected: "false",
+                clipsToCollect: block.clipPace.quantity,
+                clipsLength: block.clipPace.clipLength,
                 userId: new ObjectId(userId),
                 createdAt: new Date(),
                 lastUpdated: new Date(),

@@ -6,6 +6,7 @@ import createMomentAndGenerateS3Keys from '../middleware/moments/createMomentAnd
 import updateMomentWithS3Uris from '../middleware/moments/updateMoment.js';
 import setPromptCollected from '../middleware/prompts/setPromptCollected.js';
 import setMomentIdPrompt from '../middleware/prompts/setMomentIdPrompt.js';
+import checkS3Exists from '../middleware/moments/checkS3Exists.js';
 import checkStorylineComplete from '../middleware/storyline/checkStorylineComplete.js';
 import { validateTokenMiddleware } from '../middleware/authentication/validateTokenMiddleware.js';
 import { config } from '../config.js';
@@ -74,6 +75,7 @@ router.post('/get-multipart-presigned-url', validateTokenMiddleware, async (req,
 
     try {
         const url = await s3.getSignedUrlPromise('uploadPart', params);
+        console.log('Presigned URL:', url);
         res.json({ url });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -130,6 +132,49 @@ router.post('/complete-multipart-upload', validateTokenMiddleware, async (req, r
         message: 'Multipart upload completed and moment updated successfully.'
     });
 });
+
+// Endpoint to check all in progress Multipart uploads
+router.get('/check-multipart-uploads', validateTokenMiddleware, async (req, res) => {
+    const { key, uploadId } = req.query;
+
+    if (!key || !uploadId) {
+        return res.status(400).json({ error: 'Missing key or uploadId' });
+    }
+
+    const params = {
+        Bucket: currentConfig.INPUT_BUCKET,
+    };
+
+    try {
+        const data = await s3.listMultipartUploads(params).promise();
+        const upload = data.Uploads.find(upload => upload.Key === key && upload.UploadId === uploadId);
+
+        if (upload) {
+            res.json({ upload });
+        } else {
+            res.status(404).json({ error: 'Upload not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/check-S3-file-exists', validateTokenMiddleware, async (req, res) => {
+    const { key } = req.query;
+
+    if (!key) {
+        return res.status(400).json({ error: 'Key parameter is required' });
+    }
+
+    try {
+        const exists = await checkS3Exists(key);
+        return res.status(200).json({ exists });
+    } catch (error) {
+        console.error('Error checking S3 file existence:', error);
+        return res.status(500).json({ error: 'An error occurred while checking the file existence' });
+    }
+});
+
 
 // Existing router code to get presigned URLs for other operations
 router.get('/:promptId', validateTokenMiddleware, createMomentAndGenerateS3Keys,
